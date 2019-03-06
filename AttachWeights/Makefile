@@ -1,30 +1,70 @@
+#!/usr/bin/make -f
+
+CC= gcc
+CXX= g++
+RM= rm -f
+
+PKGCONFIG= pkg-config
+PACKAGES= 
+
 # OS-Specfic Stuff
 ifeq ($(OSTYPE),darwin)
 	OS_COMPILE_FLAGS =  -DOSX
-	TARGET_EXT = Mac
 else
 	# LINUX stuff
 	OS_COMPILE_FLAGS =  -DLINUX
-	TARGET_EXT = Linux
 endif
 
-CC = g++
-CCFLAGS = -c -O3 -Wall -fPIC $(OS_COMPILE_FLAGS)
-# Uncomment this to use a debug version
-#CCFLAGS = -c -g3 -O0 -Wall -fPIC $(OS_COMPILE_FLAGS)
+CFLAGS= -O2 -g -Wall -std=c++17 \
+	-fstack-protector-strong \
+	-Wall \
+	-Wformat \
+	-Werror=format-security \
+	-Wdate-time \
+	-D_FORTIFY_SOURCE=2 \
+	$(OS_COMPILE_FLAGS) \
+	$(shell $(PKGCONFIG) --cflags $(PACKAGES) 2>/dev/null)
 
-TARGETBASE = AttachWeights
-TARGET = $(TARGETBASE)$(TARGET_EXT)
+LDFLAGS= \
+	-Wl,-z,defs,-z,relro,-z,now \
+	-Wl,--as-needed \
+	-Wl,--no-undefined
 
-$(TARGET) : stdfx.o $(TARGETBASE).o
-	gcc -O3 -Wall -fPIC -o $(TARGET) stdafx.o $(TARGETBASE).o ../Pinocchio/libpinocchio.a -lstdc++
+LIBS= \
+	-lm -L../Pinocchio/ -lpinocchio \
+	$(shell $(PKGCONFIG) --libs $(PACKAGES) 2>/dev/null)
 
-stdfx.o : stdafx.cpp stdafx.h
-	$(CC) $(CCFLAGS) stdafx.cpp
-	
-$(TARGET).o : stdafx.h
-	$(CC) $(CCFLAGS) $(TARGET).cpp
+SRCS= AttachWeights.cpp  stdafx.cpp
+OBJS= $(subst .cpp,.o,$(SRCS))
 
-clean :
-	rm -f *.o
-	rm -f $(TARGET)
+BINARY= AttachWeights
+
+all: $(BINARY)
+
+$(BINARY): $(OBJS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+%.o: %.cpp
+	$(CXX) -o $@ -c $< $(CFLAGS)
+
+%.o: %.cc
+	$(CXX) -o $@ -c $< $(CFLAGS)
+
+%.o: %.c
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+depend: .depend
+
+.depend: $(SRCS)
+	$(RM) ./.depend
+	$(CXX) $(CFLAGS) -MM $^>>./.depend;
+
+clean:
+	$(RM) $(OBJS) AttachWeights
+
+distclean: clean
+	$(RM) *~ .depend core *.out *.bak
+
+include .depend
+
+.PHONY: all depend clean distclean

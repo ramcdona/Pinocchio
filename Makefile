@@ -1,9 +1,6 @@
-# Makefile for Pinocchio
+#!/usr/bin/make -f
 
-dirs = Pinocchio AttachWeights
-# DemoUI is a windows prog, and on windows, VisualC++ is used,
-# so we can ignore it here
-# dirs = Pinocchio AttachWeights DemoUI
+dirs = Pinocchio AttachWeights DemoUI
 
 # Define a standard makePerDir command, which goes into
 # each dir, and runs make $(makerule)
@@ -17,24 +14,11 @@ endef
 nullstring :=
 
 all: makerule = $(nullstring)
-depend: makerule = depend 
-clean: makerule = clean 
+depend: makerule = depend
+clean: makerule = clean
+distclean: makerule = distclean
 
-all depend clean:
+all depend clean distclean:
 	$(makePerDir)
 
-
-#all:
-#	cd Pinocchio && $(MAKE)
-#	cd DemoUI && $(MAKE)
-#
-#depend:
-#	cd Pinocchio && $(MAKE) depend
-#	cd DemoUI && $(MAKE) depend
-#
-#clean:
-#	cd Pinocchio && $(MAKE) clean
-#	cd DemoUI && $(MAKE) clean
-
-
-# DO NOT DELETE
+.PHONY: all depend clean distclean
