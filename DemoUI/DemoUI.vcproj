@@ -119,10 +119,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="3"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="$(FLTKDIR)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CONSOLE"
 				RuntimeLibrary="2"
@@ -210,36 +206,36 @@
 				RelativePath=".\processor.cpp"
 				>
 			</File>
-			<Filter
-				Name="Header Files"
-				Filter="h;hpp;hxx;hm;inl;inc;xsd"
-				UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\defmesh.h"
 				>
-				<File
-					RelativePath=".\defmesh.h"
-					>
-				</File>
-				<File
-					RelativePath=".\DisplayMesh.h"
-					>
-				</File>
-				<File
-					RelativePath=".\filter.h"
-					>
-				</File>
-				<File
-					RelativePath=".\motion.h"
-					>
-				</File>
-				<File
-					RelativePath=".\MyWindow.h"
-					>
-				</File>
-				<File
-					RelativePath=".\processor.h"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath=".\DisplayMesh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\motion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MyWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\processor.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

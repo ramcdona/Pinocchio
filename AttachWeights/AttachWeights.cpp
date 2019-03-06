@@ -181,7 +181,7 @@ void process(const vector<string> &args)
         for(i = 0; i < (int)o.embedding.size(); ++i)
             o.embedding[i] = m.toAdd + o.embedding[i] * m.scale;
 
-		o.attachment = new Attachment(m, a.skeleton, o.embedding, tester, a.stiffness);
+        o.attachment = new Attachment(m, a.skeleton, o.embedding, tester, a.stiffness);
 
         delete tester;
         delete distanceField;

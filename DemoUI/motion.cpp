@@ -21,9 +21,11 @@ THE SOFTWARE.
 */
 
 #include "motion.h"
+#include "shared.h"
 #include "../Pinocchio/skeleton.h"
 #include "../Pinocchio/utils.h"
 
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
@@ -195,7 +197,8 @@ void Motion::readH(istream &strm)
             continue;
         
         if(words.size() != (int)numVals) {
-            cout << "Error reading motion file: not " << numVals << " numbers in line " << lineNum << endl;
+            cout << "Error reading motion file: not " << 
+                numVals << " numbers in line " << lineNum << endl;
             data.clear();
             return;
         }
@@ -275,11 +278,78 @@ int getMsecs()
     return getT() - startTime;
 }
 
+/* 
+ * In this function, the id of the next frame to be shown is retrieved. There
+ * are two options though depending on the value f the boolean normalSpeed.
+ * 
+ * If normalSpeed is set to true, the the original algorithm for getting the
+ * frame Id is used, which basically uses the current time to determine the
+ * next frame id. The only problem with this is that frames will always be
+ * skipped in between, thus making it difficult to always pause at the same
+ * frames when running our tests and taking screenshots.
+ *
+ * The second option is to set normalSpeed to false. This was, a counter is
+ * kept which indicates what frame we are on, and when the counter reaches the
+ * last frame, it is reset to zero. This allows us for consistently being 
+ * able to pause at the exact frames we want. This is the setting we used
+ * for our project. Note it also leads to a much slower run time.
+ *
+ */
 int Motion::getFrameIdx() const
 {
+    // Indicates how to get frame id, the normal way (faster) or the more
+	// precise way (for this, set to false).
+    bool normalSpeed = false;
+
     if(fixedFrame >= 0)
         return fixedFrame;
-    return (getMsecs() / (1000 / 120)) % data.size();
+    
+    // Keep a counter to indicate what frame we are on, and increment it
+	// each time through
+    if (!normalSpeed) {
+        static int framenum = -1;
+
+		// If the animation is paused, don't increment the framenumber.
+        if (paused) {
+            return framenum;
+        }
+
+        framenum++;
+		
+		// If reached last frame, reset the framenumber and output how
+		// long it took to run through the animation
+        if (framenum >= (signed)data.size()) {
+            cout << "Run Time End: " << getT() - runStartTime << endl;
+            runStartTime = getT();
+            framenum = 0;
+        }
+        
+        // Pause at specific frames to take snapshot
+        /*/if (framenum == 33 ||
+            framenum == 4827 ||  // angle 4
+            framenum == 5655 ||  // angle 4
+            framenum == 5827 ||  // angle 4
+            framenum == 6254 ||  // angle 3
+            framenum == 485 ||  // angle 3
+            framenum == 3917 || // angle 5
+            framenum == 5571 || // angle 6
+            framenum == 5844) { // angle 6
+            paused = true;
+        }*/
+               
+        return framenum;
+    }
+    
+	// Rough measurement of how long it took to run through the animation
+	// at normal speed
+    int frame = (getMsecs() / (1000 / 120)) % data.size();
+    if (frame >= (signed)data.size() - 10) {
+        cout << "Run Time End: " << getT() - runStartTime << endl;
+        runStartTime = getT();
+    }
+    
+    // Use if measuring FPS
+    return frame;
 }
 
 vector<Transform<> > Motion::get() const
@@ -287,8 +357,9 @@ vector<Transform<> > Motion::get() const
     return data[getFrameIdx()];
 }
 
-vector<Vector3> Motion::getPose() const
+vector<Vector3> Motion::getPose(int &framenum) const
 {
-    return poses[getFrameIdx()];
+    framenum = getFrameIdx();
+    return poses[framenum];
 }
 

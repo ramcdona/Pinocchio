@@ -24,16 +24,25 @@ THE SOFTWARE.
 #include "MyWindow.h"
 #include "DisplayMesh.h"
 #include "processor.h"
+#include "motion.h"
+#include "shared.h"
+
+// Definition of global variable to record start times of animation runs
+unsigned long runStartTime;
 
 int main(int argc, char **argv) {
-    MyWindow *window = new MyWindow();
-
+    MyWindow *window = new MyWindow(1024, 768, "Pinocchio");
     vector<string> args;
     for(int i = 0; i < argc; ++i)
         args.push_back(argv[i]);
+	// Process, and then print out time taken for processing
+    unsigned long processTime = getT();
     process(args, window);
-
+    cout << "Process time: " << getT() - processTime << endl;
+    
     window->show();
-
+    
+	// Start time for the first run
+    runStartTime = getT();
     return Fl::run();
 }

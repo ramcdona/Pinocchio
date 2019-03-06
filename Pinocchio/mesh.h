@@ -24,6 +24,8 @@
 #include "vector.h"
 #include "rect.h"
 
+//#define 
+
 struct MeshVertex
 {
     MeshVertex() : edge(-1) {}
@@ -37,7 +39,8 @@ struct MeshEdge
 {
     MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
     
-    int vertex; //the vertex the edge points to--the start vertex is prev->vertex
+    //the vertex the edge points to--the start vertex is prev->vertex
+    int vertex; 
     int prev; //ccw, next is prev->prev
     int twin;
 };
@@ -45,7 +48,7 @@ struct MeshEdge
 class PINOCCHIO_API Mesh {
 public:
     Mesh() : scale(1.) {}
-    Mesh(const string &file);
+    Mesh(const string &file, int algo=Mesh::LBS, float weight=1.);
 
     bool integrityCheck() const;
     bool isConnected() const; //returns true if the mesh consists of a single connected component
@@ -69,6 +72,11 @@ public: //data
 
     Vector3 toAdd;
     double scale;
+    float blendWeight;
+    int algo;
+    static int LBS;
+    static int DQS;
+    static int MIX;
 };
 
 #endif

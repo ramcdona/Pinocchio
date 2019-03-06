@@ -20,12 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include <iostream>
 #include <FL/gl.h>
 #include <FL/Fl.H>
 #include "MyWindow.h"
 #include "../Pinocchio/skeleton.h"
 
 static HumanSkeleton human;
+bool paused = false;
 
 MyWindow *win = NULL;
 
@@ -35,11 +37,14 @@ void idle(void *s)
         win->redraw();
 }
 
-MyWindow::MyWindow() : Fl_Gl_Window(1024, 768, "Pinocchio"), flatShading(true), floor(true), skeleton(false)
+MyWindow::MyWindow(int width, int height, const char* title) 
+    : Fl_Gl_Window(width, height, title), 
+    flatShading(true), 
+    floor(true), 
+    skeleton(false)
 {
     size_range(20, 20, 5000, 5000);
     end();
-
     resetTransform();
     win = this;
     Fl::add_idle(idle);
@@ -55,6 +60,7 @@ int MyWindow::handle(int event) {
         return 1;
     case FL_DRAG:
         if(Fl::event_state(FL_BUTTON3)) {
+            // rotate cam
             int dx = Fl::event_x() - prevX, dy = Fl::event_y() - prevY;
             double len = sqrt(double(SQR(dx) + SQR(dy))) * 0.01;
             Transform<> cur = Transform<>(Vector3(0.5, 0.5, 0.5)) *
@@ -64,8 +70,10 @@ int MyWindow::handle(int event) {
             transform = cur * transform;
         }
         else if(Fl::event_state(FL_BUTTON1)) {
+            // translate cam
             double scale = min(w(), h()) / 2.5;
-            Transform<> cur = Transform<>(Vector3(Fl::event_x() - prevX, prevY - Fl::event_y(), 0) / scale);
+            int dx = Fl::event_x() - prevX, dy = prevY - Fl::event_y();
+            Transform<> cur = Transform<>(Vector3(dx, dy, 0) / scale);
 
             transform = cur * transform;
         }
@@ -102,6 +110,42 @@ int MyWindow::handle(int event) {
         case 'g':
             floor = !floor;
             break;
+        case 'p':
+            {
+                // Pause until user hits p again.
+                if (paused)
+                    paused = false;
+                else 
+                    paused = true;
+            }
+            return 1;
+        case '1':   // Changes the camera angle
+                changeAngle(Vector3(0.32,-0.95,0.09), .95, 2.7,
+                        Vector3(-1.23,-1.07,0.09));
+            break;
+        case '2': // Changes the camera angle
+                changeAngle(Vector3(.33,-.94,.07), .90, 2.73,
+                        Vector3(-1.60,-1.36,-2.07));
+            break;
+        case '3':	// Changes the camera angle
+                changeAngle(Vector3(1,0,0), .2, 3.69,
+                        Vector3(-1.91, -1.98, -.73));
+            break;
+        case '4':	// Changes the camera angle
+                changeAngle(Vector3(1,0,0), .42, 2.73,
+                        Vector3(-0.6, -1.39, -.85));
+            break;
+        case '5':	// Changes the camera angle
+                changeAngle(Vector3(.32,-.95,-.02), .13, 3.34,
+                        Vector3(-0.49, -1.09, -0.72));
+            break;
+        case '6':	// Changes the camera angle
+                changeAngle(Vector3(.34,-.91,.25), 1.05, 3.02,
+                        Vector3(-0.49, -1.53, -3.0));
+            break;
+        case 'r':   // Print current transformation of camera to terminal.
+                cout << transform << endl;
+            break;
         default:
             break;
         }
@@ -111,9 +155,22 @@ int MyWindow::handle(int event) {
         return Fl_Gl_Window::handle(event);
     }
 }
+                
+
+/*  
+ *  Changes the camera angle. Expects a rotation axis and angle, the amount
+ *  of scale to be applied, and a translation vector as well.
+ */
+void MyWindow::changeAngle(Vector3 axis, double angle, 
+        double scale, Vector3 v2)
+{
+    transform = Transform<>(Quaternion<>(axis, angle), scale, v2);
+}
+
 
 void MyWindow::draw() {
     int i;
+    static int framenum;
     if (!valid()) { //Init viewport and projection
         initGL();
 
@@ -169,10 +226,20 @@ void MyWindow::draw() {
     if(floor)
         drawFloor();
 
-    vector<const Mesh *> ms(meshes.size());
-    for(i = 0; i < (int)meshes.size(); ++i) {
-        ms[i] = &(meshes[i]->getMesh());
+    // Get mesh to draw, but only if not paused.
+    static vector<const Mesh *> ms(meshes.size());
+    if (!paused) {
+        for(i = 0; i < (int)meshes.size(); ++i) {
+            ms[i] = &(meshes[i]->getMesh(framenum));
+        }
     }
+
+    // display frame number
+    stringstream strs;
+    strs << framenum;
+    string temp = strs.str();
+    const char* strFramenum = temp.c_str();
+    win->label(strFramenum);    
 
     //shadows
     if(floor) {
@@ -238,7 +305,8 @@ void MyWindow::draw() {
 
 void MyWindow::resetTransform()
 {
-    transform = Transform<>(Quaternion<>(Vector3(1, 0, 0), .2), 1.5, Vector3(-0.66, -0.66, 0));
+    transform = Transform<>(Quaternion<>(Vector3(1, 0, 0), .2), 
+            1.5, Vector3(-0.66, -0.66, 0));
 }
 
 void MyWindow::initGL()

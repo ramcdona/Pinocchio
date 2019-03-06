@@ -24,9 +24,13 @@ THE SOFTWARE.
 #define MYWINDOW_H
 
 #include <FL/Fl_Gl_Window.H>
+#include <stdlib.h>
+#include <sstream>
+#include <string.h>
 #include "../Pinocchio/mesh.h"
 #include "../Pinocchio/transform.h"
 #include "DisplayMesh.h"
+#include "shared.h"
 
 struct LineSegment
 {
@@ -42,7 +46,7 @@ struct LineSegment
 class MyWindow : public Fl_Gl_Window
 {
 public:
-    MyWindow();
+    MyWindow(int width, int height, const char* title);
 
     virtual ~MyWindow() {}
     virtual void draw();
@@ -62,6 +66,8 @@ private:
     void initGL();
     void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
     void drawFloor();
+    void changeAngle(Vector3 axis, double angle, 
+            double scale, Vector3 v2);
 };
 
 #endif //MYWINDOW_H
