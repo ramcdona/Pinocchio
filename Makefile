@@ -21,4 +21,7 @@ distclean: makerule = distclean
 all depend clean distclean:
 	$(makePerDir)
 
-.PHONY: all depend clean distclean
+test:all
+	LD_LIBRARY_PATH=Pinocchio DemoUI/DemoUI DemoUI/data/test.obj -motion DemoUI/data/walk.txt
+
+.PHONY: all depend clean distclean test
