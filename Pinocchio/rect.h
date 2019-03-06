@@ -147,6 +147,7 @@ private:
     template<int D> friend class RectOp;
     template<class R, int D> friend class Rect;
 
+public:
     template<class R, int D>
     static R distSq(const RRD &r, const VRD &v)
     {
@@ -177,6 +178,7 @@ class RectOp<1>
 private:
     template<int D> friend class RectOp;
 
+public:
     template<class R, int D>
     static R distSq(const RRD &r, const VRD &v)
     {
