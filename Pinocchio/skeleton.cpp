@@ -25,6 +25,7 @@
 #include "utils.h"
 #include "debugging.h"
 #include <fstream>
+#include <unordered_map>
 
 void Skeleton::initCompressed()
 {
@@ -79,7 +80,7 @@ void Skeleton::initCompressed()
   for(i = 1; i < (int)cPrevV.size(); ++i)
   {
     int cur = cfMapV[i];
-    _HASH_NAMESPACE::hash_map<int, double> lengths;
+    std::unordered_map<int, double> lengths;
     do
     {
       lengths[cur] = (fGraphV.verts[cur] - fGraphV.verts[fPrevV[cur]]).length();
@@ -87,7 +88,7 @@ void Skeleton::initCompressed()
       cur = fPrevV[cur];
     } while(fcMapV[cur] == -1);
 
-    for(_HASH_NAMESPACE::hash_map<int, double>::iterator it = lengths.begin(); it != lengths.end(); ++it)
+    for(std::unordered_map<int, double>::iterator it = lengths.begin(); it != lengths.end(); ++it)
       fcFractionV[it->first] = it->second / cLengthV[i];
   }
 }

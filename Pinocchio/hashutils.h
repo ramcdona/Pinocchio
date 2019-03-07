@@ -21,21 +21,13 @@
 
 #include "mathutils.h"
 
-//#include <unordered_map>
-#include <ext/hash_map>
-
-#define _HASH_NAMESPACE __gnu_cxx
-
-//using namespace _HASH_NAMESPACE;
-
-namespace _HASH_NAMESPACE {
-  template<class T1, class T2> struct hash<pair<T1, T2> > {
-    size_t operator()(const pair<T1, T2> &p) const { return hash<T1>()(p.first) + 37 * hash<T2>()(p.second); }
-  };
-
-  template<class T> struct hash<T *> {
-    size_t operator()(T *p) const { return (size_t)p; }
-  };
+namespace std {
+  template<class T1, class T2>
+    struct hash<pair<T1, T2> > {
+      size_t operator()(const pair<T1, T2> &p) const {
+        return hash<T1>()(p.first) + 37 * hash<T2>()(p.second);
+      }
+    };
 }
 
 //HASHUTILS_H

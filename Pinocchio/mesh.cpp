@@ -25,6 +25,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <unordered_map>
 
 // Some constants to make it easier to specify different algorithms.
 // linear blend skinning
@@ -610,7 +611,7 @@ class StlVtx : public Vector3
     }
 };
 
-namespace _HASH_NAMESPACE {
+namespace std {
   template<> struct hash<StlVtx> {
       std::size_t operator()(const StlVtx &p) const {
         return (int)(p[0] * 100000. + p[1] * 200000. + p[2] * 400000.);
@@ -623,7 +624,7 @@ void Mesh::readStl(std::istream &strm)
   int i;
   int lineNum = 0;
 
-  _HASH_NAMESPACE::hash_map<StlVtx, int> vertexIdx;
+  std::unordered_map<StlVtx, int> vertexIdx;
 
   std::vector<int> lastIdxs;
 
