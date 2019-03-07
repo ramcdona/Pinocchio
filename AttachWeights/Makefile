@@ -60,7 +60,7 @@ depend: .depend
 	$(CXX) $(CFLAGS) -MM $^>>./.depend;
 
 clean:
-	$(RM) $(OBJS) AttachWeights
+	$(RM) $(OBJS) $(BINARY)
 
 distclean cleanall: clean
 	$(RM) *~ .depend core *.out *.bak

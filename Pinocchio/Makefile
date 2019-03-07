@@ -88,6 +88,7 @@ clean:
 	rm -f $(STATIC_OBJS)
 	rm -f $(FIXED_OBJS)
 	rm -f $(STATIC_FIXED_OBJS)
+	rm -f $(LIBRARY).a $(LIBRARY).so
 	rm -f *.so *.so* *.a *~
 
 distclean cleanall: clean

@@ -51,7 +51,7 @@ depend: .depend
 	$(CXX) $(CFLAGS) -MM $^>>./.depend;
 
 clean:
-	$(RM) $(OBJS) DemoUI
+	$(RM) $(OBJS) $(BINARY)
 
 distclean cleanall: clean
 	$(RM) *~ .depend core *.out *.bak
