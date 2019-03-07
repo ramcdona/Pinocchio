@@ -1,20 +1,20 @@
 /*
  * =====================================================================================
  *
- *       Filename:  quatinterface.cpp
+ *  Filename:  quatinterface.cpp
  *
- *    Description: We created the following file to help with the interfacing
- *	  between the different classes from pinocchio and the dual quaternion
- *	  skinning library. Since they both used data classes defined by themselves,
- *	  we had to convert between the different data classes. For example, while
- *	  Pinocchio uses the Vector3 class, the DQS library uses a Vec3 class.
+ *  Description: We created the following file to help with the interfacing
+ *               between the different classes from pinocchio and the dual quaternion
+ *               skinning library. Since they both used data classes defined by themselves,
+ *               we had to convert between the different data classes. For example, while
+ *               Pinocchio uses the Vector3 class, the DQS library uses a Vec3 class.
  *
- *        Version:  1.0
- *        Created:  03/14/2015 07:01:53 PM
- *       Revision:  none
- *       Compiler:  gcc
+ *  Version:  1.0
+ *  Created:  03/14/2015 07:01:53 PM
+ *  Revision:  none
+ *  Compiler:  gcc
  *
- *         Author: Group F, CMPUT414 Winter 2015
+ *  Author: Group F, CMPUT414 Winter 2015
  *
  * =====================================================================================
  */
@@ -25,7 +25,7 @@
 using namespace Tbx;
 
 /* 
- * GIven a transofrmation matrix, it converts it to a dual quaternion and returns that */
+ * Given a transofrmation matrix, it converts it to a dual quaternion and returns that */
 Dual_quat_cu getQuatFromMat(Transform<> matrix)
 {
   Mat3 mat3;
@@ -34,7 +34,7 @@ Dual_quat_cu getQuatFromMat(Transform<> matrix)
   Quaternion<double> quat;
   Dual_quat_cu dualQuat;
   Transfo transfo;
-  int x = 0, y = 1, z = 2;
+  //int x = 0, y = 1, z = 2;
 
   // Get translation from matrix, convert it to Vec3
   trans = matrix.getTrans();

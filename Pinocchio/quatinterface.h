@@ -1,17 +1,17 @@
 /*
  * =====================================================================================
  *
- *       Filename:  quatinterface.h
+ *  Filename:  quatinterface.h
  *
- *    Description: Header file for quatinterface.cpp. See the source file for details
- *                on different functions defined here.
+ *  Description: Header file for quatinterface.cpp. See the source file for details
+ *               on different functions defined here.
  *
- *        Version:  1.0
- *        Created:  03/14/2015 07:01:53 PM
- *       Revision:  none
- *       Compiler:  gcc
+ *  Version:  1.0
+ *  Created:  03/14/2015 07:01:53 PM
+ *  Revision:  none
+ *  Compiler:  gcc
  *
- *         Author:  Group F, CMPUT414 Winter 2015
+ *  Author:  Group F, CMPUT414 Winter 2015
  *
  * =====================================================================================
  */
