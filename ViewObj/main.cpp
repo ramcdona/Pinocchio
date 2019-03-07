@@ -17,6 +17,13 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include <fstream>
+
+#include "../Pinocchio/skeleton.h"
+#include "../Pinocchio/utils.h"
+#include "../Pinocchio/debugging.h"
+#include "../Pinocchio/attachment.h"
+#include "../Pinocchio/pinocchioApi.h"
 
 //
 // for parsing CL params
@@ -231,7 +238,73 @@ int main (int argc, char** argv) {
 		GLuint points_vbo, texcoord_vbo, normals_vbo;
 
 		assert (load_obj_file (obj_file_name, &vp, &vt, &vn, &point_count));
-	
+
+		// Calculate Skeleton and Attachment Values with Pinocchio
+		Mesh m(obj_file_name, Mesh::DQS);
+		Quaternion<> meshTransform;
+		double skelScale = 1.;
+		double stiffness = 1.;
+		bool fitSkeleton = true;
+		assert (m.vertices.size() != 0);
+		for (int i = 0; i < (int)m.vertices.size(); ++i) {
+			m.vertices[i].pos = meshTransform * m.vertices[i].pos;
+		}
+		m.normalizeBoundingBox();
+		m.computeVertexNormals();
+		std::string skeletonName("human");
+		Skeleton skeleton;
+		if (skeletonName == std::string("human")) {
+			skeleton = HumanSkeleton();
+		} else if (skeletonName == std::string("horse")) {
+			skeleton = HorseSkeleton();
+		} else if(skeletonName == std::string("quad")) {
+			skeleton = QuadSkeleton();
+		} else if(skeletonName == std::string("centaur")) {
+			skeleton = CentaurSkeleton();
+		} else {
+			skeleton = FileSkeleton(skeletonName);
+		}
+		Skeleton given = skeleton;
+		given.scale(skelScale * 0.7);
+		PinocchioOutput o;
+		if (fitSkeleton) {
+			o = autorig(given, m);
+		} else { // skip the fitting step--assume the skeleton is already correct for the mesh
+			TreeType *distanceField = constructDistanceField(m);
+			VisTester<TreeType> *tester = new VisTester<TreeType>(distanceField);
+			o.embedding = skeleton.fGraph().verts;
+			for (int i = 0; i < (int)o.embedding.size(); ++i) {
+				o.embedding[i] = m.toAdd + o.embedding[i] * m.scale;
+			}
+			o.attachment = new Attachment(m, skeleton, o.embedding, tester, stiffness);
+			delete tester;
+			delete distanceField;
+		}
+		assert (o.embedding.size() != 0);
+		// output skeleton embedding
+		std::string skelOutName("skeleton.out");
+		for (int i = 0; i < (int)o.embedding.size(); ++i) {
+			o.embedding[i] = (o.embedding[i] - m.toAdd) / m.scale;
+		}
+		std::ofstream os(skelOutName.c_str());
+		for (int i = 0; i < (int)o.embedding.size(); ++i) {
+			os << i << " " << o.embedding[i][0] << " " << o.embedding[i][1] <<
+			" " << o.embedding[i][2] << " " << skeleton.fPrev()[i] << std::endl;
+		}
+		// output attachment
+		std::string weightOutName("attachment.out");
+		std::ofstream astrm(weightOutName.c_str());
+		for (int i = 0; i < (int)m.vertices.size(); ++i) {
+			Vector<double, -1> v = o.attachment->getWeights(i);
+			for (int j = 0; j < v.size(); ++j) {
+				double d = floor(0.5 + v[j] * 10000.) / 10000.;
+				astrm << d << " ";
+			}
+			astrm << std::endl;
+		}
+		delete o.attachment;
+
+		// Set up OpenGL elements
 		glGenBuffers (1, &points_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
 		// copy our points from the header file into our VBO on graphics hardware
