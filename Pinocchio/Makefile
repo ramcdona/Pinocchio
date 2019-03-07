@@ -17,6 +17,7 @@ STATIC_OBJS = $(SOURCES:.cpp=.static.o)
 
 CC= gcc
 CXX= g++
+AR= ar
 RM= rm -f
 
 PKGCONFIG= pkg-config
@@ -42,6 +43,8 @@ LDFLAGS= \
 
 EXTRA_LDFLAGS=
 
+ARFLAGS= cr
+
 LIBS= $(shell $(PKGCONFIG) --libs $(PACKAGES) 2>/dev/null)
 
 $(LIBRARY).so.$(MAJOR).$(MINOR): $(SHARED_OBJS)
@@ -57,7 +60,7 @@ $(LIBRARY).so: $(LIBRARY).so.$(MAJOR).$(MINOR)
 	ln -s $@.$(MAJOR) $@
 
 $(LIBRARY).a: $(STATIC_OBJS)
-	ar cru $@ $+
+	$(AR) $(ARFLAGS) $@ $+
 
 %.shared.o: %.cpp
 	$(CXX) -o $@ -c $+ $(SHARED_CFLAGS)
