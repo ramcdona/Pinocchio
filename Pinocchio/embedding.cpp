@@ -99,7 +99,7 @@ const Skeleton &skeleton)
   for(i = 0; i < (int)graph.verts.size(); ++i)
     if(spheres[i].radius >= cutoff)
       fatVerts.push_back(i);
-  Debugging::out() << "Extrem, fat verts " << limbVerts.size() << " " << fatVerts.size() << endl;
+  Debugging::out() << "Extrem, fat verts " << limbVerts.size() << " " << fatVerts.size() << std::endl;
 
   for(i = 0; i < (int)out.size(); ++i)
   {
@@ -149,15 +149,15 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
 
   fp.footBase = 1.;
   for(i = 0; i < (int)graph.verts.size(); ++i)
-    fp.footBase = min(fp.footBase, graph.verts[i][1]);
+    fp.footBase = std::min(fp.footBase, graph.verts[i][1]);
 
   vector<PenaltyFunction *> penaltyFunctions = getPenaltyFunctions(&fp);
 
   int toMatch = skeleton.cGraph().verts.size();
 
-  Debugging::out() << "Matching!" << endl;
+  Debugging::out() << "Matching!" << std::endl;
 
-  priority_queue<PartialMatch> todo;
+  std::priority_queue<PartialMatch> todo;
 
   PartialMatch output(graph.verts.size());
   todo.push(output);
@@ -176,13 +176,13 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
     {
       maxSz = curSz;
       if(maxSz > 3)
-        Debugging::out() << "Reached " << todo.size() << endl;
+        Debugging::out() << "Reached " << todo.size() << std::endl;
     }
 
     if(idx == toMatch)
     {
       output = cur;
-      Debugging::out() << "Found: residual = " << cur.penalty << endl;
+      Debugging::out() << "Found: residual = " << cur.penalty << std::endl;
       break;
     }
 
@@ -193,7 +193,7 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
       double extraPenalty = computePenalty(penaltyFunctions, cur, candidate);
 
       if(extraPenalty < 0)
-        Debugging::out() << "ERR = " << extraPenalty << endl;
+        Debugging::out() << "ERR = " << extraPenalty << std::endl;
       if(cur.penalty + extraPenalty < 1.)
       {
         PartialMatch next = cur;
@@ -217,7 +217,7 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
           double minP = 1e37;
           for(k = 0; k < (int)possibilities[j].size(); ++k)
           {
-            minP = min(minP, computePenalty(penaltyFunctions, next, possibilities[j][k], j));
+            minP = std::min(minP, computePenalty(penaltyFunctions, next, possibilities[j][k], j));
           }
           next.heuristic += minP;
           if(next.heuristic > 1.)
@@ -234,7 +234,7 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
 
   if(output.match.size() == 0)
   {
-    Debugging::out() << "No Match" << endl;
+    Debugging::out() << "No Match" << std::endl;
   }
 
   for(i = 0; i < (int)penaltyFunctions.size(); ++i)
@@ -468,10 +468,10 @@ class SymPF : public PenaltyFunction
   //add end circles
         fp->sph[cur.match[v2]].radius);
 
-      double nocRatio = min(2., max(dist / (sDist + 1e-8), sDist / (dist + 1e-8)));
-      double ratio = max(sDist / distC, dist / sDistC);
+      double nocRatio = std::min(2., std::max(dist / (sDist + 1e-8), sDist / (dist + 1e-8)));
+      double ratio = std::max(sDist / distC, dist / sDistC);
 
-      return max(0., CUBE(nocRatio * 0.2 + ratio * 0.8) - 1.2);
+      return std::max(0., CUBE(nocRatio * 0.2 + ratio * 0.8) - 1.2);
     }
 };
 
@@ -498,14 +498,14 @@ class GlobalDotPF : public PenaltyFunction
           if(dot < 0.0)
             return NOMATCH;
 
-          out += 0.5 * max(0., SQR((1. - dot) * 4.) - 0.1);
+          out += 0.5 * std::max(0., SQR((1. - dot) * 4.) - 0.1);
         }
         else
         {
           if(dot < -0.5)
             return NOMATCH;
 
-          out += 0.5 * max(0., SQR((1. - dot) * 2.) - 0.5);
+          out += 0.5 * std::max(0., SQR((1. - dot) * 2.) - 0.5);
         }
       }
       return out;

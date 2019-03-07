@@ -51,7 +51,7 @@ class PINOCCHIO_API Mesh
 {
   public:
     Mesh() : scale(1.) {}
-    Mesh(const string &file, int algo=Mesh::LBS, float weight=1.);
+    Mesh(const std::string &file, int algo=Mesh::LBS, float weight=1.);
 
     bool integrityCheck() const;
   //returns true if the mesh consists of a single connected component
@@ -59,23 +59,23 @@ class PINOCCHIO_API Mesh
     void computeVertexNormals();
     void normalizeBoundingBox();
     void computeTopology();
-    void writeObj(const string &filename) const;
+    void writeObj(const std::string &filename) const;
 
   private:
-    void readObj(istream &strm);
-    void readOff(istream &strm);
-    void readPly(istream &strm);
-    void readGts(istream &strm);
-    void readStl(istream &strm);
+    void readObj(std::istream &strm);
+    void readOff(std::istream &strm);
+    void readPly(std::istream &strm);
+    void readGts(std::istream &strm);
+    void readStl(std::istream &strm);
     void fixDupFaces();
   //sort edges so that triplets forming faces are adjacent
     void sortEdges();
 
   //data
   public:
-    vector<MeshVertex> vertices;
+    std::vector<MeshVertex> vertices;
   //halfEdges, really
-    vector<MeshEdge> edges;
+    std::vector<MeshEdge> edges;
 
     Vector3 toAdd;
     double scale;

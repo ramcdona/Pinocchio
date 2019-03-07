@@ -19,7 +19,7 @@
 #include "graphutils.h"
 #include "debugging.h"
 
-#define CHECK(pred) { if(!(pred)) { Debugging::out() << "Graph integrity error: " #pred << " in line " << __LINE__ << endl; return false; } }
+#define CHECK(pred) { if(!(pred)) { Debugging::out() << "Graph integrity error: " #pred << " in line " << __LINE__ << std::endl; return false; } }
 
 bool PtGraph::integrityCheck() const
 {
@@ -52,7 +52,7 @@ bool PtGraph::integrityCheck() const
 ShortestPather::ShortestPather(const PtGraph &g, int root)
 {
   int sz = g.verts.size();
-  priority_queue<Inf> todo;
+  std::priority_queue<Inf> todo;
   vector<bool> done(sz, false);
   prev.resize(sz, -1);
   dist.resize(sz, -1);

@@ -60,16 +60,16 @@ template<class Real> Real computeFineError(const vector<Vector<Real, 3> > &match
       Vector3 m = rp->medProjector.project(cur);
       Real medDist = (cur - Vector<Real, 3>(m)).length();
       Real surfDist = -rp->distanceField->locate(cur)->evaluate(cur);
-      Real penalty = SQR(min(medDist, Real(0.001) + max(Real(0.), Real(0.05) - surfDist)));
+      Real penalty = SQR(std::min(medDist, Real(0.001) + std::max(Real(0.), Real(0.05) - surfDist)));
       if(penalty > Real(SQR(0.003)))
         surfPenalty += Real(1. / double(samples)) * penalty;
     }
 
     //---------------length
     Real optDistSq = (rp->given.fGraph().verts[i] - rp->given.fGraph().verts[prev]).lengthsq();
-    Real distSq = SQR(max(Real(-10.), (match[i] - match[prev]) *
+    Real distSq = SQR(std::max(Real(-10.), (match[i] - match[prev]) *
       (rp->given.fGraph().verts[i] - rp->given.fGraph().verts[prev]))) / optDistSq;
-    lenPenalty = max(Real(.5), (Real(0.0001) + optDistSq) / (Real(0.0001) + distSq));
+    lenPenalty = std::max(Real(.5), (Real(0.0001) + optDistSq) / (Real(0.0001) + distSq));
 
     //---------------sym
     if(rp->given.fSym()[i] != -1)
@@ -78,7 +78,7 @@ template<class Real> Real computeFineError(const vector<Vector<Real, 3> > &match
       int sp = rp->given.fPrev()[s];
 
       Real sDistSq = (match[s] - match[sp]).lengthsq();
-      symPenalty = max(Real(1.05), max(distSq / (Real(0.001) + sDistSq), sDistSq / (Real(0.001) + distSq)));
+      symPenalty = std::max(Real(1.05), std::max(distSq / (Real(0.001) + sDistSq), sDistSq / (Real(0.001) + distSq)));
     }
 
     //--------------angle
@@ -157,7 +157,7 @@ const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
     typedef Deriv<double, 6> DType;
     typedef Deriv<double, -1> DType1;
 
-    Debugging::out() << "E = " << computeFineError(fineEmbedding, &rp) << endl;
+    Debugging::out() << "E = " << computeFineError(fineEmbedding, &rp) << std::endl;
 
     for(int j = 0; j < 2; ++j)
     {

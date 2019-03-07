@@ -72,11 +72,11 @@ class Quaternion
     //quaternion multiplication
     Quaternion operator*(const Quaternion &q) const { return Quaternion(r * q.r - v * q.v, r * q.v + q.r * v + v % q.v); }
 
-    //transforming a vector
+    //transforming a std::vector
     Vector<Real, 3> operator*(const Vector<Real, 3> &p) const
     {
       Vector<Real, 3> v2 = v + v;
-      Vector<Real, 3> vsq2 = v.apply(multiplies<Real>(), v2);
+      Vector<Real, 3> vsq2 = v.apply(std::multiplies<Real>(), v2);
       Vector<Real, 3> rv2 = r * v2;
       Vector<Real, 3> vv2(v[1] * v2[2], v[0] * v2[2], v[0] * v2[1]);
       return Vector<Real, 3>(p[0] * (Real(1.) - vsq2[1] - vsq2[2]) + p[1] * (vv2[2] - rv2[2]) + p[2] * (vv2[1] + rv2[1]),
@@ -115,12 +115,12 @@ inline std::ostream& operator<<(std::ostream& os,
 const Quaternion<double> &obj)
 {
   // print angle
-  cout << "   Rotation Angle: " << obj.getAngle() << endl;
+  std::cout << "   Rotation Angle: " << obj.getAngle() << std::endl;
 
-  // print axis vector
+  // print axis std::vector
   Vector3 axis = obj.getAxis();
-  cout << " Rotation Axis (a vector): (" << axis[0] << " ," << axis[1] <<
-    " ," << axis[2] << ")" << endl;
+  std::cout << " Rotation Axis (a std::vector): (" << axis[0] << " ," << axis[1] <<
+    " ," << axis[2] << ")" << std::endl;
   return os;
 }
 
@@ -159,16 +159,16 @@ inline std::ostream& operator<<(std::ostream& os,
 const Transform<double> &obj)
 {
   // print rotation quaternion
-  cout << "Rotation Quaternion:\n " << obj.getRot() << endl;
+  std::cout << "Rotation Quaternion:\n " << obj.getRot() << std::endl;
 
-  // print scale vector
+  // print scale std::vector
   double scale = obj.getScale();
-  cout << "Scale: " << scale << endl;
+  std::cout << "Scale: " << scale << std::endl;
 
-  // print translation vector
+  // print translation std::vector
   Vector3 trans = obj.getTrans();
-  cout << "Translation Vector: (" << trans[0] << " ," <<
-    trans[1] << " ," << trans[2] << ")" << endl;
+  std::cout << "Translation Vector: (" << trans[0] << " ," <<
+    trans[1] << " ," << trans[2] << ")" << std::endl;
   return os;
 }
 
@@ -269,7 +269,7 @@ template<class Real = double> class Matrix3
 };
 
 template <class charT, class traits, class Real>
-basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& os, const Matrix3<Real> &m)
+std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Matrix3<Real> &m)
 {
   os << "[[" << m[0] << "," << m[1] << "," << m[2] << "]";
   os << "[" << m[3] << "," << m[4] << "," << m[5] << "]";

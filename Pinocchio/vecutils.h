@@ -47,7 +47,7 @@ void getBasis(const Vector<Real, 3> &n, Vector<Real, 3> &v1, Vector<Real, 3> &v2
 template<class Real, int Dim>
 Real distsqToLine(const Vector<Real, Dim> &v, const Vector<Real, Dim> &l, const Vector<Real, Dim> &dir)
 {
-  return max(Real(), (v - l).lengthsq() - SQR((v - l) * dir) / dir.lengthsq());
+  return std::max(Real(), (v - l).lengthsq() - SQR((v - l) * dir) / dir.lengthsq());
 }
 
 
@@ -75,7 +75,7 @@ Real distsqToSeg(const Vector<Real, Dim> &v, const Vector<Real, Dim> &p1, const 
   if(dot <= Real())
     return difp1.lengthsq();
 
-  return max(Real(), difp1.lengthsq() - SQR(dot) / dir.lengthsq());
+  return std::max(Real(), difp1.lengthsq() - SQR(dot) / dir.lengthsq());
 }
 
 

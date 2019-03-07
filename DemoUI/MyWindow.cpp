@@ -26,6 +26,8 @@ THE SOFTWARE.
 #include "MyWindow.h"
 #include "../Pinocchio/skeleton.h"
 
+using namespace std;
+
 static HumanSkeleton human;
 bool paused = false;
 

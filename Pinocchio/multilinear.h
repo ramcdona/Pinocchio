@@ -43,7 +43,7 @@ class Multilinear
       {
         Vector<Real, Dim> corner;
         BitComparator<Dim>::assignCorner(i, v, Vector<Real, Dim>(1.) - v, corner);
-        Real factor = corner.accumulate(ident<Real>(), multiplies<Real>());
+        Real factor = corner.accumulate(ident<Real>(), std::multiplies<Real>());
         out += (factor * Real(values[i]));
       }
       return out;

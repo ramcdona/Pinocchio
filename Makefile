@@ -33,6 +33,6 @@ bcpp:
 	done
 
 test:all
-	LD_LIBRARY_PATH=Pinocchio DemoUI/DemoUI DemoUI/data/test.obj -motion DemoUI/data/walk.txt
+	LD_LIBRARY_PATH=Pinocchio DemoUI/DemoUI DemoUI/data/test.obj -motion DemoUI/data/walk.txt -algo DQS
 
 .PHONY: all depend clean distclean bcpp test

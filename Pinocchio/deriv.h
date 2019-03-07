@@ -93,7 +93,7 @@ TWOVAR(atan2, y._x() / (SQR(x._x()) + SQR(y._x())), -x._x() / (SQR(x._x()) + SQR
 #undef DerivRV
 
 template <class charT, class traits, class Real, int Vars>
-basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& os, const Deriv<Real, Vars> &d)
+std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Deriv<Real, Vars> &d)
 {
   os << "Deriv(" << d._x() << ", " << d._d() << ")";
   return os;

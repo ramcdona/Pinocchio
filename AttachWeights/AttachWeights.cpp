@@ -11,6 +11,8 @@
 #include "../Pinocchio/attachment.h"
 #include "../Pinocchio/pinocchioApi.h"
 
+using namespace std;
+
 struct ArgData
 {
   ArgData() :

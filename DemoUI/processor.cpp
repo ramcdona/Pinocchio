@@ -32,6 +32,8 @@ THE SOFTWARE.
 #include "defmesh.h"
 #include "motion.h"
 
+using namespace std;
+
 struct ArgData
 {
   ArgData() :

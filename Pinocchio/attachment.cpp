@@ -100,7 +100,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
           const Vector3 &v1 = match[j],
             &v2 = match[skeleton.fPrev()[j]];
           boneDists[i][j - 1] = sqrt(distsqToSeg(cPos, v1, v2));
-          minDist = min(boneDists[i][j - 1], minDist);
+          minDist = std::min(boneDists[i][j - 1], minDist);
         }
         for(j = 1; j <= bones; ++j)
         {
@@ -120,7 +120,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
       //We have -Lw+Hw=HI, same as (H-L)w=HI, with (H-L)=DA (with
       //D=diag(1./area)) so w = A^-1 (HI/D)
 
-      vector<vector<pair<int, double> > > A(nv);
+      vector<vector<std::pair<int, double> > > A(nv);
       vector<double> D(nv, 0.), H(nv, 0.);
       vector<int> closest(nv, -1);
       for(i = 0; i < nv; ++i)
@@ -175,10 +175,10 @@ class AttachmentPrivate1 : public AttachmentPrivate
           // computed regardless
           if(edges[i][j] > i)
             continue;
-          A[i].push_back(make_pair(edges[i][j], -cot1 - cot2));
+          A[i].push_back(std::make_pair(edges[i][j], -cot1 - cot2));
         }
 
-        A[i].push_back(make_pair(i, sum + H[i] / D[i]));
+        A[i].push_back(std::make_pair(i, sum + H[i] / D[i]));
 
         sort(A[i].begin(), A[i].end());
       }
@@ -206,7 +206,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
     //clip just in case
             rhs[i] = 1.;
           if(rhs[i] > 1e-8)
-            nzweights[i].push_back(make_pair(j, rhs[i]));
+            nzweights[i].push_back(std::make_pair(j, rhs[i]));
         }
       }
 
@@ -429,7 +429,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
   private:
     vector<Vector<double, -1> > weights;
   //sparse representation
-    vector<vector<pair<int, double> > > nzweights;
+    vector<vector<std::pair<int, double> > > nzweights;
 };
 
 Attachment::~Attachment()

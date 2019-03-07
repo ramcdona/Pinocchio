@@ -89,21 +89,21 @@ class Rect
 
       bool contains(const Self &other) const
     {
-      return other.empty || !(empty || other.lo.accumulate(less<Real>(), logical_or<bool>(), lo) ||
-        hi.accumulate(less<Real>(), logical_or<bool>(), other.hi));
+      return other.empty || !(empty || other.lo.accumulate(std::less<Real>(), std::logical_or<bool>(), lo) ||
+        hi.accumulate(std::less<Real>(), std::logical_or<bool>(), other.hi));
     }
 
     bool contains(const Vec &other) const
     {
-      return !(empty || other.accumulate(less<Real>(), logical_or<bool>(), lo) ||
-        hi.accumulate(less<Real>(), logical_or<bool>(), other));
+      return !(empty || other.accumulate(std::less<Real>(), std::logical_or<bool>(), lo) ||
+        hi.accumulate(std::less<Real>(), std::logical_or<bool>(), other));
     }
 
     const Vec &getLo() const { return lo; }
     const Vec &getHi() const { return hi; }
     Vec getSize() const { return empty ? Vec() : hi - lo; }
 
-    Real getContent() const { return empty ? Real() : (hi - lo).accumulate(ident<Real>(), multiplies<Real>()); }
+    Real getContent() const { return empty ? Real() : (hi - lo).accumulate(ident<Real>(), std::multiplies<Real>()); }
     Real getDiagLength() const { return empty ? Real() : (hi - lo).length(); }
     Vec getCenter() const { return (lo + hi) / Real(2); }
 
@@ -121,7 +121,7 @@ class Rect
     template<class R, int D> friend class Rect;
 
     Rect(bool inEmpty, const Vec &inLo, const Vec &inHi) : empty(inEmpty), lo(inLo), hi(inHi) { }
-    void markEmpty() { empty = hi.accumulate(less<Real>(), logical_or<bool>(), lo); }
+    void markEmpty() { empty = hi.accumulate(std::less<Real>(), std::logical_or<bool>(), lo); }
 
     bool empty;
     Vec lo, hi;
@@ -131,7 +131,7 @@ typedef Rect<double, 2> Rect2;
 typedef Rect<double, 3> Rect3;
 
 template <class charT, class traits, class Real, int Dim>
-basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& os, const Rect<Real, Dim> &r)
+std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Rect<Real, Dim> &r)
 {
   if(r.isEmpty())
     os << "Rect()";

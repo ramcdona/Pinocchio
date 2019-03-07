@@ -27,11 +27,11 @@ static const int cells = 200;
 
 void Intersector::getIndex(const Vector2 &pt, int &x, int &y) const
 {
-  Vector2 c = (pt - bounds.getLo()).apply(divides<double>(), bounds.getSize());
+  Vector2 c = (pt - bounds.getLo()).apply(std::divides<double>(), bounds.getSize());
   x = int(c[0] * double(cells));
   y = int(c[0] * double(cells));
-  x = max(0, min(cells - 1, x));
-  y = max(0, min(cells - 1, y));
+  x = std::max(0, std::min(cells - 1, x));
+  y = std::max(0, std::min(cells - 1, y));
 }
 
 

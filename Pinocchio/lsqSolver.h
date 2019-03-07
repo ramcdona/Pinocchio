@@ -33,7 +33,7 @@ class LLTMatrix
 {
   public:
     virtual ~LLTMatrix() {}
-    virtual bool solve(vector<double> &b) const = 0;
+    virtual bool solve(std::vector<double> &b) const = 0;
     virtual int size() const = 0;
 };
 
@@ -45,15 +45,15 @@ class LLTMatrix
 class SPDMatrix
 {
   public:
-    SPDMatrix(const vector<vector<pair<int, double> > > &inM) : m(inM) {}
+    SPDMatrix(const std::vector<std::vector<std::pair<int, double> > > &inM) : m(inM) {}
     LLTMatrix *factor() const;
 
   private:
   //computes a fill-reduction permutation
-    vector<int> computePerm() const;
+    std::vector<int> computePerm() const;
 
   //rows -- lower triangle
-    vector<vector<pair<int, double> > > m;
+    std::vector<std::vector<std::pair<int, double> > > m;
 };
 
 /**
@@ -81,12 +81,12 @@ template<class V, class C> class LSQSystem
     LSQSystem() : factoredMatrix(NULL) {}
     ~LSQSystem() { if(factoredMatrix) delete factoredMatrix; }
 
-    void addConstraint(bool hard, const map<V, double> &lhs, const C &id)
+    void addConstraint(bool hard, const std::map<V, double> &lhs, const C &id)
     {
       constraints[make_pair(id, -1)] = Constraint(hard, lhs);
     }
 
-    void addConstraint(bool hard, double rhs, const map<V, double> &lhs)
+    void addConstraint(bool hard, double rhs, const std::map<V, double> &lhs)
     {
       constraints[make_pair(C(), (int)constraints.size())] = Constraint(hard, lhs, rhs);
     }
@@ -100,7 +100,7 @@ template<class V, class C> class LSQSystem
     bool factor()
     {
       int i;
-      typename map<pair<C, int>, Constraint>::iterator it;
+      typename std::map<std::pair<C, int>, Constraint>::iterator it;
 
       //This is a mess.  This function needs to assign indices to both variables and
       //constraints, row-reduce the hard-constraint matrix, and construct the soft constraint
@@ -133,8 +133,8 @@ template<class V, class C> class LSQSystem
       }
 
       //isolate hard constraints
-      vector<map<V, double> > hardConstraints;
-      vector<pair<C, int> > hardConstraintIds;
+      std::vector<std::map<V, double> > hardConstraints;
+      std::vector<std::pair<C, int> > hardConstraintIds;
       int hardNum = 0;
       for(it = constraints.begin(); it != constraints.end(); ++it)
       {
@@ -147,18 +147,18 @@ template<class V, class C> class LSQSystem
       }
 
   //"substitutions[x] = (y, 3.), (z, 2.)" means "x = 3y+2z + c"
-      map<V, map<V, double> > substitutions;
+      std::map<V, std::map<V, double> > substitutions;
   //the "c" in the above equation as a lin.comb. of rhs's
-      map<V, map<pair<C, int>, double> > substitutionsRhs;
+      std::map<V, std::map<std::pair<C, int>, double> > substitutionsRhs;
   //keeps track of which constraint a substitution came from
-      map<V, int> substitutionConstraintIdx;
-      vector<map<pair<C, int>, double> > hardRhs(hardConstraints.size());
+      std::map<V, int> substitutionConstraintIdx;
+      std::vector<std::map<std::pair<C, int>, double> > hardRhs(hardConstraints.size());
       for(i = 0; i < (int)hardConstraints.size(); ++i)
         hardRhs[i][hardConstraintIds[i]] = 1.;
       while(hardConstraints.size())
       {
-        typename map<V, double>::iterator it;
-        typename map<pair<C, int>, double>::iterator rit;
+        typename std::map<V, double>::iterator it;
+        typename std::map<std::pair<C, int>, double>::iterator rit;
         //find best variable and equation -- essentially pivoting
         V bestVar;
         int bestEq = -1;
@@ -200,8 +200,8 @@ template<class V, class C> class LSQSystem
         swap(hardRhs[bestEq], hardRhs.back());
         double factor = -1. / hardConstraints.back()[bestVar];
         //figure out the substitution
-        map<V, double> &curSub = substitutions[bestVar];
-        map<pair<C, int>, double> &curSubRhs = substitutionsRhs[bestVar];
+        std::map<V, double> &curSub = substitutions[bestVar];
+        std::map<std::pair<C, int>, double> &curSubRhs = substitutionsRhs[bestVar];
         for(it = hardConstraints.back().begin(); it != hardConstraints.back().end(); ++it)
         {
           if(it->first != bestVar)
@@ -228,7 +228,7 @@ template<class V, class C> class LSQSystem
         }
 
         //now substitute into the other substitutions
-        typename map<V, map<V, double> >::iterator sit;
+        typename std::map<V, std::map<V, double> >::iterator sit;
         for(sit = substitutions.begin(); sit != substitutions.end(); ++sit)
         {
           if(sit->second.count(bestVar) == 0)
@@ -238,7 +238,7 @@ template<class V, class C> class LSQSystem
           for(it = curSub.begin(); it != curSub.end(); ++it)
             sit->second[it->first] += it->second * varWeight;
           //and the rhs
-          map<pair<C, int>, double> &srhs = substitutionsRhs[sit->first];
+          std::map<std::pair<C, int>, double> &srhs = substitutionsRhs[sit->first];
           for(rit = curSubRhs.begin(); rit != curSubRhs.end(); ++rit)
           {
             srhs[rit->first] += rit->second * varWeight;
@@ -248,13 +248,13 @@ template<class V, class C> class LSQSystem
 
       //now that we know which variables are determined by hard constraints, give indices to the rest
   //maps variables to indices
-      map<V, int> varMap;
+      std::map<V, int> varMap;
       //variables from soft constraints first
       for(it = constraints.begin(); it != constraints.end(); ++it)
       {
         if(it->second.hard)
           continue;
-        typename map<V, double>::iterator it2;
+        typename std::map<V, double>::iterator it2;
         for(it2 = it->second.lhs.begin(); it2 != it->second.lhs.end(); ++it2)
         {
           if(varMap.count(it2->first) || substitutions.count(it2->first))
@@ -266,7 +266,7 @@ template<class V, class C> class LSQSystem
       int softVars = varIds.size();
       //then the hard constraint variables
       varIds.resize(softVars + hardNum);
-      typename map<V, map<V, double> >::iterator sit;
+      typename std::map<V, std::map<V, double> >::iterator sit;
       for(sit = substitutions.begin(); sit != substitutions.end(); ++sit)
       {
         int idx = substitutionConstraintIdx[sit->first] + softVars;
@@ -278,7 +278,7 @@ template<class V, class C> class LSQSystem
       substitutedHard.resize(substitutions.size());
       for(sit = substitutions.begin(); sit != substitutions.end(); ++sit)
       {
-        typename map<V, double>::iterator it;
+        typename std::map<V, double>::iterator it;
         int idx = substitutionConstraintIdx[sit->first];
         for(it = sit->second.begin(); it != sit->second.end(); ++it)
         {
@@ -290,28 +290,28 @@ template<class V, class C> class LSQSystem
       }
 
       //compute the softMatrix (and the rhs transform)
-  //the rhsTransform matrix as a map
-      vector<map<int, double> > rhsTransformMap(hardNum);
+  //the rhsTransform matrix as a std::map
+      std::vector<std::map<int, double> > rhsTransformMap(hardNum);
       softMatrix.resize(softNum);
       for(it = constraints.begin(); it != constraints.end(); ++it)
       {
         if(it->second.hard)
           continue;
-        map<V, double> modLhs = it->second.lhs;
-        typename map<V, double>::iterator it2, it3;
+        std::map<V, double> modLhs = it->second.lhs;
+        typename std::map<V, double>::iterator it2, it3;
         int idx = constraintMap[it->first];
         for(it2 = it->second.lhs.begin(); it2 != it->second.lhs.end(); ++it2)
         {
           if(substitutions.count(it2->first) == 0)
             continue;
           double fac = it2->second;
-          map<V, double> &curSub = substitutions[it2->first];
+          std::map<V, double> &curSub = substitutions[it2->first];
           for(it3 = curSub.begin(); it3 != curSub.end(); ++it3)
           {
             modLhs[it3->first] += fac * it3->second;
           }
-          map<pair<C, int>, double> &curRhsSub = substitutionsRhs[it2->first];
-          typename map<pair<C, int>, double>::iterator it4;
+          std::map<std::pair<C, int>, double> &curRhsSub = substitutionsRhs[it2->first];
+          typename std::map<std::pair<C, int>, double>::iterator it4;
           for(it4 = curRhsSub.begin(); it4 != curRhsSub.end(); ++it4)
           {
             rhsTransformMap[constraintMap[it4->first] - softNum][idx] -= fac * it4->second;
@@ -329,10 +329,10 @@ template<class V, class C> class LSQSystem
 
       //add the rhs transforms for the hard constraints
       //and get the rhsTransform into the right form
-      typename map<V, map<pair<C, int>, double> >::iterator rit;
+      typename std::map<V, std::map<std::pair<C, int>, double> >::iterator rit;
       for(rit = substitutionsRhs.begin(); rit != substitutionsRhs.end(); ++rit)
       {
-        typename map<pair<C, int>, double>::iterator it;
+        typename std::map<std::pair<C, int>, double>::iterator it;
         int idx = substitutionConstraintIdx[rit->first] + softNum;
         for(it = rit->second.begin(); it != rit->second.end(); ++it)
         {
@@ -341,15 +341,15 @@ template<class V, class C> class LSQSystem
       }
       for(i = 0; i < hardNum; ++i)
       {
-        rhsTransform.push_back(vector<pair<int, double> >(rhsTransformMap[i].begin(),
+        rhsTransform.push_back(std::vector<std::pair<int, double> >(rhsTransformMap[i].begin(),
           rhsTransformMap[i].end()));
       }
 
       //multiply the softMatrix by its transpose to get an SPDMatrix
   //the lower triangle of A^T * A
-      vector<vector<pair<int, double> > > spdm;
-  //the lower triangle of A^T * A as a map
-      vector<map<int, double> > spdMap(softVars);
+      std::vector<std::vector<std::pair<int, double> > > spdm;
+  //the lower triangle of A^T * A as a std::map
+      std::vector<std::map<int, double> > spdMap(softVars);
       for(i = 0; i < (int)softMatrix.size(); ++i)
       {
         int j, k;
@@ -360,7 +360,7 @@ template<class V, class C> class LSQSystem
         }
       }
       for(i = 0; i < softVars; ++i)
-        spdm.push_back(vector<pair<int, double> >(spdMap[i].begin(), spdMap[i].end()));
+        spdm.push_back(std::vector<std::pair<int, double> >(spdMap[i].begin(), spdMap[i].end()));
 
       //factor the SPDMatrix to get the LLTMatrix
       SPDMatrix spdMatrix(spdm);
@@ -376,8 +376,8 @@ template<class V, class C> class LSQSystem
     bool solve()
     {
       result.clear();
-      typename map<pair<C, int>, Constraint>::const_iterator it;
-      vector<double> rhs0, rhs1;
+      typename std::map<std::pair<C, int>, Constraint>::const_iterator it;
+      std::vector<double> rhs0, rhs1;
 
       //grab the rhs's of the constraints
       for(it = constraints.begin(); it != constraints.end(); ++it)
@@ -403,7 +403,7 @@ template<class V, class C> class LSQSystem
       }
 
       //multiply by A^T (as in (A^T A)^-1 x = A^T b )
-      vector<double> rhs2(factoredMatrix->size(), 0);
+      std::vector<double> rhs2(factoredMatrix->size(), 0);
   //i is row
       for(i = 0; i < (int)softMatrix.size(); ++i)
       {
@@ -449,28 +449,28 @@ template<class V, class C> class LSQSystem
     struct Constraint
     {
       Constraint() {}
-      Constraint(bool inHard, const map<V, double> &inLhs, double inRhs = 0.)
+      Constraint(bool inHard, const std::map<V, double> &inLhs, double inRhs = 0.)
         : hard(inHard), lhs(inLhs), rhs(inRhs) {}
 
       bool hard;
-      map<V, double> lhs;
+      std::map<V, double> lhs;
       double rhs;
     };
 
-    map<pair<C, int>, Constraint> constraints;
+    std::map<std::pair<C, int>, Constraint> constraints;
 
     //set during solve
-    map<V, double> result;
+    std::map<V, double> result;
 
     //variables set during factor
   //number of soft constraints
     int softNum;
   //first the variables softly solved for, then the ones substituted
-    vector<V> varIds;
-    map<pair<C, int>, int> constraintMap;
-    vector<vector<pair<int, double> > > substitutedHard;
-    vector<vector<pair<int, double> > > rhsTransform;
-    vector<vector<pair<int, double> > > softMatrix;
+    std::vector<V> varIds;
+    std::map<std::pair<C, int>, int> constraintMap;
+    std::vector<std::vector<std::pair<int, double> > > substitutedHard;
+    std::vector<std::vector<std::pair<int, double> > > rhsTransform;
+    std::vector<std::vector<std::pair<int, double> > > softMatrix;
     LLTMatrix *factoredMatrix;
 };
 

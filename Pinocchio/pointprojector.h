@@ -1,4 +1,4 @@
-/*  This file is part of the Pinocchio automatic rigging library.
+	/*  This file is part of the Pinocchio automatic rigging library.
     Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
 
     This library is free software; you can redistribute it and/or
@@ -60,10 +60,10 @@ class ObjectProjector
     typedef Rect<double, Dim> Rec;
 
     ObjectProjector() {}
-    ObjectProjector(const vector<Obj> &inObjs) : objs(inObjs)
+    ObjectProjector(const std::vector<Obj> &inObjs) : objs(inObjs)
     {
       int i, d;
-      vector<int> orders[Dim];
+      std::vector<int> orders[Dim];
 
       for(d = 0; d < Dim; ++d)
       {
@@ -83,8 +83,8 @@ class ObjectProjector
       Vec closestSoFar;
 
       int sz = 1;
-      static pair<double, int> todo[10000];
-      todo[0] = make_pair(rnodes[0].rect.distSqTo(from), 0);
+      static std::pair<double, int> todo[10000];
+      todo[0] = std::make_pair(rnodes[0].rect.distSqTo(from), 0);
 
       while(sz > 0)
       {
@@ -103,11 +103,11 @@ class ObjectProjector
         {
           double l1 = rnodes[c1].rect.distSqTo(from);
           if(l1 < minDistSq)
-            todo[sz++] = make_pair(l1, c1);
+            todo[sz++] = std::make_pair(l1, c1);
 
           double l2 = rnodes[c2].rect.distSqTo(from);
           if(l2 < minDistSq)
-            todo[sz++] = make_pair(l2, c2);
+            todo[sz++] = std::make_pair(l2, c2);
 
           if(sz >= 2 && todo[sz - 1].first > todo[sz - 2].first)
           {
@@ -116,7 +116,7 @@ class ObjectProjector
   //getting close to our array limit
           if(sz > 9995)
           {
-            Debugging::out() << "Large todo list, likely to fail" << endl;
+            Debugging::out() << "Large todo list, likely to fail" << std::endl;
           }
           continue;
         }
@@ -141,17 +141,17 @@ class ObjectProjector
       int child1, child2;
     };
 
-    const vector<RNode> &getRNodes() const { return rnodes; }
+    const std::vector<RNode> &getRNodes() const { return rnodes; }
 
   private:
 
     struct DL
     {
-      bool operator()(const pair<double, int> &p1,
-        const pair<double, int> &p2) const { return p1.first > p2.first; }
+      bool operator()(const std::pair<double, int> &p1,
+        const std::pair<double, int> &p2) const { return p1.first > p2.first; }
     };
 
-    int initHelper(vector<int> orders[Dim], int curDim = 0)
+    int initHelper(std::vector<int> orders[Dim], int curDim = 0)
     {
       int out = rnodes.size();
       rnodes.resize(out + 1);
@@ -166,8 +166,8 @@ class ObjectProjector
       else
       {
         int i, d;
-        vector<int> orders1[Dim], orders2[Dim];
-        set<int> left;
+        std::vector<int> orders1[Dim], orders2[Dim];
+        std::set<int> left;
         for(i = 0; i < num / 2; ++i)
           left.insert(orders[curDim][i]);
 
@@ -194,14 +194,14 @@ class ObjectProjector
     class DLess
     {
       public:
-        DLess(int inDim, const vector<Obj> &inObjs) : dim(inDim), objs(inObjs) {}
+        DLess(int inDim, const std::vector<Obj> &inObjs) : dim(inDim), objs(inObjs) {}
         bool operator()(int i1, int i2) { return objs[i1][dim] < objs[i2][dim]; }
       private:
         int dim;
-        const vector<Obj> &objs;
+        const std::vector<Obj> &objs;
     };
 
-    vector<RNode> rnodes;
-    vector<Obj> objs;
+    std::vector<RNode> rnodes;
+    std::vector<Obj> objs;
 };
 #endif

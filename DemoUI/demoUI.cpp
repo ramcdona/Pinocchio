@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include "motion.h"
 #include "shared.h"
 
+using namespace std;
+
 // Definition of global variable to record start times of animation runs
 unsigned long runStartTime;
 

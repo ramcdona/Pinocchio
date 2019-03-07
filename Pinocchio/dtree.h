@@ -45,7 +45,7 @@ class DNode : public Data
         return 0;
       int ml = 0;
       for(int i = 0; i < numChildren; ++i)
-        ml = max(ml, children[i]->maxLevel());
+        ml = std::max(ml, children[i]->maxLevel());
       return 1 + ml;
     }
 
@@ -105,7 +105,7 @@ class DRootNode : public DNode<Data, Dim>, public Indexer<DNode<Data, Dim>, Dim>
     typedef Vector<double, Dim> Vec;
     typedef Rect<double, Dim> MyRect;
 
-    DRootNode(MyRect r = MyRect(Vec(), Vec().apply(bind2nd(plus<double>(), 1.)))) : Node(r)
+    DRootNode(MyRect r = MyRect(Vec(), Vec().apply(bind2nd(std::plus<double>(), 1.)))) : Node(r)
     {
       MyIndexer::setRoot(this);
     }

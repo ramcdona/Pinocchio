@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #include "MyWindow.h"
 
-void process(const vector<string> &args, MyWindow *w);
+void process(const vector<std::string> &args, MyWindow *w);
 
 //PROCESSOR_H
 #endif

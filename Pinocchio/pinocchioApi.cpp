@@ -21,7 +21,7 @@
 #include <fstream>
 #include <sys/time.h>
 
-ostream *Debugging::outStream = new ofstream();
+std::ostream *Debugging::outStream = new std::ofstream();
 
 PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
 {

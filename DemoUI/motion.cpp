@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include <fstream>
 #include <sstream>
 
+using namespace std;
+
 Motion::Motion(const string &file) : fixedFrame(-1)
 {
   ifstream strm(file.c_str());

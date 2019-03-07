@@ -21,12 +21,12 @@
 
 namespace EigPrivate
 {
-  pair<int, double> findMaxAbs(const Vectorn<double> &vec, int maxElem)
+  std::pair<int, double> findMaxAbs(const Vectorn<double> &vec, int maxElem)
   {
-    pair<int, double> out = make_pair(0, fabs(vec[0]));
+    std::pair<int, double> out = std::make_pair(0, fabs(vec[0]));
     for(int i = 1; i < maxElem; ++i)
       if(vec[i] > out.second)
-        out = make_pair(i, fabs(vec[i]));
+        out = std::make_pair(i, fabs(vec[i]));
     return out;
   }
 
@@ -109,26 +109,26 @@ Vectorn<double> getEigensystem(Matrixn<double> m, Matrixn<double> *vectors)
     double biggestSoFar = -1;
     for(i = 0; i < sz; ++i) for(j = 0; j < i; ++j)
     {
-      biggestSoFar = max(biggestSoFar, fabs(m[i][j]));
+      biggestSoFar = std::max(biggestSoFar, fabs(m[i][j]));
       jacobi(i, j, m, vectors);
     }
     if(biggestSoFar < tol)
       break;
   }
-  Debugging::out() << iter << endl;
+  Debugging::out() << iter << std::endl;
 
   Vectorn<double> out(sz);
   for(i = 0; i < sz; ++i)
     out[i] = m[i][i];
 
   //now sort by decreasing eigenvalue
-  vector<pair<double, int> > perm;
+  std::vector<std::pair<double, int> > perm;
   for(i = 0; i < sz; ++i)
   {
-    perm.push_back(make_pair(fabs(out[i]), i));
+    perm.push_back(std::make_pair(fabs(out[i]), i));
   }
   sort(perm.begin(), perm.end());
-  reverse(perm.begin(), perm.end());
+  std::reverse(perm.begin(), perm.end());
   Vectorn<double> oldOut = out;
 
   if(!vectors)

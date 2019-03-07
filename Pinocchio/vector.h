@@ -26,8 +26,6 @@
 #include "hashutils.h"
 #include "mathutils.h"
 
-using namespace std;
-
 namespace _VectorPrivate
 {
   template <int Dim> class VecOp;
@@ -67,13 +65,13 @@ class Vector
       { return VO::accumulate(op, accum, *this, other); }
 
     //operators
-    Real operator*(const Self &other) const { return accumulate(multiplies<Real>(), plus<Real>(), other); }
-    Self operator+(const Self &other) const { return apply(plus<Real>(), other); }
-    Self operator-(const Self &other) const { return apply(minus<Real>(), other); }
-    Self operator*(const Real &scalar) const { return apply(bind2nd(multiplies<Real>(), scalar)); }
-    Self operator/(const Real &scalar) const { return apply(bind2nd(divides<Real>(), scalar)); }
-    Self operator-() const { return apply(negate<Real>()); }
-    bool operator==(const Self &other) const { return accumulate(equal_to<Real>(), logical_and<Real>(), other); }
+    Real operator*(const Self &other) const { return accumulate(std::multiplies<Real>(), std::plus<Real>(), other); }
+    Self operator+(const Self &other) const { return apply(std::plus<Real>(), other); }
+    Self operator-(const Self &other) const { return apply(std::minus<Real>(), other); }
+    Self operator*(const Real &scalar) const { return apply(bind2nd(std::multiplies<Real>(), scalar)); }
+    Self operator/(const Real &scalar) const { return apply(bind2nd(std::divides<Real>(), scalar)); }
+    Self operator-() const { return apply(std::negate<Real>()); }
+    bool operator==(const Self &other) const { return accumulate(std::equal_to<Real>(), std::logical_and<Real>(), other); }
 
   #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
     OPAS(+, Self)
@@ -104,7 +102,7 @@ class Vector<Real, -1>
 
     Vector() { }
     Vector(const Self &other) : m(other.m) { }
-    Vector(const vector<Real> &inM) : m(inM) { }
+    Vector(const std::vector<Real> &inM) : m(inM) { }
     explicit Vector(const Real &inM) { m.push_back(inM); }
 
     Real &operator[](int n) { if((int)m.size() <= n) m.resize(n + 1); return m[n]; }
@@ -113,14 +111,14 @@ class Vector<Real, -1>
     //basic recursive functions
     template<class F> Vector<typename F::result_type, -1> apply(const F &func) const
     {
-      vector<typename F::result_type> out(m.size());
+      std::vector<typename F::result_type> out(m.size());
       transform(m.begin(), m.end(), out.begin(), func);
       return Vector<typename F::result_type, -1>(out);
     }
 
     template<class F> Vector<typename F::result_type, -1> apply(const F &func, const Self &other) const
     {
-      vector<typename F::result_type> out(max(m.size(), other.m.size()));
+      std::vector<typename F::result_type> out(std::max(m.size(), other.m.size()));
       if(m.size() == other.m.size())
         transform(m.begin(), m.end(), other.m.begin(), out.begin(), func);
       else if(m.size() < other.m.size())
@@ -173,12 +171,12 @@ class Vector<Real, -1>
     }
 
     //operators
-    Real operator*(const Self &other) const { return accumulate(multiplies<Real>(), plus<Real>(), other); }
-    Self operator+(const Self &other) const { return apply(plus<Real>(), other); }
-    Self operator-(const Self &other) const { return apply(minus<Real>(), other); }
-    Self operator*(const Real &scalar) const { return apply(bind2nd(multiplies<Real>(), scalar)); }
-    Self operator/(const Real &scalar) const { return apply(bind2nd(divides<Real>(), scalar)); }
-    Self operator-() const { return apply(negate<Real>()); }
+    Real operator*(const Self &other) const { return accumulate(std::multiplies<Real>(), std::plus<Real>(), other); }
+    Self operator+(const Self &other) const { return apply(std::plus<Real>(), other); }
+    Self operator-(const Self &other) const { return apply(std::minus<Real>(), other); }
+    Self operator*(const Real &scalar) const { return apply(bind2nd(std::multiplies<Real>(), scalar)); }
+    Self operator/(const Real &scalar) const { return apply(bind2nd(std::divides<Real>(), scalar)); }
+    Self operator-() const { return apply(std::negate<Real>()); }
 
   #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
     OPAS(+, Self)
@@ -195,7 +193,7 @@ class Vector<Real, -1>
     int size() const { return m.size(); }
 
   private:
-    vector<Real> m;
+    std::vector<Real> m;
 };
 
 template <class Real, int Dim>
@@ -220,7 +218,7 @@ typedef Vector<double, 3> Vector3;
 typedef Vector<double, 2> Vector2;
 
 template <class charT, class traits, class Real, int Dim>
-basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& os, const Vector<Real, Dim> &v)
+std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Vector<Real, Dim> &v)
 {
   os << "[";
   int ms = Dim;
@@ -327,7 +325,7 @@ template<int Dim> class BitComparator
     typedef BitComparator<Dim - 1> Next;
 
     template<class R, int D> static unsigned int less(const VRD &v1, const VRD &v2)
-      { return ((v1[last] < v2[last]) ? (1 << last) : 0) + Next::less(v1, v2); }
+      { return ((v1[last] < v2[last]) ? (1 << last) : 0) + Next::std::less(v1, v2); }
 
     template<class R, int D> static void assignCorner(int idx, const VRD &v1, const VRD &v2, VRD &out)
       { out[last] = (idx & (1 << last)) ? v1[last] : v2[last]; Next::assignCorner(idx, v1, v2, out); }

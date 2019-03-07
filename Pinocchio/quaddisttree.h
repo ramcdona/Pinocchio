@@ -129,7 +129,7 @@ class DistData : public DistFunction<Dim>
     {
       if(node->getChild(0) == NULL)
       {
-        return super::evaluate((v - node->getRect().getLo()).apply(divides<Real>(),
+        return super::evaluate((v - node->getRect().getLo()).apply(std::divides<Real>(),
           node->getRect().getSize()));
       }
       Vector<Real, Dim> center = node->getRect().getCenter();
@@ -148,8 +148,8 @@ class DistData : public DistFunction<Dim>
       if(node->getChild(0) == NULL)
       {
         Vector<Real, Dim> corner = node->getRect().getLo(), size = node->getRect().getSize();
-        Rect<Real, Dim> adjRect((r.getLo() - corner).apply(divides<Real>(), size),
-          (r.getHi() - corner).apply(divides<Real>(), size));
+        Rect<Real, Dim> adjRect((r.getLo() - corner).apply(std::divides<Real>(), size),
+          (r.getHi() - corner).apply(std::divides<Real>(), size));
         return Real(node->getRect().getContent()) * super::integrate(adjRect);
       }
       Real out = Real();
@@ -238,7 +238,7 @@ template<class RootNode = OctTreeRoot> class OctTreeMaker
           if(!ins)
           {
             ins = 1;
-            vector<Vector3> isecs = mint.intersect(vec);
+            std::vector<Vector3> isecs = mint.intersect(vec);
             for(i = 0; i < (int)isecs.size(); ++i)
             {
               if(isecs[i][0] > vec[0])
@@ -249,7 +249,7 @@ template<class RootNode = OctTreeRoot> class OctTreeMaker
           return (vec - proj.project(vec)).length() * ins;
         }
 
-        mutable map<unsigned int, double> cache;
+        mutable std::map<unsigned int, double> cache;
         const ObjectProjector<3, Tri3Object> &proj;
         Intersector mint;
         mutable Rect3 rects[11];

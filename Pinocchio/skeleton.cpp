@@ -101,7 +101,7 @@ void Skeleton::scale(double factor)
 }
 
 
-void Skeleton::makeJoint(const string &name, const Vector3 &pos, const string &previous)
+void Skeleton::makeJoint(const std::string &name, const Vector3 &pos, const std::string &previous)
 {
   int cur = fSymV.size();
   fSymV.push_back(-1);
@@ -110,7 +110,7 @@ void Skeleton::makeJoint(const string &name, const Vector3 &pos, const string &p
   fGraphV.edges.resize(cur + 1);
   jointNames[name] = cur;
 
-  if(previous == string(""))
+  if(previous == std::string(""))
   {
     fPrevV.push_back(-1);
 //add a bone
@@ -125,25 +125,25 @@ void Skeleton::makeJoint(const string &name, const Vector3 &pos, const string &p
 }
 
 
-void Skeleton::makeSymmetric(const string &name1, const string &name2)
+void Skeleton::makeSymmetric(const std::string &name1, const std::string &name2)
 {
   int i1 = jointNames[name1];
   int i2 = jointNames[name2];
 
   if(i1 > i2)
-    swap(i1, i2);
+    std::swap(i1, i2);
   fSymV[i2] = i1;
 }
 
 
-void Skeleton::setFoot(const string &name)
+void Skeleton::setFoot(const std::string &name)
 {
   int i = jointNames[name];
   cFeetV[fcMapV[i]] = true;
 }
 
 
-void Skeleton::setFat(const string &name)
+void Skeleton::setFat(const std::string &name)
 {
   int i = jointNames[name];
   cFatV[fcMapV[i]] = true;
@@ -155,45 +155,27 @@ void Skeleton::setFat(const string &name)
 HumanSkeleton::HumanSkeleton()
 {
   //order of makeJoint calls is very important
-//0
   makeJoint("shoulders",  Vector3(0., 0.5, 0.));
-//1
   makeJoint("back",       Vector3(0., 0.15, 0.),      "shoulders");
-//2
   makeJoint("hips",       Vector3(0., 0., 0.),        "back");
-//3
   makeJoint("head",       Vector3(0., 0.7, 0.),       "shoulders");
 
-//4
   makeJoint("lthigh",     Vector3(-0.1, 0., 0.),      "hips");
-//5
   makeJoint("lknee",      Vector3(-0.15, -0.35, 0.),  "lthigh");
-//6
   makeJoint("lankle",      Vector3(-0.15, -0.8, 0.),  "lknee");
-//7
   makeJoint("lfoot",      Vector3(-0.15, -0.8, 0.1),  "lankle");
 
-//8
   makeJoint("rthigh",     Vector3(0.1, 0., 0.),       "hips");
-//9
   makeJoint("rknee",      Vector3(0.15, -0.35, 0.),   "rthigh");
-//10
   makeJoint("rankle",      Vector3(0.15, -0.8, 0.),   "rknee");
-//11
   makeJoint("rfoot",      Vector3(0.15, -0.8, 0.1),   "rankle");
 
-//12
   makeJoint("lshoulder",  Vector3(-0.2, 0.5, 0.),     "shoulders");
-//13
   makeJoint("lelbow",     Vector3(-0.4, 0.25, 0.075), "lshoulder");
-//14
   makeJoint("lhand",      Vector3(-0.6, 0.0, 0.15),   "lelbow");
 
-//15
   makeJoint("rshoulder",  Vector3(0.2, 0.5, 0.),      "shoulders");
-//16
   makeJoint("relbow",     Vector3(0.4, 0.25, 0.075),  "rshoulder");
-//17
   makeJoint("rhand",      Vector3(0.6, 0.0, 0.15),    "relbow");
 
   //symmetry
@@ -410,17 +392,17 @@ CentaurSkeleton::CentaurSkeleton()
 
 FileSkeleton::FileSkeleton(const std::string &filename)
 {
-  ifstream strm(filename.c_str());
+  std::ifstream strm(filename.c_str());
 
   if(!strm.is_open())
   {
-    Debugging::out() << "Error opening file " << filename << endl;
+    Debugging::out() << "Error opening file " << filename << std::endl;
     return;
   }
 
   while(!strm.eof())
   {
-    vector<string> line = readWords(strm);
+    vector<std::string> line = readWords(strm);
     if(line.size() < 5)
   //error
       continue;

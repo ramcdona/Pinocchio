@@ -76,14 +76,14 @@ class PINOCCHIO_API Attachment
   public:
     Attachment() : a(NULL) {}
     Attachment(const Attachment &);
-    Attachment(const Mesh &mesh, const Skeleton &skeleton, const vector<Vector3> &match, const VisibilityTester *tester, double initialHeatWeight=1.);
+    Attachment(const Mesh &mesh, const Skeleton &skeleton, const std::vector<Vector3> &match, const VisibilityTester *tester, double initialHeatWeight=1.);
 
     virtual ~Attachment();
 
-    Mesh deform(const Mesh &mesh, const vector<Transform<> > &transforms) const;
-    Mesh mixedBlend(const Mesh &mesh, const vector<Transform<> > &transforms) const;
-    Mesh linearBlend(const Mesh &mesh, const vector<Transform<> > &transforms) const;
-    Mesh dualQuaternion(const Mesh &mesh, const vector<Transform<> > &transforms) const;
+    Mesh deform(const Mesh &mesh, const std::vector<Transform<> > &transforms) const;
+    Mesh mixedBlend(const Mesh &mesh, const std::vector<Transform<> > &transforms) const;
+    Mesh linearBlend(const Mesh &mesh, const std::vector<Transform<> > &transforms) const;
+    Mesh dualQuaternion(const Mesh &mesh, const std::vector<Transform<> > &transforms) const;
     Vector<double, -1> getWeights(int i) const;
   private:
     AttachmentPrivate *a;

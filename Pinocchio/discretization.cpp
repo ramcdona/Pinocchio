@@ -29,7 +29,7 @@ Mesh  prepareMesh(const Mesh &m)
   if(!m.isConnected())
   {
     Debugging::out() <<
-      "Bad mesh: should be a single connected component" << endl;
+      "Bad mesh: should be a single connected component" << std::endl;
     return Mesh();
   }
 
@@ -44,7 +44,7 @@ Mesh  prepareMesh(const Mesh &m)
 //output
 TreeType *constructDistanceField(const Mesh &m, double tol)
 {
-  vector<Tri3Object> triobjvec;
+  std::vector<Tri3Object> triobjvec;
   for(int i = 0; i < (int)m.edges.size(); i += 3)
   {
     Vector3 v1 = m.vertices[m.edges[i].vertex].pos;
@@ -59,7 +59,7 @@ TreeType *constructDistanceField(const Mesh &m, double tol)
   TreeType *out = OctTreeMaker<TreeType>().make(proj, m, tol);
 
   Debugging::out() << "Done fullSplit " <<
-    out->countNodes() << " " << out->maxLevel() << endl;
+    out->countNodes() << " " << out->maxLevel() << std::endl;
 
   return out;
 }
@@ -71,7 +71,7 @@ double getMinDot(TreeType *distanceField, const Vector3 &c, double step)
   typedef Vector<D, 3> VD;
 
   int i, j;
-  vector<Vector3> vecs;
+  std::vector<Vector3> vecs;
   vecs.push_back(Vector3(step, step, step));
   vecs.push_back(Vector3(step, step, -step));
   vecs.push_back(Vector3(step, -step, step));
@@ -95,7 +95,7 @@ double getMinDot(TreeType *distanceField, const Vector3 &c, double step)
 
   for(i = 1; i < (int)vecs.size(); ++i) for(j = 0; j < i; ++j)
   {
-    minDot = min(minDot, vecs[i] * vecs[j]);
+    minDot = std::min(minDot, vecs[i] * vecs[j]);
   }
 
   return minDot;
@@ -110,12 +110,12 @@ bool sphereComp(const Sphere &s1, const Sphere &s2)
 
 //samples the distance field to find spheres on the medial surface
 //output is sorted by radius in decreasing order
-vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
+std::vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
 {
   int i;
-  vector<Sphere> out;
+  std::vector<Sphere> out;
 
-  vector<OctTreeNode *> todo;
+  std::vector<OctTreeNode *> todo;
   todo.push_back(distanceField);
   int inTodo = 0;
   while(inTodo < (int)todo.size())
@@ -142,7 +142,7 @@ vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
     //we are likely near medial surface
     double step = tol;
     double x, y;
-    vector<Vector3> pts;
+    std::vector<Vector3> pts;
     double sz = r.getSize()[0];
     for(x = 0; x <= sz; x += step) for(y = 0; y <= sz; y += step)
     {
@@ -169,7 +169,7 @@ vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
     }
   }
 
-  Debugging::out() << "Medial axis points = " << out.size() << endl;
+  Debugging::out() << "Medial axis points = " << out.size() << std::endl;
 
   sort(out.begin(), out.end(), sphereComp);
 
@@ -177,11 +177,11 @@ vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
 }
 
 
-//takes sorted medial surface samples and sparsifies the vector
-vector<Sphere> packSpheres(const vector<Sphere> &samples, int maxSpheres)
+//takes sorted medial surface samples and sparsifies the std::vector
+std::vector<Sphere> packSpheres(const std::vector<Sphere> &samples, int maxSpheres)
 {
   int i, j;
-  vector<Sphere> out;
+  std::vector<Sphere> out;
 
   for(i = 0; i < (int)samples.size(); ++i)
   {
@@ -211,7 +211,7 @@ const Vector3 &v2, double maxAllowed)
   for(int k = 0; k < 101; ++k)
   {
     Vector3 pt = v1 + diff * double(k);
-    maxDist = max(maxDist, distanceField->locate(pt)->evaluate(pt));
+    maxDist = std::max(maxDist, distanceField->locate(pt)->evaluate(pt));
     if(maxDist > maxAllowed)
       break;
   }
@@ -221,7 +221,7 @@ const Vector3 &v2, double maxAllowed)
 
 //constructs graph on packed sphere centers
 PtGraph connectSamples(TreeType *distanceField,
-const vector<Sphere> &spheres)
+const std::vector<Sphere> &spheres)
 {
   int i, j;
   PtGraph out;
@@ -254,7 +254,7 @@ const vector<Sphere> &spheres)
     if(k < (int)spheres.size())
       continue;
     //every point on edge should be at least this far in:
-    double maxAllowed = -.5 * min(spheres[i].radius, spheres[j].radius);
+    double maxAllowed = -.5 * std::min(spheres[i].radius, spheres[j].radius);
     if(getMaxDist(distanceField, spheres[i].center,
       spheres[j].center, maxAllowed) < maxAllowed)
     {

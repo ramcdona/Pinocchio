@@ -167,8 +167,8 @@ template<class Node, int Level> class HashIndex
 
     Node *lookup(unsigned int idx) const
     {
-      const pair<int, Node *> &p = nodeMap[(idx >> (Level - bits))];
-      //const pair<int, Node *> &p = nodeMap[idx % num];
+      const std::pair<int, Node *> &p = nodeMap[(idx >> (Level - bits))];
+      //const std::pair<int, Node *> &p = nodeMap[idx % num];
       return p.first == idx ? p.second : NULL;
     }
 
@@ -177,7 +177,7 @@ template<class Node, int Level> class HashIndex
     //static const int num = 75437;
 
   private:
-    pair<int, Node *> nodeMap[num];
+    std::pair<int, Node *> nodeMap[num];
 };
 
 template<class Node, int Dim>

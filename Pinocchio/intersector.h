@@ -28,7 +28,7 @@ class PINOCCHIO_API Intersector
     Intersector() : mesh(NULL) {}
     Intersector(const Mesh &m, const Vector3 &inDir) : mesh(&m), dir(inDir) { init(); }
 
-    vector<Vector3> intersect(const Vector3 &pt, vector<int> *outIndices = NULL) const;
+    std::vector<Vector3> intersect(const Vector3 &pt, std::vector<int> *outIndices = NULL) const;
     const Vector3 &getDir() const { return dir; }
   private:
     void init();
@@ -41,10 +41,10 @@ class PINOCCHIO_API Intersector
   //within the basis
     Rect2 bounds;
 
-    vector<Vector2> points;
+    std::vector<Vector2> points;
   //they are scaled for intersection
-    vector<Vector3> sNormals;
-    vector<vector<int> > triangles;
+    std::vector<Vector3> sNormals;
+    std::vector<std::vector<int> > triangles;
 };
 
 //INTERSECTOR_H

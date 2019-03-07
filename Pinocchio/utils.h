@@ -23,43 +23,43 @@
 #include <sstream>
 
 template <class T>
-inline string toString(const T& obj)
+inline std::string toString(const T& obj)
 {
-  ostringstream stream;
+  std::ostringstream stream;
   stream << obj;
   return stream.str();
 }
 
 
-inline vector<string> readWords(istream &stream)
+inline std::vector<std::string> readWords(std::istream &stream)
 {
-  string whitespace = " \n\t\r";
-  stream >> noskipws;
+  std::string whitespace = " \n\t\r";
+  stream >> std::noskipws;
 
   char tmp[10000];
   stream.getline(tmp, 9990);
-  string line(tmp);
+  std::string line(tmp);
 
   if(line.size() == 0)
-    return vector<string>();
+    return std::vector<std::string>();
 
   while(line[line.size() - 1] == '\\')
   {
     line[line.size() - 1] = ' ';
     stream.getline(tmp, 9990);
-    line = line + string(tmp);
+    line = line + std::string(tmp);
   }
 
   //split the line into words
-  vector<string> words;
-  string::size_type pos = 0;
-  while(pos != string::npos)
+  std::vector<std::string> words;
+  std::string::size_type pos = 0;
+  while(pos != std::string::npos)
   {
     pos = line.find_first_not_of(whitespace, pos);
-    if(pos == string::npos)
+    if(pos == std::string::npos)
       break;
-    string::size_type eow = line.find_first_of(whitespace, pos);
-    words.push_back(string(line, pos, eow - pos));
+    std::string::size_type eow = line.find_first_of(whitespace, pos);
+    words.push_back(std::string(line, pos, eow - pos));
     pos = eow;
   }
 

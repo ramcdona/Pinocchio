@@ -29,7 +29,7 @@ THE SOFTWARE.
 class Motion
 {
   public:
-    Motion(const string &filename);
+    Motion(const std::string &filename);
 
     bool empty() const { return data.empty(); }
     vector<Transform<> > get() const;
@@ -42,7 +42,7 @@ class Motion
     void setFixedFrame(int inFrame) { fixedFrame = inFrame < 0 ? -1 : (int)(inFrame % data.size()); }
   private:
     int getFrameIdx() const;
-    void readH(istream &strm);
+    void readH(std::istream &strm);
     vector<vector<Transform<> > > data;
     vector<vector<Vector3> > poses;
     vector<Vector3> refPose;

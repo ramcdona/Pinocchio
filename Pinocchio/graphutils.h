@@ -24,8 +24,8 @@
 
 struct PtGraph
 {
-  vector<Vector3> verts;
-  vector<vector<int> > edges;
+  std::vector<Vector3> verts;
+  std::vector<std::vector<int> > edges;
 
   bool integrityCheck() const;
 };
@@ -35,9 +35,9 @@ class ShortestPather
   public:
     ShortestPather(const PtGraph &g, int root);
 
-    vector<int> pathFrom(int vtx) const
+    std::vector<int> pathFrom(int vtx) const
     {
-      vector<int> out(1, vtx);
+      std::vector<int> out(1, vtx);
       while(prev[vtx] >= 0)
         out.push_back(vtx = prev[vtx]);
       return out;
@@ -53,8 +53,8 @@ class ShortestPather
       int node, prev;
     };
 
-    vector<int> prev;
-    vector<double> dist;
+    std::vector<int> prev;
+    std::vector<double> dist;
 };
 
 class AllShortestPather
@@ -68,10 +68,10 @@ class AllShortestPather
         paths.push_back(ShortestPather(g, i));
     }
 
-    vector<int> path(int from, int to) const { return paths[to].pathFrom(from); }
+    std::vector<int> path(int from, int to) const { return paths[to].pathFrom(from); }
     double dist(int from, int to) const { return paths[to].distFrom(from); }
 
   private:
-    vector<ShortestPather> paths;
+    std::vector<ShortestPather> paths;
 };
 #endif

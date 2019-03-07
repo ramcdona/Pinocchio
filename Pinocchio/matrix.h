@@ -27,17 +27,17 @@
 #include "mathutils.h"
 
 template<class Real>
-class Vectorn : public vector<Real>
+class Vectorn : public std::vector<Real>
 {
   public:
     typedef Vectorn<Real> Self;
-    typedef vector<Real> super;
+    typedef std::vector<Real> super;
 
     Vectorn() {}
     Vectorn(const Vectorn &other) : super(other) {}
     Vectorn(int sz, const Real &init = Real()) : super(sz, init) {}
 
-    template<class R> Vectorn(const vector<R> &other) : super(other.begin(), other.end()) {}
+    template<class R> Vectorn(const std::vector<R> &other) : super(other.begin(), other.end()) {}
     template<class Iter> Vectorn(const Iter &from, const Iter &to) : super(from, to) {}
 
     using super::size;
@@ -83,13 +83,13 @@ class Vectorn : public vector<Real>
       return out;
     }
 
-    Real operator*(const Self &other) const { return accumulate(multiplies<Real>(), plus<Real>(), other); }
-    Self operator+(const Self &other) const { return apply(plus<Real>(), other); }
-    Self operator-(const Self &other) const { return apply(minus<Real>(), other); }
-    Self operator*(const Real &scalar) const { return apply(bind2nd(multiplies<Real>(), scalar)); }
-    Self operator/(const Real &scalar) const { return apply(bind2nd(divides<Real>(), scalar)); }
-    Self operator-() const { return apply(negate<Real>()); }
-    bool operator==(const Self &other) const { return accumulate(equal_to<Real>(), logical_and<Real>(), other); }
+    Real operator*(const Self &other) const { return accumulate(std::multiplies<Real>(), std::plus<Real>(), other); }
+    Self operator+(const Self &other) const { return apply(std::plus<Real>(), other); }
+    Self operator-(const Self &other) const { return apply(std::minus<Real>(), other); }
+    Self operator*(const Real &scalar) const { return apply(bind2nd(std::multiplies<Real>(), scalar)); }
+    Self operator/(const Real &scalar) const { return apply(bind2nd(std::divides<Real>(), scalar)); }
+    Self operator-() const { return apply(std::negate<Real>()); }
+    bool operator==(const Self &other) const { return accumulate(std::equal_to<Real>(), std::logical_and<Real>(), other); }
 
   #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
     OPAS(+, Self)
@@ -101,14 +101,14 @@ class Vectorn : public vector<Real>
       Real lengthsq() const { return (*this) * (*this); }
     Real length() const { return sqrt(lengthsq()); }
 
-    Real sum() const { return accumulate(ident<Real>(), plus<Real>()); }
+    Real sum() const { return accumulate(ident<Real>(), std::plus<Real>()); }
 
     Self normalize() const { return (*this) / length(); }
 
 };
 
 template<class Real>
-inline ostream &operator<<(ostream &os, const Vectorn<Real> &v)
+inline std::ostream &operator<<(std::ostream &os, const Vectorn<Real> &v)
 {
   os << "[";
   for(int i = 0; i < (int)v.size(); ++i)
@@ -310,7 +310,7 @@ Vectorn<double> getEigensystem(Matrixn<double> m, Matrixn<double> *eigenvectors 
 Vectorn<double> getSVD(const Matrixn<double> &m, Matrixn<double> &u, Matrixn<double> &v);
 
 template<class Real>
-inline ostream &operator<<(ostream &os, const Matrixn<Real> &m)
+inline std::ostream &operator<<(std::ostream &os, const Matrixn<Real> &m)
 {
   os << "[";
   for(int i = 0; i < (int)m.getRows(); ++i)
@@ -319,9 +319,9 @@ inline ostream &operator<<(ostream &os, const Matrixn<Real> &m)
       os << " ";
     os << m[i];
     if(i + 1 < (int)m.getRows())
-      os << endl;
+      os << std::endl;
   }
-  os << "]" << endl;
+  os << "]" << std::endl;
   return os;
 }
 
