@@ -896,22 +896,22 @@ static unsigned char *stbi__convert_format(unsigned char *data, int img_n, int r
       unsigned char *dest = good + j * x * req_comp;
 
       #define COMBO(a,b)  ((a)*8+(b))
-      #define CASE(a,b)   case COMBO(a,b): for(i=x-1; i >= 0; --i, src += a, dest += b)
+      #define CASE(a,b,c) case COMBO(a,b): for(i=x-1; i >= 0; --i, src += a, dest += b) { c }
       // convert source image with img_n components to one with req_comp components;
       // avoid switch per pixel, so use switch per scanline and massive macros
       switch (COMBO(img_n, req_comp)) {
-         CASE(1,2) dest[0]=src[0], dest[1]=255; break;
-         CASE(1,3) dest[0]=dest[1]=dest[2]=src[0]; break;
-         CASE(1,4) dest[0]=dest[1]=dest[2]=src[0], dest[3]=255; break;
-         CASE(2,1) dest[0]=src[0]; break;
-         CASE(2,3) dest[0]=dest[1]=dest[2]=src[0]; break;
-         CASE(2,4) dest[0]=dest[1]=dest[2]=src[0], dest[3]=src[1]; break;
-         CASE(3,4) dest[0]=src[0],dest[1]=src[1],dest[2]=src[2],dest[3]=255; break;
-         CASE(3,1) dest[0]=stbi__compute_y(src[0],src[1],src[2]); break;
-         CASE(3,2) dest[0]=stbi__compute_y(src[0],src[1],src[2]), dest[1] = 255; break;
-         CASE(4,1) dest[0]=stbi__compute_y(src[0],src[1],src[2]); break;
-         CASE(4,2) dest[0]=stbi__compute_y(src[0],src[1],src[2]), dest[1] = src[3]; break;
-         CASE(4,3) dest[0]=src[0],dest[1]=src[1],dest[2]=src[2]; break;
+         CASE(1, 2, dest[0]=src[0]; dest[1]=255;) break;
+         CASE(1, 3, dest[0]=dest[1]=dest[2]=src[0];) break;
+         CASE(1, 4, dest[0]=dest[1]=dest[2]=src[0]; dest[3]=255;) break;
+         CASE(2, 1, dest[0]=src[0];) break;
+         CASE(2, 3, dest[0]=dest[1]=dest[2]=src[0];) break;
+         CASE(2, 4, dest[0]=dest[1]=dest[2]=src[0]; dest[3]=src[1];) break;
+         CASE(3, 4, dest[0]=src[0]; dest[1]=src[1]; dest[2]=src[2]; dest[3]=255;) break;
+         CASE(3, 1, dest[0]=stbi__compute_y(src[0],src[1],src[2]);) break;
+         CASE(3, 2, dest[0]=stbi__compute_y(src[0],src[1],src[2]); dest[1] = 255;) break;
+         CASE(4, 1, dest[0]=stbi__compute_y(src[0],src[1],src[2]);) break;
+         CASE(4, 2, dest[0]=stbi__compute_y(src[0],src[1],src[2]); dest[1] = src[3];) break;
+         CASE(4, 3, dest[0]=src[0]; dest[1]=src[1]; dest[2]=src[2];) break;
          default: STBI_ASSERT(0);
       }
       #undef CASE
@@ -2526,34 +2526,34 @@ static int stbi__create_png_image_raw(stbi__png *a, stbi_uc *raw, stbi__uint32 r
       prior += out_n;
       // this is a little gross, so that we don't switch per-pixel or per-component
       if (img_n == out_n) {
-         #define CASE(f) \
+         #define CASE(f,c) \
              case f:     \
                 for (i=x-1; i >= 1; --i, raw+=img_n,cur+=img_n,prior+=img_n) \
-                   for (k=0; k < img_n; ++k)
+                   for (k=0; k < img_n; ++k) { c }
          switch (filter) {
-            CASE(STBI__F_none)         cur[k] = raw[k]; break;
-            CASE(STBI__F_sub)          cur[k] = STBI__BYTECAST(raw[k] + cur[k-img_n]); break;
-            CASE(STBI__F_up)           cur[k] = STBI__BYTECAST(raw[k] + prior[k]); break;
-            CASE(STBI__F_avg)          cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k-img_n])>>1)); break;
-            CASE(STBI__F_paeth)        cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-img_n],prior[k],prior[k-img_n])); break;
-            CASE(STBI__F_avg_first)    cur[k] = STBI__BYTECAST(raw[k] + (cur[k-img_n] >> 1)); break;
-            CASE(STBI__F_paeth_first)  cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-img_n],0,0)); break;
+            CASE(STBI__F_none,         cur[k] = raw[k];) break;
+            CASE(STBI__F_sub,          cur[k] = STBI__BYTECAST(raw[k] + cur[k-img_n]);) break;
+            CASE(STBI__F_up,           cur[k] = STBI__BYTECAST(raw[k] + prior[k]);) break;
+            CASE(STBI__F_avg,          cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k-img_n])>>1));) break;
+            CASE(STBI__F_paeth,        cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-img_n],prior[k],prior[k-img_n]));) break;
+            CASE(STBI__F_avg_first,    cur[k] = STBI__BYTECAST(raw[k] + (cur[k-img_n] >> 1));) break;
+            CASE(STBI__F_paeth_first,  cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-img_n],0,0));) break;
          }
          #undef CASE
       } else {
          STBI_ASSERT(img_n+1 == out_n);
-         #define CASE(f) \
+         #define CASE(f,c) \
              case f:     \
                 for (i=x-1; i >= 1; --i, cur[img_n]=255,raw+=img_n,cur+=out_n,prior+=out_n) \
-                   for (k=0; k < img_n; ++k)
+                   for (k=0; k < img_n; ++k) { c }
          switch (filter) {
-            CASE(STBI__F_none)         cur[k] = raw[k]; break;
-            CASE(STBI__F_sub)          cur[k] = STBI__BYTECAST(raw[k] + cur[k-out_n]); break;
-            CASE(STBI__F_up)           cur[k] = STBI__BYTECAST(raw[k] + prior[k]); break;
-            CASE(STBI__F_avg)          cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k-out_n])>>1)); break;
-            CASE(STBI__F_paeth)        cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-out_n],prior[k],prior[k-out_n])); break;
-            CASE(STBI__F_avg_first)    cur[k] = STBI__BYTECAST(raw[k] + (cur[k-out_n] >> 1)); break;
-            CASE(STBI__F_paeth_first)  cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-out_n],0,0)); break;
+            CASE(STBI__F_none,         cur[k] = raw[k];) break;
+            CASE(STBI__F_sub,          cur[k] = STBI__BYTECAST(raw[k] + cur[k-out_n]);) break;
+            CASE(STBI__F_up,           cur[k] = STBI__BYTECAST(raw[k] + prior[k]);) break;
+            CASE(STBI__F_avg,          cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k-out_n])>>1));) break;
+            CASE(STBI__F_paeth,        cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-out_n],prior[k],prior[k-out_n]));) break;
+            CASE(STBI__F_avg_first,    cur[k] = STBI__BYTECAST(raw[k] + (cur[k-out_n] >> 1));) break;
+            CASE(STBI__F_paeth_first,  cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k-out_n],0,0));) break;
          }
          #undef CASE
       }

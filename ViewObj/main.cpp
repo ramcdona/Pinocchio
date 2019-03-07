@@ -16,6 +16,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h>
 
 //
 // for parsing CL params
@@ -28,14 +29,14 @@ int gl_width = 800;
 int gl_height = 800;
 
 // shaders to use
-char vs_file_name[256];
-char fs_file_name[256];
+char vs_file_name[PATH_MAX];
+char fs_file_name[PATH_MAX];
 
 // obj to load
-char obj_file_name[256];
+char obj_file_name[PATH_MAX];
 
 // texture file
-char texture_file_name[256];
+char texture_file_name[PATH_MAX];
 
 // built-in anti-aliasing to smooth jagged diagonal edges of polygons
 int msaa_samples = 16;
@@ -120,7 +121,7 @@ int main (int argc, char** argv) {
 	float scalef = 1.0f;
 	double prev;
 	vec3 vtra = vec3 (0.0f, 0.0f, 0.0f);
-	char win_title[256];
+	char win_title[PATH_MAX + 16];
 	bool normals_mode = false;
 	bool npressed = false;
 	bool f11pressed = false;
