@@ -113,7 +113,7 @@ void Mesh::computeTopology()
     int v1 = edges[i].vertex;
     int v2 = edges[edges[i].prev].vertex;
 
-//assign the vertex' edge
+    //assign the vertex' edge
     vertices[v1].edge = edges[edges[i].prev].prev;
 
     if(halfEdgeMap[v1].count(v2))
@@ -273,11 +273,11 @@ void Mesh::readObj(std::istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
-//unknown line
+    //unknown line
     if(words[0].size() != 1)
       continue;
 
@@ -344,11 +344,11 @@ void Mesh::readPly(std::istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
-//look for end_header or verts
+    //look for end_header or verts
     if(!outOfHeader)
     {
       if(words[0] == std::string("end_header"))
@@ -361,7 +361,7 @@ void Mesh::readPly(std::istream &strm)
         outOfHeader = true;
         continue;
       }
-//not "element vertex n"
+      //not "element vertex n"
       if(words.size() < 3)
         continue;
       if(words[0] == std::string("element") && words[1] == std::string("vertex"))
@@ -406,7 +406,7 @@ void Mesh::readPly(std::istream &strm)
     edges.resize(edges.size() + 3);
     for(i = 0; i < 3; ++i)
     {
-//indices in file are 0-based
+      //indices in file are 0-based
       edges[first + i].vertex = a[i];
     }
 
@@ -431,14 +431,14 @@ void Mesh::readOff(std::istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
-//look for number of verts
+    //look for number of verts
     if(!outOfHeader)
     {
-//not "vertices faces 0"
+      //not "vertices faces 0"
       if(words.size() < 3)
         continue;
       sscanf(words[0].c_str(), "%d", &vertsLeft);
@@ -482,7 +482,7 @@ void Mesh::readOff(std::istream &strm)
     edges.resize(edges.size() + 3);
     for(i = 0; i < 3; ++i)
     {
-//indices in file are 0-based
+      //indices in file are 0-based
       edges[first + i].vertex = a[i];
     }
 
@@ -510,14 +510,14 @@ void Mesh::readGts(std::istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
-//look for number of verts
+    //look for number of verts
     if(!outOfHeader)
     {
-//not "vertices faces 0"
+      //not "vertices faces 0"
       if(words.size() < 3)
         continue;
       sscanf(words[0].c_str(), "%d", &vertsLeft);
@@ -573,7 +573,7 @@ void Mesh::readGts(std::istream &strm)
     for(i = 0; i < 3; ++i)
     {
       sscanf(words[i].c_str(), "%d", a + i);
-//indices in file are 1-based
+      //indices in file are 1-based
       --(a[i]);
     }
 
@@ -631,7 +631,7 @@ void Mesh::readStl(std::istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
@@ -672,7 +672,7 @@ void Mesh::readStl(std::istream &strm)
       edges.resize(edges.size() + 3);
       for(i = 0; i < 3; ++i)
       {
-//indices in file are 0-based
+        //indices in file are 0-based
         edges[first + i].vertex = lastIdxs[i];
       }
       continue;
@@ -713,7 +713,7 @@ bool Mesh::isConnected() const
     int curEdge = startEdge;
     do
     {
-//walk around
+      //walk around
       curEdge = edges[edges[curEdge].prev].twin;
       int vtx = edges[curEdge].vertex;
       if(!reached[vtx])
@@ -737,14 +737,14 @@ bool Mesh::integrityCheck() const
   int vs = vertices.size();
   int es = edges.size();
 
-//if there are no vertices, shouldn't be any edges either
+  //if there are no vertices, shouldn't be any edges either
   if(vs == 0)
   {
     CHECK(es == 0);
     return true;
   }
 
-//otherwise, there should be edges
+  //otherwise, there should be edges
   CHECK(es > 0);
 
   //check index range validity
@@ -764,27 +764,27 @@ bool Mesh::integrityCheck() const
   //check basic edge and vertex relationships
   for(i = 0; i < es; ++i)
   {
-//no loops
+    //no loops
     CHECK(edges[i].prev != i);
-//we have only triangles
+    //we have only triangles
     CHECK(edges[edges[edges[i].prev].prev].prev == i);
-//no self twins
+    //no self twins
     CHECK(edges[i].twin != i);
-//twins are valid
+    //twins are valid
     CHECK(edges[edges[i].twin].twin == i);
 
-//twin's vertex and prev's vertex should be the same
+    //twin's vertex and prev's vertex should be the same
     CHECK(edges[edges[i].twin].vertex == edges[edges[i].prev].vertex);
   }
 
   for(i = 0; i < vs; ++i)
   {
-//make sure the edge pointer is correct
+    //make sure the edge pointer is correct
     CHECK(edges[edges[vertices[i].edge].prev].vertex == i);
   }
 
   //check that the edges around a vertex form a cycle -- by counting
-//how many edges adjacent to each vertex
+  //how many edges adjacent to each vertex
   std::vector<int> edgeCount(vs, 0);
   for(i = 0; i < es; ++i)
     edgeCount[edges[i].vertex] += 1;
@@ -796,7 +796,7 @@ bool Mesh::integrityCheck() const
     int count = 0;
     do
     {
-//walk around
+      //walk around
       curEdge = edges[edges[curEdge].prev].twin;
       ++count;
     } while(curEdge != startEdge && count <= edgeCount[i]);

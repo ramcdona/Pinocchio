@@ -144,15 +144,14 @@ Q54. How do I convert a quaternion to a rotation matrix?
   matrix using the following expression (Warning: you might have to
   transpose this matrix if you (do not) follow the OpenGL order!):
 
-                 2     2                                      
-          1 - (2Y  + 2Z )   2XY + 2ZW         2XZ - 2YW       
-                                                              
-                                   2     2                    
-     M =  2XY - 2ZW         1 - (2X  + 2Z )   2YZ + 2XW       
-                                                              
-                                                     2     2  
-          2XZ + 2YW         2YZ - 2XW         1 - (2X  + 2Y ) 
-                                                              
+                 2     2
+          1 - (2Y  + 2Z )   2XY + 2ZW         2XZ - 2YW
+
+                                   2     2
+     M =  2XY - 2ZW         1 - (2X  + 2Z )   2YZ + 2XW
+
+                                                     2     2
+          2XZ + 2YW         2YZ - 2XW         1 - (2X  + 2Y )
 
   If a 4x4 matrix is required, then the bottom row and right-most column
   may be added.
@@ -181,10 +180,10 @@ Q54. How do I convert a quaternion to a rotation matrix?
 
   The resulting matrix uses the following positions:
 
-       mat[0]  mat[4] mat[ 8] mat[12] 
-  M =  mat[1]  mat[5] mat[ 9] mat[13] 
-       mat[2]  mat[6] mat[10] mat[14] 
-       mat[3]  mat[7] mat[11] mat[15] 
+       mat[0]  mat[4] mat[ 8] mat[12]
+  M =  mat[1]  mat[5] mat[ 9] mat[13]
+       mat[2]  mat[6] mat[10] mat[14]
+       mat[3]  mat[7] mat[11] mat[15]
 
 Q55. How do I convert a rotation matrix to a quaternion?
 --------------------------------------------------------
@@ -552,7 +551,7 @@ namespace Tbx
 
         float S, X, Y, Z, W;
 
-  // to avoid large distortions!
+        // to avoid large distortions!
         if ( T > 0.00000001f )
         {
           S = sqrt(T) * 2.f;
@@ -582,7 +581,7 @@ namespace Tbx
             W = (t.m[8] - t.m[2] ) / S;
           }
           else
-    // Column 2 :
+            // Column 2 :
           {
             S  = sqrt( 1.0f + t.m[10] - t.m[0] - t.m[5] ) * 2.f;
             X = (t.m[8] + t.m[2] ) / S;
@@ -774,7 +773,7 @@ namespace Tbx
 
   };
 
-// END Tbx NAMESPACE ==========================================================
+  // END Tbx NAMESPACE ==========================================================
 }
 
 

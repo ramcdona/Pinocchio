@@ -21,11 +21,11 @@ namespace Tbx
   struct Mat3
   {
 
-///< first row
+    ///< first row
     float a, b, c;
-///< second row
+    ///< second row
     float d, e, f;
-///< third row
+    ///< third row
     float g, h ,i;
 
     inline Mat3() {   }

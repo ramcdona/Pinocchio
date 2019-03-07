@@ -51,9 +51,9 @@ struct ArgData
   bool noFit;
   Skeleton skeleton;
   string skeletonname;
-// Indicates which skinning algorithm to use
+  // Indicates which skinning algorithm to use
   int skinAlgorithm;
-// Indicates the blending weight for MIX algorithm
+  // Indicates the blending weight for MIX algorithm
   float blendWeight;
 };
 
@@ -213,7 +213,7 @@ void process(const vector<string> &args, MyWindow *w)
   Skeleton given = a.skeleton;
   given.scale(a.skelScale * 0.7);
 
-//if early bailout
+  //if early bailout
   if(a.stopAtMesh)
   {
     w->addMesh(new StaticDisplayMesh(m));
@@ -221,12 +221,12 @@ void process(const vector<string> &args, MyWindow *w)
   }
 
   PinocchioOutput o;
-//do everything
+  //do everything
   if(!a.noFit)
   {
     o = autorig(given, m);
   }
-//skip the fitting step--assume the skeleton is already correct for the mesh
+  //skip the fitting step--assume the skeleton is already correct for the mesh
   else
   {
     TreeType *distanceField = constructDistanceField(m);

@@ -129,7 +129,7 @@ void Motion::readH(istream &strm)
   HumanSkeleton skel;
   //int boneCorresp[17] = { 9, 0, 9, 0, 5, 6, 7, 0, 1, 2, 3, 14, 15, 16, 10, 11, 12 };
   int boneCorresp[17] = { 9, 0, 9, 0, 5, 6, 7, 0, 1, 2, 3, 15, 16, 17, 11, 12, 13 };
-//centaur
+  //centaur
   #else
   CentaurSkeleton skel;
   int boneCorresp[24] = { 0, 0, 0, 9, 10, 0, 5, 6, 0, 1, 2, 0, 5, 6, 0, 1, 2, 14, 15, 16, 10, 11, 12 };
@@ -206,7 +206,7 @@ void Motion::readH(istream &strm)
 
     if(words.size() == 0)
       continue;
-//comment
+    //comment
     if(words[0][0] == '#')
       continue;
 
@@ -257,7 +257,7 @@ void Motion::readH(istream &strm)
     data.back()[0] = trans * data.back()[0];
   }
 
-//centaur
+  //centaur
   if(false)
   {
     int offset = 180;

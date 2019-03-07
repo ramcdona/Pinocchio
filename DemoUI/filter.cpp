@@ -173,12 +173,12 @@ void MotionFilter::step(const vector<Transform<> > &transforms, vector<Vector3> 
 
   Matrixn<double> jac = getJac(curTransforms);
 
-//regular pseudoinverse
+  //regular pseudoinverse
   #if 1
   Matrixn<double> regularizer = Matrixn<double>::identity(jac.getRows(), 1e-4);
   regularizer[6][6] = regularizer[7][7] = regularizer[8][8] = 1e-2;
   Matrixn<double> jacPI = ~jac * !(jac * ~jac + regularizer);
-//svd based pseudoinverse
+  //svd based pseudoinverse
   #else
   Matrixn<double> u, v;
   Vectorn<double> sigma;
@@ -187,7 +187,7 @@ void MotionFilter::step(const vector<Transform<> > &transforms, vector<Vector3> 
   double minSV = 1e-6;
   for(i = 0; i < (int)sigma.size(); ++i)
   {
-//?
+    //?
     if(fabs(sigma[i]) < minSV)
     {
       sigma[i] = sigma[i] > 0 ? minSV : -minSV;

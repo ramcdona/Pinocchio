@@ -199,7 +199,7 @@ class Vector<Real, -1>
 template <class Real, int Dim>
 Vector<Real, Dim> operator*(const Real &scalar, const Vector<Real, Dim> &vec)
 {
-//multiplication commutes around here
+  //multiplication commutes around here
   return vec * scalar;
 }
 
@@ -313,7 +313,7 @@ namespace _VectorPrivate
         static void _apply(const F &func, const VRD &v, const VRD &other, Vector<typename F::result_type, D> &out)
         { out[0] = func(v[0], other[0]); }
   };
-//namespace _VectorPrivate
+  //namespace _VectorPrivate
 }
 
 

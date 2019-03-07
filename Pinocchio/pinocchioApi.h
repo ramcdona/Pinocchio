@@ -28,7 +28,7 @@ struct PinocchioOutput
   PinocchioOutput() : attachment(NULL) {}
 
   std::vector<Vector3> embedding;
-//user responsible for deletion
+  //user responsible for deletion
   Attachment *attachment;
 };
 

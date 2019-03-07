@@ -33,13 +33,13 @@ bool PtGraph::integrityCheck() const
       int cur = edges[i][j];
       CHECK(cur >= 0);
       CHECK(cur < (int)edges.size());
-//no self edges
+      //no self edges
       CHECK(cur != i);
 
       vector<int>::const_iterator it = find(edges[cur].begin(), edges[cur].end(), i);
       CHECK(it != edges[cur].end());
 
-//duplicates
+      //duplicates
       for(k = 0; k < j; ++k)
         CHECK(cur != edges[i][k]);
     }

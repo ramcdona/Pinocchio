@@ -36,7 +36,7 @@ template<class T> class VisTester : public VisibilityTester
   public:
     VisTester(const T *t) : tree(t) {}
 
-  //faster when v2 is farther inside than v1
+    //faster when v2 is farther inside than v1
     virtual bool canSee(const Vector3 &v1, const Vector3 &v2) const
     {
       const double maxVal = 0.002;

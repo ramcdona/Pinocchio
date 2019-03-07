@@ -49,10 +49,10 @@ class SPDMatrix
     LLTMatrix *factor() const;
 
   private:
-  //computes a fill-reduction permutation
+    //computes a fill-reduction permutation
     std::vector<int> computePerm() const;
 
-  //rows -- lower triangle
+    //rows -- lower triangle
     std::vector<std::vector<std::pair<int, double> > > m;
 };
 
@@ -146,11 +146,11 @@ template<class V, class C> class LSQSystem
         }
       }
 
-  //"substitutions[x] = (y, 3.), (z, 2.)" means "x = 3y+2z + c"
+      //"substitutions[x] = (y, 3.), (z, 2.)" means "x = 3y+2z + c"
       std::map<V, std::map<V, double> > substitutions;
-  //the "c" in the above equation as a lin.comb. of rhs's
+      //the "c" in the above equation as a lin.comb. of rhs's
       std::map<V, std::map<std::pair<C, int>, double> > substitutionsRhs;
-  //keeps track of which constraint a substitution came from
+      //keeps track of which constraint a substitution came from
       std::map<V, int> substitutionConstraintIdx;
       std::vector<std::map<std::pair<C, int>, double> > hardRhs(hardConstraints.size());
       for(i = 0; i < (int)hardConstraints.size(); ++i)
@@ -179,7 +179,7 @@ template<class V, class C> class LSQSystem
               //an equality or hard assignment constraint is always good enough
               if(val > .5 && hardConstraints[i].size() <= 2)
               {
-  //break from the outer loop as well
+                //break from the outer loop as well
                 i = hardConstraints.size();
                 break;
               }
@@ -188,7 +188,7 @@ template<class V, class C> class LSQSystem
         }
 
         if(bestVal < 1e-10)
-    //near-singular matrix
+          //near-singular matrix
           return false;
 
         substitutionConstraintIdx[bestVar] = substitutions.size();
@@ -247,7 +247,7 @@ template<class V, class C> class LSQSystem
       }
 
       //now that we know which variables are determined by hard constraints, give indices to the rest
-  //maps variables to indices
+      //maps variables to indices
       std::map<V, int> varMap;
       //variables from soft constraints first
       for(it = constraints.begin(); it != constraints.end(); ++it)
@@ -283,14 +283,14 @@ template<class V, class C> class LSQSystem
         for(it = sit->second.begin(); it != sit->second.end(); ++it)
         {
           if(varMap.count(it->first) == 0)
-    //variable is left free by both hard and soft constraints--bad system
+            //variable is left free by both hard and soft constraints--bad system
             return false;
           substitutedHard[idx].push_back(make_pair(varMap[it->first], it->second));
         }
       }
 
       //compute the softMatrix (and the rhs transform)
-  //the rhsTransform matrix as a std::map
+      //the rhsTransform matrix as a std::map
       std::vector<std::map<int, double> > rhsTransformMap(hardNum);
       softMatrix.resize(softNum);
       for(it = constraints.begin(); it != constraints.end(); ++it)
@@ -317,7 +317,7 @@ template<class V, class C> class LSQSystem
             rhsTransformMap[constraintMap[it4->first] - softNum][idx] -= fac * it4->second;
           }
         }
-  //write modLhs into the right form
+        //write modLhs into the right form
         for(it2 = modLhs.begin(); it2 != modLhs.end(); ++it2)
         {
           if(substitutions.count(it2->first))
@@ -346,9 +346,9 @@ template<class V, class C> class LSQSystem
       }
 
       //multiply the softMatrix by its transpose to get an SPDMatrix
-  //the lower triangle of A^T * A
+      //the lower triangle of A^T * A
       std::vector<std::vector<std::pair<int, double> > > spdm;
-  //the lower triangle of A^T * A as a std::map
+      //the lower triangle of A^T * A as a std::map
       std::vector<std::map<int, double> > spdMap(softVars);
       for(i = 0; i < (int)softMatrix.size(); ++i)
       {
@@ -391,7 +391,7 @@ template<class V, class C> class LSQSystem
       rhs1 = rhs0;
       int i, j;
       for(i = softNum; i < (int)rhs1.size(); ++i)
-    //for hard constraints, transform is absolute, not "additive"
+        //for hard constraints, transform is absolute, not "additive"
         rhs1[i] = 0;
       //transform them (as per hard constraints substitution)
       for(i = 0; i < (int)rhsTransform.size(); ++i)
@@ -404,10 +404,10 @@ template<class V, class C> class LSQSystem
 
       //multiply by A^T (as in (A^T A)^-1 x = A^T b )
       std::vector<double> rhs2(factoredMatrix->size(), 0);
-  //i is row
+      //i is row
       for(i = 0; i < (int)softMatrix.size(); ++i)
       {
-  //softMatrix[i][j].first is column
+        //softMatrix[i][j].first is column
         for(j = 0; j < (int)softMatrix[i].size(); ++j)
         {
           int col = softMatrix[i][j].first;
@@ -463,9 +463,9 @@ template<class V, class C> class LSQSystem
     std::map<V, double> result;
 
     //variables set during factor
-  //number of soft constraints
+    //number of soft constraints
     int softNum;
-  //first the variables softly solved for, then the ones substituted
+    //first the variables softly solved for, then the ones substituted
     std::vector<V> varIds;
     std::map<std::pair<C, int>, int> constraintMap;
     std::vector<std::vector<std::pair<int, double> > > substitutedHard;

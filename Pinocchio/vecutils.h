@@ -37,9 +37,9 @@ void getBasis(const Vector<Real, 3> &n, Vector<Real, 3> &v1, Vector<Real, 3> &v2
   else
     v2 = Vector<Real, 3>(0., 0., 1.);
 
-//first basis vector
+  //first basis vector
   v1 = (n % v2).normalize();
-//second basis vector
+  //second basis vector
   v2 = (n % v1).normalize();
 }
 
@@ -112,7 +112,7 @@ Real getCircleIntersectionArea(const Real &d, const Real &r1, const Real &r2)
     return Real(M_PI) * SQR(r2);
 
   Real sqrdif = SQR(r1) - SQR(r2);
-//d^2 - r1^2 + r2^2
+  //d^2 - r1^2 + r2^2
   Real dsqrdif = SQR(d) - sqrdif;
   Real a1 = SQR(r1) * acos((SQR(d) + sqrdif) / (Real(2.) * r1 * d));
   Real a2 = SQR(r2) * acos(dsqrdif / (Real(2.) * r2 * d));
@@ -130,7 +130,7 @@ Vector<Real, 3> projToTri(const Vector<Real, 3> &from, const Vector<Real, 3> &p1
   Vec p3p1 = (p3 - p1);
   Vec normal = p2p1 % p3p1;
 
-//inside s1
+  //inside s1
   if((p2p1 % (from - p1)) * normal >= Real())
   {
     bool s2 = ((p3 - p2) % (from - p2)) * normal >= Real();
@@ -139,7 +139,7 @@ Vector<Real, 3> projToTri(const Vector<Real, 3> &from, const Vector<Real, 3> &p1
     if(s2 && s3)
     {
       if(normal.lengthsq() < tolsq)
-  //incorrect, but whatever...
+        //incorrect, but whatever...
         return p1;
 
       double dot = (from - p3) * normal;

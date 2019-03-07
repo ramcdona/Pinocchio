@@ -36,13 +36,13 @@ class PINOCCHIO_API Intersector
 
     const Mesh *mesh;
     Vector3 dir;
-  //basis
+    //basis
     Vector3 v1, v2;
-  //within the basis
+    //within the basis
     Rect2 bounds;
 
     std::vector<Vector2> points;
-  //they are scaled for intersection
+    //they are scaled for intersection
     std::vector<Vector3> sNormals;
     std::vector<std::vector<int> > triangles;
 };

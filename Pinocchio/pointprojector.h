@@ -1,19 +1,19 @@
-	/*  This file is part of the Pinocchio automatic rigging library.
-    Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
+/*  This file is part of the Pinocchio automatic rigging library.
+  Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifndef POINTPROJECTOR_H
@@ -42,7 +42,7 @@ struct Tri3Object
   Tri3Object(const Vector3 &inV1, const Vector3 &inV2, const Vector3 &inV3) : v1(inV1), v2(inV2), v3(inV3) {}
 
   Rect3 boundingRect() const { return Rect3(v1) | Rect3(v2) | Rect3(v3); }
-//for comparison only, no need to divide by 3
+  //for comparison only, no need to divide by 3
   double operator[](int i) const
   {
     return v1[i] + v2[i] + v3[i];
@@ -92,13 +92,13 @@ class ObjectProjector
         {
           continue;
         }
-  //the top element that was just popped
+        //the top element that was just popped
         int cur = todo[sz].second;
 
         int c1 = rnodes[cur].child1;
         int c2 = rnodes[cur].child2;
 
-  //not a leaf
+        //not a leaf
         if(c1 >= 0)
         {
           double l1 = rnodes[c1].rect.distSqTo(from);
@@ -113,7 +113,7 @@ class ObjectProjector
           {
             swap(todo[sz - 1], todo[sz - 2]);
           }
-  //getting close to our array limit
+          //getting close to our array limit
           if(sz > 9995)
           {
             Debugging::out() << "Large todo list, likely to fail" << std::endl;
@@ -137,7 +137,7 @@ class ObjectProjector
     struct RNode
     {
       Rec rect;
-  //if child1 is -1, child2 is the object index
+      //if child1 is -1, child2 is the object index
       int child1, child2;
     };
 

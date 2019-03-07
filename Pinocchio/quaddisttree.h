@@ -254,7 +254,7 @@ template<class RootNode = OctTreeRoot> class OctTreeMaker
         Intersector mint;
         mutable Rect3 rects[11];
         mutable int inside[11];
-    //essentially index of last rect
+        //essentially index of last rect
         mutable int level;
     };
 

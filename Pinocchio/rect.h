@@ -207,7 +207,7 @@ namespace _RectPrivate
       }
 
   };
-//namespace _RectPrivate
+  //namespace _RectPrivate
 }
 
 

@@ -37,7 +37,7 @@ extern "C"
 
 std::vector<int> SPDMatrix::computePerm() const
 {
-//do nothing
+  //do nothing
   return std::vector<int>();
 }
 
@@ -91,7 +91,7 @@ LLTMatrix *SPDMatrix::factor() const
 
   out->m = taucs_ccs_create(sz, sz, nz, TAUCS_DOUBLE | TAUCS_SYMMETRIC | TAUCS_LOWER);
 
-//transposed values
+  //transposed values
   std::vector<std::vector<std::pair<int, double> > > mt(sz);
   for(i = 0; i < sz; ++i)
   {
@@ -137,19 +137,19 @@ LLTMatrix *SPDMatrix::factor() const
 class MyLLTMatrix : public LLTMatrix
 {
   public:
-  //solves it in place
+    //solves it in place
     bool solve(std::vector<double> &b) const;
     int size() const { return m.size(); }
 
   private:
     void initMt();
-  //off-diagonal values stored by rows
+    //off-diagonal values stored by rows
     std::vector<std::vector<std::pair<int, double> > > m;
-  //off-diagonal values transposed stored by rows
+    //off-diagonal values transposed stored by rows
     std::vector<std::vector<std::pair<int, double> > > mt;
-  //values on diagonal
+    //values on diagonal
     std::vector<double> diag;
-  //permutation
+    //permutation
     std::vector<int> perm;
 
     friend class SPDMatrix;
@@ -162,7 +162,7 @@ std::vector<int> SPDMatrix::computePerm() const
   std::vector<int> out;
   int sz = m.size();
 
-//No permutation
+  //No permutation
   #if 0
   out.resize(sz);
   for(i = 0; i < sz; ++i)
@@ -219,7 +219,7 @@ std::vector<int> SPDMatrix::computePerm() const
   }
 
   std::vector<int> oout = out;
-//invert the permutation
+  //invert the permutation
   for(i = 0; i < sz; ++i)
     out[oout[i]] = i;
 
@@ -260,13 +260,13 @@ LLTMatrix *SPDMatrix::factor() const
 
   //prepare for decomposition
   std::vector<std::vector<std::pair<int, double> > > cols(sz);
-//inverses of out.diag
+  //inverses of out.diag
   std::vector<double> dinv(sz);
 
   std::vector<bool> added(sz, false);
 
   //Sparse cholesky decomposition
-//current row
+  //current row
   for(i = 0; i < sz; ++i)
   {
     std::vector<int> columnsAdded;
@@ -295,28 +295,28 @@ LLTMatrix *SPDMatrix::factor() const
     }
     sort(columnsAdded.begin(), columnsAdded.end());
 
-//add the columns and clear added
+    //add the columns and clear added
     for(j = 0; j < (int)columnsAdded.size(); ++j)
     {
       added[columnsAdded[j]] = false;
       cols[columnsAdded[j]].push_back(std::make_pair(i, 0.));
     }
 
-//initialize it with m's entries
+    //initialize it with m's entries
     for(j = 0; j < (int)pm[i].size() - 1; ++j)
     {
       int curCol = pm[i][j].first;
       cols[curCol].back().second = pm[i][j].second * dinv[curCol];
     }
-//current column
+    //current column
     for(j = 0; j < (int)columnsAdded.size(); ++j)
     {
       int idx = columnsAdded[j];
       int csz = cols[idx].size() - 1;
-//index in column above current row -- inner loop
+      //index in column above current row -- inner loop
       for(k = 0; k < csz; ++k)
       {
-//index into current row
+        //index into current row
         int tidx = cols[idx][k].first;
         double prod = cols[idx][k].second * cols[idx].back().second * dinv[tidx];
         cols[tidx].back().second -= prod;
@@ -328,10 +328,10 @@ LLTMatrix *SPDMatrix::factor() const
     {
       double val = cols[columnsAdded[j]].back().second;
       out.diag[i] -= SQR(val);
-//also add rows to output
+      //also add rows to output
       out.m[i].push_back(std::make_pair(columnsAdded[j], val));
     }
-//not positive definite
+    //not positive definite
     if(out.diag[i] <= 0.)
     {
       assert(false && "Not positive definite matrix (or ill-conditioned)");

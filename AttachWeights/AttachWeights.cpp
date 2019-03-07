@@ -185,19 +185,19 @@ void process(const vector<string> &args)
   Skeleton given = a.skeleton;
   given.scale(a.skelScale * 0.7);
 
-//if early bailout
+  //if early bailout
   if(a.stopAtMesh)
   {
     return;
   }
 
   PinocchioOutput o;
-//do everything
+  //do everything
   if(!a.noFit)
   {
     o = autorig(given, m);
   }
-//skip the fitting step--assume the skeleton is already correct for the mesh
+  //skip the fitting step--assume the skeleton is already correct for the mesh
   else
   {
     TreeType *distanceField = constructDistanceField(m);

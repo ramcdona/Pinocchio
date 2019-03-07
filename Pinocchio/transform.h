@@ -27,16 +27,16 @@ class Quaternion
 {
   public:
     //constructors
-  //initialize to identity
+    //initialize to identity
     Quaternion() : r(1.)
     {
     }
-  //copy constructor
+    //copy constructor
     Quaternion(const Quaternion &q) : r(q.r), v(q.v)
     {
     }
     template<class R> Quaternion(const Quaternion<R> &q) :
-  //convert quaternions of other types
+    //convert quaternions of other types
     r(q.r), v(q.v)
     {
     }
@@ -99,7 +99,7 @@ class Quaternion
     void set(const Real &inR, const Vector<Real, 3> &inV)
     {
       Real ratio = Real(1.) / sqrt(inR * inR + inV.lengthsq());
-  //normalize
+      //normalize
       r = inR * ratio; v = inV * ratio;
     }
 
@@ -220,17 +220,17 @@ template<class Real = double> class Matrix3
       return Self((*this) * Vec(o[0], o[3], o[6]), (*this) * Vec(o[1], o[4], o[7]), (*this) * Vec(o[2], o[5], o[8]));
     }
 
-  //transpose
+    //transpose
     Self operator~() const
     {
-  //uninitialized
+      //uninitialized
       Self out(S(0));
       out[0] = m[0]; out[4] = m[4]; out[8] = m[8];
       out[1] = m[3]; out[3] = m[1]; out[2] = m[6]; out[6] = m[2]; out[5] = m[7]; out[7] = m[5];
       return out;
     }
 
-  //invert
+    //invert
     Self operator!() const
     {
       Self out(S(0));
@@ -260,7 +260,7 @@ template<class Real = double> class Matrix3
       {
       }
     };
-  //no initialization
+    //no initialization
     Matrix3(const S &)
     {
     }

@@ -73,10 +73,10 @@ void Intersector::init()
     j = i / 3;
     sNormals[j] = cross.normalize();
     if(fabs(sNormals[j] * dir) <= 1e-8)
-  //zero if coplanar
+      //zero if coplanar
       sNormals[j] = Vector3();
     else
-  //prescaled for intersection
+      //prescaled for intersection
       sNormals[j] = sNormals[j] / (sNormals[j] * dir);
   }
 }
@@ -92,7 +92,7 @@ vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndice
 
   Vector2 pt2(pt * v1, pt * v2);
   if(!bounds.contains(pt2))
-  //no intersections
+    //no intersections
     return out;
 
   int x, y;
@@ -115,7 +115,7 @@ vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndice
       sign[j] = SIGN(d1[0] * d2[1] - d1[1] * d2[0]);
     }
     if(sign[0] != sign[1] || sign[1] != sign[2])
-  //no intersection
+      //no intersection
       continue;
 
     if(outIndices)
@@ -123,7 +123,7 @@ vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndice
 
     //now compute the plane intersection
     const Vector3 &n = sNormals[tris[i] / 3];
-//triangle and line coplanar --just project the triangle center to the line and hope for the best
+    //triangle and line coplanar --just project the triangle center to the line and hope for the best
     if(n.lengthsq() == 0)
     {
       Vector3 ctr = (vtc[idx[0]].pos + vtc[idx[1]].pos + vtc[idx[2]].pos) * (1. / 3.);
@@ -131,7 +131,7 @@ vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndice
       continue;
     }
 
-//intersection
+    //intersection
     out.push_back(pt + dir * (n * (vtc[idx[0]].pos - pt)));
   }
 

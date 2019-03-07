@@ -39,7 +39,7 @@ struct PartialMatch
   vector<int> match;
   double penalty;
   double heuristic;
-//smallest penalty first
+  //smallest penalty first
   bool operator<(const PartialMatch &pm) const
   {
     return heuristic > pm.heuristic;
@@ -249,7 +249,7 @@ vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
   int i;
   vector<int> newPath = fp->paths.path(prevIdx, curIdx);
 
-//stores the indices of the path in the unsimplified skeleton
+  //stores the indices of the path in the unsimplified skeleton
   vector<int> uncompIdx;
   uncompIdx.push_back(fp->given.cfMap()[joint]);
   do
@@ -260,7 +260,7 @@ vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
 
   vector<Vector3> pathPts(uncompIdx.size(), fp->graph.verts[newPath[0]]);
 
-//if there is a meaningful path in the extracted graph
+  //if there is a meaningful path in the extracted graph
   if(newPath.size() > 1)
   {
     double dist = fp->paths.dist(newPath[0], newPath.back());
@@ -287,7 +287,7 @@ vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
       }
       double ratio = (lengths[curPt] - lengthSoFar) / len;
       pathPts[curPt] = newPathPts[i - 1] + ratio * (newPathPts[i] - newPathPts[i - 1]);
-//try this segment again
+      //try this segment again
       --i;
       ++curPt;
       if(curPt >= (int)lengths.size())
@@ -345,14 +345,14 @@ class DistPF : public PenaltyFunction
       int prev = fp->given.cPrev()[idx];
       double dist = fp->paths.dist(next, cur.match[prev]);
 
-  //if no path
+      //if no path
       if(dist < 0)
         return NOMATCH;
 
-  //end circle radii
+      //end circle radii
       double distPlay = distPlayFactor * (fp->sph[next].radius + fp->sph[cur.match[prev]].radius);
       double optDist = fp->given.cLength()[idx];
-  //if too short, get out
+      //if too short, get out
       if(dist + distPlay < 0.5 * optDist)
         return NOMATCH;
 
@@ -369,7 +369,7 @@ vector<Vector3> computeDirs(FP * fp, const PartialMatch &cur, int next, int idx 
 
   int prev = fp->given.cPrev()[idx];
 
-//path of zero length
+  //path of zero length
   if(idx == 0 || next == cur.match[prev])
     return out;
 
@@ -395,7 +395,7 @@ class DotPF : public PenaltyFunction
 
       int prev = fp->given.cPrev()[idx];
 
-  //no penalty if same sphere
+      //no penalty if same sphere
       if(next == cur.match[prev])
         return 0.;
 
@@ -453,11 +453,11 @@ class SymPF : public PenaltyFunction
     {
       int prev = fp->given.cPrev()[idx];
       if(fp->given.cSym()[idx] < 0 || fp->given.cSym()[idx] >= (int)cur.match.size())
-    //doesn't apply here
+        //doesn't apply here
         return 0.;
 
       double dist = fp->paths.dist(next, cur.match[prev]);
-  //end circle radii
+      //end circle radii
       double distPlay = distPlayFactor * (fp->sph[next].radius + fp->sph[cur.match[prev]].radius);
       int v1 = fp->given.cSym()[idx];
       int v2 = fp->given.cPrev()[v1];
@@ -465,7 +465,7 @@ class SymPF : public PenaltyFunction
       double distC = dist + distPlay;
       double sDist = fp->paths.dist(cur.match[v1], cur.match[v2]);
       double sDistC = sDist + distPlayFactor * (fp->sph[cur.match[v1]].radius +
-  //add end circles
+      //add end circles
         fp->sph[cur.match[v2]].radius);
 
       double nocRatio = std::min(2., std::max(dist / (sDist + 1e-8), sDist / (dist + 1e-8)));
@@ -524,12 +524,12 @@ class DoublePF : public PenaltyFunction
       double out = 0.;
       vector<int> newPath = fp->paths.path(next, cur.match[prev]);
 
-  //check if tail of path is in use
+      //check if tail of path is in use
       for(int i = (int)newPath.size() - 2; i >= 0; --i)
       {
         if(cur.vTaken[newPath[i]])
         {
-  //if sphere too small to have more than one appendage
+          //if sphere too small to have more than one appendage
           if(fp->sph[newPath[i]].radius < 0.02)
             return NOMATCH;
           out += 0.5 / SQR(double(i + 1));

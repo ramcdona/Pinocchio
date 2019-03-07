@@ -160,7 +160,7 @@ std::vector<Sphere> sampleMedialSurface(TreeType *distanceField, double tol)
       Vector3 &p = pts[i];
       double dist = -distanceField->locate(p)->evaluate(p);
       if(dist <= 2. * step)
-  //we want to be well inside
+        //we want to be well inside
         continue;
       double dot = getMinDot(distanceField, p, step * 0.001);
       if(dot > 0.0)
@@ -248,7 +248,7 @@ const std::vector<Sphere> &spheres)
       if(k == i || k == j)
         continue;
       if((spheres[k].center - ctr).lengthsq() < radsq)
-  //gabriel graph condition violation
+        //gabriel graph condition violation
         break;
     }
     if(k < (int)spheres.size())

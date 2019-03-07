@@ -59,30 +59,30 @@ class PINOCCHIO_API Skeleton
   private:
     //full
     PtGraph fGraphV;
-  //previous vertices
+    //previous vertices
     std::vector<int> fPrevV;
-  //symmetry
+    //symmetry
     std::vector<int> fSymV;
 
     //compressed (no degree 2 vertices)
     PtGraph cGraphV;
-  //previous vertices
+    //previous vertices
     std::vector<int> cPrevV;
-  //symmetry
+    //symmetry
     std::vector<int> cSymV;
-  //whether the vertex should be near the ground
+    //whether the vertex should be near the ground
     std::vector<bool> cFeetV;
-  //whether the vertex should be in a large region
+    //whether the vertex should be in a large region
     std::vector<bool> cFatV;
 
-  //compressed to full std::map
+    //compressed to full std::map
     std::vector<int> cfMapV;
-  //full to compressed std::map, -1 when vertex is not in compressed
+    //full to compressed std::map, -1 when vertex is not in compressed
     std::vector<int> fcMapV;
-  //maps full vertex number to ratio of its prev edge length to total length of
+    //maps full vertex number to ratio of its prev edge length to total length of
     std::vector<double> fcFractionV;
     //containing edge in the compressed graph
-  //lengths of the compressed bones
+    //lengths of the compressed bones
     std::vector<double> cLengthV;
 };
 

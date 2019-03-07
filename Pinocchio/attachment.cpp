@@ -203,7 +203,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
         for(i = 0; i < nv; ++i)
         {
           if(rhs[i] > 1.)
-    //clip just in case
+            //clip just in case
             rhs[i] = 1.;
           if(rhs[i] > 1e-8)
             nzweights[i].push_back(std::make_pair(j, rhs[i]));
@@ -265,7 +265,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
       int i, nv = mesh.vertices.size();
 
       if(mesh.vertices.size() != weights.size())
-    //error
+        //error
         return out;
 
       for(i = 0; i < nv; ++i)
@@ -331,7 +331,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
       int i, nv = mesh.vertices.size();
 
       if(mesh.vertices.size() != weights.size())
-    //error
+        //error
         return out;
 
       for(i = 0; i < nv; ++i)
@@ -369,7 +369,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
       int i, nv = mesh.vertices.size();
 
       if(mesh.vertices.size() != weights.size())
-    //error
+        //error
         return out;
 
       for(i = 0; i < nv; ++i)
@@ -428,7 +428,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
 
   private:
     vector<Vector<double, -1> > weights;
-  //sparse representation
+    //sparse representation
     vector<vector<std::pair<int, double> > > nzweights;
 };
 

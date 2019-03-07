@@ -54,7 +54,7 @@ PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
   vector<int> embeddingIndices = discreteEmbed(graph, spheres,
     given, possibilities);
 
-//failure
+  //failure
   if(embeddingIndices.size() == 0)
   {
     delete distanceField;

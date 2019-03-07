@@ -177,7 +177,7 @@ class Matrixn
       return out;
     }
 
-  //transpose
+    //transpose
     Self operator~() const
     {
       Self out(getCols(), getRows());
@@ -186,7 +186,7 @@ class Matrixn
       return out;
     }
 
-  //invert
+    //invert
     Self operator!() const
     {
       assert(getRows() == getCols());
@@ -210,10 +210,10 @@ class Matrixn
           }
         }
 
-  //nonsingular
+        //nonsingular
         assert(biggestSoFar > 1e-10);
         if(biggestSoFar <= 1e-10)
-    //whatever
+          //whatever
           return out;
 
         //move pivot to the right place
@@ -272,7 +272,7 @@ class Matrixn
         }
 
         if(biggestSoFar <= 1e-10)
-    //singular
+          //singular
           return Real(0.);
 
         //move pivot to the right place
