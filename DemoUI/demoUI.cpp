@@ -27,21 +27,19 @@ THE SOFTWARE.
 #include "motion.h"
 #include "shared.h"
 
-using namespace std;
-
 // Definition of global variable to record start times of animation runs
 unsigned long runStartTime;
 
 int main(int argc, char **argv)
 {
   MyWindow *window = new MyWindow(1024, 768, "Pinocchio");
-  vector<string> args;
+  std::vector<std::string> args;
   for(int i = 0; i < argc; ++i)
     args.push_back(argv[i]);
   // Process, and then print out time taken for processing
   unsigned long processTime = getT();
   process(args, window);
-  cout << "Process time: " << getT() - processTime << endl;
+  std::cout << "Process time: " << getT() - processTime << std::endl;
 
   window->show();
 

@@ -26,8 +26,6 @@ THE SOFTWARE.
 #include "MyWindow.h"
 #include "../Pinocchio/skeleton.h"
 
-using namespace std;
-
 static HumanSkeleton human;
 bool paused = false;
 
@@ -79,7 +77,7 @@ int MyWindow::handle(int event)
       else if(Fl::event_state(FL_BUTTON1))
       {
         // translate cam
-        double scale = min(w(), h()) / 2.5;
+        double scale = std::min(w(), h()) / 2.5;
         int dx = Fl::event_x() - prevX, dy = prevY - Fl::event_y();
         Transform<> cur = Transform<>(Vector3(dx, dy, 0) / scale);
 
@@ -160,7 +158,7 @@ int MyWindow::handle(int event)
           break;
           // Print current transformation of camera to terminal.
         case 'r':
-          cout << transform << endl;
+          std::cout << transform << std::endl;
           break;
         default:
           break;
@@ -175,7 +173,7 @@ int MyWindow::handle(int event)
 
 /* 
  *  Changes the camera angle. Expects a rotation axis and angle, the amount
- *  of scale to be applied, and a translation vector as well.
+ *  of scale to be applied, and a translation std::vector as well.
  */
 void MyWindow::changeAngle(Vector3 axis, double angle,
 double scale, Vector3 v2)
@@ -250,7 +248,7 @@ void MyWindow::draw()
     drawFloor();
 
   // Get mesh to draw, but only if not paused.
-  static vector<const Mesh *> ms(meshes.size());
+  static std::vector<const Mesh *> ms(meshes.size());
   if (!paused)
   {
     for(i = 0; i < (int)meshes.size(); ++i)
@@ -260,9 +258,9 @@ void MyWindow::draw()
   }
 
   // display frame number
-  stringstream strs;
+  std::stringstream strs;
   strs << framenum;
-  string temp = strs.str();
+  std::string temp = strs.str();
   const char* strFramenum = temp.c_str();
   win->label(strFramenum);
 
@@ -316,12 +314,12 @@ void MyWindow::draw()
     glLineWidth(5);
     for(i = 0; i < (int)meshes.size(); ++i)
     {
-      vector<Vector3> v = meshes[i]->getSkel();
+      std::vector<Vector3> v = meshes[i]->getSkel();
       if(v.size() == 0)
         continue;
       glColor3d(.5, 0, 0);
 
-      const vector<int> &prev = human.fPrev();
+      const std::vector<int> &prev = human.fPrev();
       glBegin(GL_LINES);
       for(int j = 1; j < (int)prev.size(); ++j)
       {

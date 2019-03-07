@@ -87,7 +87,7 @@ clean:
 	rm -f $(STATIC_FIXED_OBJS)
 	rm -f *.so *.so* *.a *~
 
-distclean: clean
+distclean cleanall: clean
 	$(RM) *~ .depend core *.out *.bak
 
 depend: .depend
@@ -98,4 +98,4 @@ depend: .depend
 
 include .depend
 
-.PHONY: all depend clean distclean
+.PHONY: all depend clean distclean cleanall

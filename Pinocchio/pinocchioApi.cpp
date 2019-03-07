@@ -36,22 +36,22 @@ PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
   TreeType *distanceField = constructDistanceField(newMesh);
 
   //discretization
-  vector<Sphere> medialSurface = sampleMedialSurface(distanceField);
+  std::vector<Sphere> medialSurface = sampleMedialSurface(distanceField);
 
-  vector<Sphere> spheres = packSpheres(medialSurface);
+  std::vector<Sphere> spheres = packSpheres(medialSurface);
 
   PtGraph graph = connectSamples(distanceField, spheres);
 
   //discrete embedding
-  vector<vector<int> > possibilities = computePossibilities(graph,
+  std::vector<std::vector<int> > possibilities = computePossibilities(graph,
     spheres, given);
 
   //constraints can be set by respecifying possibilities for
   //skeleton joints:
   //to constrain joint i to sphere j, use: possiblities[i] =
-  //vector<int>(1, j);
+  //std::vector<int>(1, j);
 
-  vector<int> embeddingIndices = discreteEmbed(graph, spheres,
+  std::vector<int> embeddingIndices = discreteEmbed(graph, spheres,
     given, possibilities);
 
   //failure
@@ -61,11 +61,11 @@ PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
     return out;
   }
 
-  vector<Vector3> discreteEmbedding = splitPaths(embeddingIndices,
+  std::vector<Vector3> discreteEmbedding = splitPaths(embeddingIndices,
     graph, given);
 
   //continuous refinement
-  vector<Vector3> medialCenters(medialSurface.size());
+  std::vector<Vector3> medialCenters(medialSurface.size());
   for(i = 0; i < (int)medialSurface.size(); ++i)
     medialCenters[i] = medialSurface[i].center;
 

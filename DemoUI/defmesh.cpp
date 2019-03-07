@@ -24,16 +24,14 @@ THE SOFTWARE.
 #include "motion.h"
 #include "../Pinocchio/intersector.h"
 
-using namespace std;
-
-vector<Transform<> > DefMesh::computeTransforms() const
+std::vector<Transform<> > DefMesh::computeTransforms() const
 {
-  vector<Transform<> > out;
+  std::vector<Transform<> > out;
   int i;
 
   if(motion)
   {
-    vector<Transform<> > ts;
+    std::vector<Transform<> > ts;
     ts = motion->get();
 
     double legRatio = getLegRatio();
@@ -46,7 +44,7 @@ vector<Transform<> > DefMesh::computeTransforms() const
         trans += (out[0] * match[0] - out[1] * match[2]);
 
       out.clear();
-      vector<Vector3> tm;
+      std::vector<Vector3> tm;
       tm.push_back(match[0]);
       ts[0] = ts[0].linearComponent();
       for(i = 0; i < (int)ts.size(); ++i)
@@ -83,7 +81,7 @@ bool reallyDeform = true;
 
 void DefMesh::updateMesh(int &framenum) const
 {
-  vector<Transform<> > t = computeTransforms();
+  std::vector<Transform<> > t = computeTransforms();
 
   if(motion)
   {
@@ -91,25 +89,25 @@ void DefMesh::updateMesh(int &framenum) const
     {
       Intersector s(origMesh, Vector3(0, 1, 0));
 
-      vector<Vector3> sects;
+      std::vector<Vector3> sects;
       double offs;
 
       sects = s.intersect(match[7]);
       offs = 0;
       for(int i = 0; i < (int)sects.size(); ++i)
-        offs = max(offs, match[7][1] - sects[i][1]);
-      const_cast<vector<double> *>(&footOffsets)->push_back(offs);
+        offs = std::max(offs, match[7][1] - sects[i][1]);
+      const_cast<std::vector<double> *>(&footOffsets)->push_back(offs);
 
       sects = s.intersect(match[11]);
       offs = 0;
       for(int i = 0; i < (int)sects.size(); ++i)
-        offs = max(offs, match[11][1] - sects[i][1]);
-      const_cast<vector<double> *>(&footOffsets)->push_back(offs);
+        offs = std::max(offs, match[11][1] - sects[i][1]);
+      const_cast<std::vector<double> *>(&footOffsets)->push_back(offs);
     }
 
-    vector<Vector3> pose = motion->getPose(framenum);
-    vector<Vector3> refPose = motion->getRefPose();
-    vector<Vector3> feet;
+    std::vector<Vector3> pose = motion->getPose(framenum);
+    std::vector<Vector3> refPose = motion->getRefPose();
+    std::vector<Vector3> feet;
 
     double legRatio = getLegRatio();
     feet.push_back(pose[15] * legRatio);
@@ -126,7 +124,7 @@ void DefMesh::updateMesh(int &framenum) const
 
     Vector3 pelvisVec = (refPose[0] - 0.5 * (refPose[4] + refPose[8])) * legRatio;
     Vector3 mpelvisVec = (match[2] - 0.5 * (match[7] + match[11]));
-    mpelvisVec += Vector3(0, min(footOffsets[0], footOffsets[1]), 0);
+    mpelvisVec += Vector3(0, std::min(footOffsets[0], footOffsets[1]), 0);
     Vector3 v(0, 1, 0);
     feet.push_back(pose[0] * legRatio + v * (v * (mpelvisVec - pelvisVec)));
     //feet.back()[1] = 0.;
@@ -162,11 +160,11 @@ void DefMesh::updateMesh(int &framenum) const
 }
 
 
-vector<Vector3> DefMesh::getSkel() const
+std::vector<Vector3> DefMesh::getSkel() const
 {
-  vector<Vector3> out = match;
+  std::vector<Vector3> out = match;
 
-  vector<Transform<> > t;
+  std::vector<Transform<> > t;
   if(motion)
     t = filter.getTransforms();
   else
@@ -174,7 +172,7 @@ vector<Vector3> DefMesh::getSkel() const
 
   for(int i = 0; i < (int)out.size(); ++i)
   {
-    out[i] = t[max(0, i - 1)] * out[i];
+    out[i] = t[std::max(0, i - 1)] * out[i];
   }
 
   return out;
@@ -187,5 +185,5 @@ double DefMesh::getLegRatio() const
   double widthRatio = fabs(match[7][0] - match[11][0]) / motion->getLegWidth();
 
   return lengthRatio;
-  return max(lengthRatio, min(lengthRatio * 1.4, sqrt(lengthRatio * widthRatio)));
+  return std::max(lengthRatio, std::min(lengthRatio * 1.4, sqrt(lengthRatio * widthRatio)));
 }

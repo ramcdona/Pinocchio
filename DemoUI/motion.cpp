@@ -29,29 +29,27 @@ THE SOFTWARE.
 #include <fstream>
 #include <sstream>
 
-using namespace std;
-
-Motion::Motion(const string &file) : fixedFrame(-1)
+Motion::Motion(const std::string &file) : fixedFrame(-1)
 {
-  ifstream strm(file.c_str());
+  std::ifstream strm(file.c_str());
 
   if(!strm.is_open())
   {
-    cout << "Error opening file " << file << endl;
+    std::cout << "Error opening file " << file << std::endl;
     return;
   }
 
-  cout << "Reading " << file << endl;
+  std::cout << "Reading " << file << std::endl;
 
   readH(strm);
 }
 
 
-vector<Vector3> computePose(const vector<Vector3> &nums, const int *prev)
+std::vector<Vector3> computePose(const std::vector<Vector3> &nums, const int *prev)
 {
   int i;
-  vector<Vector3> out;
-  vector<Transform<> > tr;
+  std::vector<Vector3> out;
+  std::vector<Transform<> > tr;
 
   for(i = 0; i < (int)nums.size(); i += 2)
   {
@@ -75,11 +73,11 @@ vector<Vector3> computePose(const vector<Vector3> &nums, const int *prev)
 }
 
 
-vector<Transform<> > computeTransfs(const vector<Vector3> &nums, const vector<Vector3> &refNums, const int *prev)
+std::vector<Transform<> > computeTransfs(const std::vector<Vector3> &nums, const std::vector<Vector3> &refNums, const int *prev)
 {
   int i;
-  vector<Transform<> > out;
-  vector<Transform<> > tr, trr;
+  std::vector<Transform<> > out;
+  std::vector<Transform<> > tr, trr;
 
   for(i = 0; i < (int)nums.size(); i += 2)
   {
@@ -120,7 +118,7 @@ vector<Transform<> > computeTransfs(const vector<Vector3> &nums, const vector<Ve
 }
 
 
-void Motion::readH(istream &strm)
+void Motion::readH(std::istream &strm)
 {
   int i;
   int lineNum = 0;
@@ -138,7 +136,7 @@ void Motion::readH(istream &strm)
   //int filePrev[18] = {-1, 0, 1, 2, 3, 0, 5, 6, 7, 0, 9, 10, 11, 12, 9, 14, 15, 16};
   int filePrev[19] = {-1, 0, 1, 2, 3, 0, 5, 6, 7, 0, 9, 9, 11, 12, 13, 9, 15, 16, 17};
 
-  vector<Vector3> refNums;
+  std::vector<Vector3> refNums;
 
   const int numVals = 114;
 
@@ -202,7 +200,7 @@ void Motion::readH(istream &strm)
     if(data.size() > 36000)
       break;
 
-    vector<string> words = readWords(strm);
+    std::vector<std::string> words = readWords(strm);
 
     if(words.size() == 0)
       continue;
@@ -212,13 +210,13 @@ void Motion::readH(istream &strm)
 
     if(words.size() != (int)numVals)
     {
-      cout << "Error reading motion file: not " <<
-        numVals << " numbers in line " << lineNum << endl;
+      std::cout << "Error reading motion file: not " <<
+        numVals << " numbers in line " << lineNum << std::endl;
       data.clear();
       return;
     }
 
-    vector<Vector3> nums(words.size() / 3);
+    std::vector<Vector3> nums(words.size() / 3);
     for(i = 0; i < (int)words.size(); ++i)
     {
       double cur;
@@ -233,10 +231,10 @@ void Motion::readH(istream &strm)
       legLength = fabs(refPose[4][1] - refPose[0][1]);
     }
 
-    vector<Vector3> pose = computePose(nums, filePrev);
+    std::vector<Vector3> pose = computePose(nums, filePrev);
 
     {
-      vector<Vector3> cp;
+      std::vector<Vector3> cp;
       for(i = 1; i < (int)pose.size(); ++i)
       {
         cp.push_back(pose[filePrev[i]]);
@@ -246,7 +244,7 @@ void Motion::readH(istream &strm)
     }
 
     data.resize(data.size() + 1);
-    vector<Transform<> > trs = computeTransfs(nums, refNums, filePrev);
+    std::vector<Transform<> > trs = computeTransfs(nums, refNums, filePrev);
     for(i = 0; i < (int)skel.fPrev().size() - 1; ++i)
     {
       data.back().push_back(trs[boneCorresp[i]]);
@@ -265,9 +263,9 @@ void Motion::readH(istream &strm)
     for(i = (int)data.size() - 1; i >= 0; --i)
     {
       int j;
-      data[i][1] = data[max(0, i - offset)][1];
+      data[i][1] = data[std::max(0, i - offset)][1];
       for(j = 6; j <= 11; ++j)
-        data[i][j] = data[max(0, i - offset)][j];
+        data[i][j] = data[std::max(0, i - offset)][j];
     }
   }
 }
@@ -348,7 +346,7 @@ int Motion::getFrameIdx() const
     // long it took to run through the animation
     if (framenum >= (signed)data.size())
     {
-      cout << "Run Time End: " << getT() - runStartTime << endl;
+      std::cout << "Run Time End: " << getT() - runStartTime << std::endl;
       runStartTime = getT();
       framenum = 0;
     }
@@ -374,7 +372,7 @@ int Motion::getFrameIdx() const
   int frame = (getMsecs() / (1000 / 120)) % data.size();
   if (frame >= (signed)data.size() - 10)
   {
-    cout << "Run Time End: " << getT() - runStartTime << endl;
+    std::cout << "Run Time End: " << getT() - runStartTime << std::endl;
     runStartTime = getT();
   }
 
@@ -383,13 +381,13 @@ int Motion::getFrameIdx() const
 }
 
 
-vector<Transform<> > Motion::get() const
+std::vector<Transform<> > Motion::get() const
 {
   return data[getFrameIdx()];
 }
 
 
-vector<Vector3> Motion::getPose(int &framenum) const
+std::vector<Vector3> Motion::getPose(int &framenum) const
 {
   framenum = getFrameIdx();
   return poses[framenum];

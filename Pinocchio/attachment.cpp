@@ -28,12 +28,12 @@ class AttachmentPrivate
     AttachmentPrivate() {}
     virtual ~AttachmentPrivate() {}
     virtual Mesh deform(const Mesh &mesh,
-      const vector<Transform<> > &transforms) const = 0;
+      const std::vector<Transform<> > &transforms) const = 0;
     virtual Vector<double, -1> getWeights(int i) const = 0;
     virtual AttachmentPrivate *clone() const = 0;
 };
 
-bool vectorInCone(const Vector3 &v, const vector<Vector3> &ns)
+bool vectorInCone(const Vector3 &v, const std::vector<Vector3> &ns)
 {
   int i;
   Vector3 avg;
@@ -50,13 +50,13 @@ class AttachmentPrivate1 : public AttachmentPrivate
     AttachmentPrivate1() {}
 
     AttachmentPrivate1(const Mesh &mesh, const Skeleton &skeleton,
-      const vector<Vector3> &match, const VisibilityTester *tester,
+      const std::vector<Vector3> &match, const VisibilityTester *tester,
       double initialHeatWeight)
     {
       int i, j;
       int nv = mesh.vertices.size();
       //compute edges
-      vector<vector<int> > edges(nv);
+      std::vector<std::vector<int> > edges(nv);
 
       for(i = 0; i < nv; ++i)
       {
@@ -76,8 +76,8 @@ class AttachmentPrivate1 : public AttachmentPrivate
       for(i = 0; i < nv; ++i)
         weights[i][bones - 1] = 0.;
 
-      vector<vector<double> > boneDists(nv);
-      vector<vector<bool> > boneVis(nv);
+      std::vector<std::vector<double> > boneDists(nv);
+      std::vector<std::vector<bool> > boneVis(nv);
 
       for(i = 0; i < nv; ++i)
       {
@@ -85,7 +85,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
         boneVis[i].resize(bones);
         Vector3 cPos = mesh.vertices[i].pos;
 
-        vector<Vector3> normals;
+        std::vector<Vector3> normals;
         for(j = 0; j < (int)edges[i].size(); ++j)
         {
           int nj = (j + 1) % edges[i].size();
@@ -120,9 +120,9 @@ class AttachmentPrivate1 : public AttachmentPrivate
       //We have -Lw+Hw=HI, same as (H-L)w=HI, with (H-L)=DA (with
       //D=diag(1./area)) so w = A^-1 (HI/D)
 
-      vector<vector<std::pair<int, double> > > A(nv);
-      vector<double> D(nv, 0.), H(nv, 0.);
-      vector<int> closest(nv, -1);
+      std::vector<std::vector<std::pair<int, double> > > A(nv);
+      std::vector<double> D(nv, 0.), H(nv, 0.);
+      std::vector<int> closest(nv, -1);
       for(i = 0; i < nv; ++i)
       {
         //get areas
@@ -191,7 +191,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
 
       for(j = 0; j < bones; ++j)
       {
-        vector<double> rhs(nv, 0.);
+        std::vector<double> rhs(nv, 0.);
         for(i = 0; i < nv; ++i)
         {
           if(boneVis[i][j] && boneDists[i][j] <=
@@ -232,7 +232,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
      * use as the skinning algorithm. The options are linear blend
      * skinning, dual quaternion skinning, or a mixed result.
      */
-    Mesh deform(const Mesh &mesh, const vector<Transform<> > &transforms)
+    Mesh deform(const Mesh &mesh, const std::vector<Transform<> > &transforms)
       const
     {
       Mesh out;
@@ -257,7 +257,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
      *  will be used, while 80% of the dual quaternion result will be used.
      */
     Mesh mixedBlend(const Mesh &mesh,
-      const vector<Transform<> > &transforms)
+      const std::vector<Transform<> > &transforms)
       const
     {
       Mesh out = mesh;
@@ -324,7 +324,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
      * skinning. This was the original code used in Pinocchio before
      * our adjustments.
      */
-    Mesh linearBlend(const Mesh &mesh, const vector<Transform<> > &transforms)
+    Mesh linearBlend(const Mesh &mesh, const std::vector<Transform<> > &transforms)
       const
     {
       Mesh out = mesh;
@@ -361,7 +361,7 @@ class AttachmentPrivate1 : public AttachmentPrivate
      * Vaillant-David.
      */
     Mesh dualQuaternion(const Mesh &mesh,
-      const vector<Transform<> > &transforms)
+      const std::vector<Transform<> > &transforms)
       const
     {
       Mesh out = mesh;
@@ -427,9 +427,9 @@ class AttachmentPrivate1 : public AttachmentPrivate
     }
 
   private:
-    vector<Vector<double, -1> > weights;
+    std::vector<Vector<double, -1> > weights;
     //sparse representation
-    vector<vector<std::pair<int, double> > > nzweights;
+    std::vector<std::vector<std::pair<int, double> > > nzweights;
 };
 
 Attachment::~Attachment()
@@ -452,14 +452,14 @@ Vector<double, -1> Attachment::getWeights(int i) const
 
 
 Mesh Attachment::deform(const Mesh &mesh,
-const vector<Transform<> > &transforms) const
+const std::vector<Transform<> > &transforms) const
 {
   return a->deform(mesh, transforms);
 }
 
 
 Attachment::Attachment(const Mesh &mesh, const Skeleton &skeleton,
-const vector<Vector3> &match, const VisibilityTester *tester,
+const std::vector<Vector3> &match, const VisibilityTester *tester,
 double initialHeatWeight)
 {
   a = new AttachmentPrivate1(mesh, skeleton, match, tester, initialHeatWeight);

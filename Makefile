@@ -14,11 +14,9 @@ endef
 nullstring :=
 
 all: makerule = $(nullstring)
-depend: makerule = depend
-clean: makerule = clean
-distclean: makerule = distclean
+depend clean distclean cleanall: makerule = distclean
 
-all depend clean distclean:
+all depend clean distclean cleanall:
 	$(makePerDir)
 
 SRC_FILES = $(shell find . -maxdepth 3 \
@@ -35,4 +33,4 @@ bcpp:
 test:all
 	LD_LIBRARY_PATH=Pinocchio DemoUI/DemoUI DemoUI/data/test.obj -motion DemoUI/data/walk.txt -algo DQS
 
-.PHONY: all depend clean distclean bcpp test
+.PHONY: all depend clean distclean cleanall bcpp test

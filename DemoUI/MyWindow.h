@@ -59,8 +59,8 @@ class MyWindow : public Fl_Gl_Window
   private:
     bool flatShading, floor, skeleton;
     Transform<> transform;
-    vector<DisplayMesh *> meshes;
-    vector<LineSegment> lines;
+    std::vector<DisplayMesh *> meshes;
+    std::vector<LineSegment> lines;
 
     void resetTransform();
     void initGL();

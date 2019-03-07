@@ -32,7 +32,7 @@ class Motion;
 class DefMesh : public DisplayMesh
 {
   public:
-    DefMesh(const Mesh inMesh, const Skeleton &inOrigSkel, const vector<Vector3> &inMatch,
+    DefMesh(const Mesh inMesh, const Skeleton &inOrigSkel, const std::vector<Vector3> &inMatch,
       const Attachment &inAttachment, Motion *inMotion = NULL)
       : origSkel(inOrigSkel), match(inMatch), attachment(inAttachment),
       origMesh(inMesh), motion(inMotion), filter(match, origSkel.fPrev())
@@ -44,7 +44,7 @@ class DefMesh : public DisplayMesh
     Motion *getMotion() const { return motion; }
     void updateIfHasMotion(int &fnum) const { if(motion) updateMesh(fnum); }
 
-    vector<Vector3> getSkel() const;
+    std::vector<Vector3> getSkel() const;
     const Skeleton &getOrigSkel() const { return origSkel; }
 
     const Attachment &getAttachment() const { return attachment; }
@@ -57,18 +57,18 @@ class DefMesh : public DisplayMesh
 
   private:
     double getLegRatio() const;
-    vector<Transform<> > computeTransforms() const;
+    std::vector<Transform<> > computeTransforms() const;
     void updateMesh(int &framenum) const;
 
     Skeleton origSkel;
-    vector<Vector3> match;
+    std::vector<Vector3> match;
     Attachment attachment;
     Mesh origMesh;
     mutable Mesh curMesh;
-    vector<Quaternion<> > transforms;
+    std::vector<Quaternion<> > transforms;
     Motion *motion;
 
-    vector<double> footOffsets;
+    std::vector<double> footOffsets;
     mutable MotionFilter filter;
 };
 

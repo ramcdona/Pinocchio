@@ -610,14 +610,20 @@ class StlVtx : public Vector3
     }
 };
 
-MAKE_HASH(StlVtx, return (int)(p[0] * 100000. + p[1] * 200000. + p[2] * 400000.););
+namespace _HASH_NAMESPACE {
+  template<> struct hash<StlVtx> {
+      std::size_t operator()(const StlVtx &p) const {
+        return (int)(p[0] * 100000. + p[1] * 200000. + p[2] * 400000.);
+      }
+    };
+}
 
 void Mesh::readStl(std::istream &strm)
 {
   int i;
   int lineNum = 0;
 
-  hash_map<StlVtx, int> vertexIdx;
+  _HASH_NAMESPACE::hash_map<StlVtx, int> vertexIdx;
 
   std::vector<int> lastIdxs;
 

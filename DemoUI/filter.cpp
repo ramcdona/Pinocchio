@@ -24,8 +24,8 @@ THE SOFTWARE.
 #include "../Pinocchio/deriv.h"
 
 template<class Real>
-Vectorn<Real> getFeet(const vector<Transform<Real> > &transforms, const vector<Vector3> &joints,
-const vector<int> &prev)
+Vectorn<Real> getFeet(const std::vector<Transform<Real> > &transforms, const std::vector<Vector3> &joints,
+const std::vector<int> &prev)
 {
   int i;
   Vectorn<Real> out;
@@ -51,7 +51,7 @@ const vector<int> &prev)
 }
 
 
-Vectorn<double> toVector(const vector<Transform<> > &transforms)
+Vectorn<double> toVector(const std::vector<Transform<> > &transforms)
 {
   Vectorn<double> out(3 + 4 * transforms.size());
   out[0] = transforms[0].getTrans()[0];
@@ -70,9 +70,9 @@ Vectorn<double> toVector(const vector<Transform<> > &transforms)
 }
 
 
-vector<Transform<> > fromVector(const Vectorn<double> &v)
+std::vector<Transform<> > fromVector(const Vectorn<double> &v)
 {
-  vector<Transform<> > out;
+  std::vector<Transform<> > out;
 
   int i;
   Vector3 trans0(v[0], v[1], v[2]);
@@ -108,10 +108,10 @@ Vectorn<double> adjVector(const Vectorn<double> &v, const Vectorn<double> &dirs)
 }
 
 
-Matrixn<double> MotionFilter::getJac(const vector<Transform<> > &transforms) const
+Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms) const
 {
   typedef Deriv<double, -1> D;
-  vector<Transform<D> > transD(transforms.size());
+  std::vector<Transform<D> > transD(transforms.size());
   int i, j;
 
   Vectorn<double> transVec = toVector(transforms);
@@ -145,7 +145,7 @@ Matrixn<double> MotionFilter::getJac(const vector<Transform<> > &transforms) con
 }
 
 
-void MotionFilter::step(const vector<Transform<> > &transforms, vector<Vector3> feet)
+void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector<Vector3> feet)
 {
   Vectorn<double> feetV;
   int i, j;
@@ -169,7 +169,7 @@ void MotionFilter::step(const vector<Transform<> > &transforms, vector<Vector3> 
   }
 
   //flips quaternions on incoming transforms to be more like current ones
-  vector<Transform<> > transfs = fromVector(adjVector(toVector(transforms), toVector(curTransforms)));
+  std::vector<Transform<> > transfs = fromVector(adjVector(toVector(transforms), toVector(curTransforms)));
 
   Matrixn<double> jac = getJac(curTransforms);
 
@@ -228,7 +228,7 @@ void MotionFilter::step(const vector<Transform<> > &transforms, vector<Vector3> 
 void MotionFilter::addTranslation()
 {
   int i;
-  vector<Vector3> pts = joints;
+  std::vector<Vector3> pts = joints;
 
   pts[0] = curTransforms[0] * pts[0];
   pts[1] = curTransforms[0] * pts[1];

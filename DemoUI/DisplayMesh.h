@@ -31,7 +31,7 @@ class DisplayMesh
     virtual ~DisplayMesh() {}
 
     virtual const Mesh &getMesh(int &framenum) = 0;
-    virtual vector<Vector3> getSkel() const { return vector<Vector3>(); }
+    virtual std::vector<Vector3> getSkel() const { return std::vector<Vector3>(); }
 };
 
 class StaticDisplayMesh : public DisplayMesh

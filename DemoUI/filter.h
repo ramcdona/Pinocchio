@@ -30,23 +30,23 @@ THE SOFTWARE.
 class MotionFilter
 {
   public:
-    MotionFilter(const vector<Vector3> &inJoints, const vector<int> inPrev)
+    MotionFilter(const std::vector<Vector3> &inJoints, const std::vector<int> inPrev)
       : joints(inJoints), prev(inPrev) {}
 
-    void step(const vector<Transform<> > &transforms, vector<Vector3> feet);
+    void step(const std::vector<Transform<> > &transforms, std::vector<Vector3> feet);
 
-    const vector<Transform<> > &getTransforms() const { return curTransforms; }
+    const std::vector<Transform<> > &getTransforms() const { return curTransforms; }
 
   private:
-    Matrixn<double> getJac(const vector<Transform<> > &transforms) const;
+    Matrixn<double> getJac(const std::vector<Transform<> > &transforms) const;
     void addTranslation();
 
-    vector<Vector3> joints;
-    vector<int> prev;
+    std::vector<Vector3> joints;
+    std::vector<int> prev;
 
     Vector3 prevTrans;
     Vectorn<double> prevFeet;
-    vector<Transform<> > curTransforms;
+    std::vector<Transform<> > curTransforms;
 };
 
 //FILTER_H_INCLUDED

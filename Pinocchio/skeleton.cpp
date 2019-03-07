@@ -44,8 +44,8 @@ void Skeleton::initCompressed()
   cPrevV.resize(cfMapV.size(), -1);
   cSymV.resize(cfMapV.size(), -1);
   cGraphV.edges.resize(cfMapV.size());
-  cFeetV = vector<bool>(cPrevV.size(), false);
-  cFatV = vector<bool>(cPrevV.size(), false);
+  cFeetV = std::vector<bool>(cPrevV.size(), false);
+  cFatV = std::vector<bool>(cPrevV.size(), false);
 
   for(i = 0; i < (int)cfMapV.size(); ++i)
   {
@@ -79,7 +79,7 @@ void Skeleton::initCompressed()
   for(i = 1; i < (int)cPrevV.size(); ++i)
   {
     int cur = cfMapV[i];
-    hash_map<int, double> lengths;
+    _HASH_NAMESPACE::hash_map<int, double> lengths;
     do
     {
       lengths[cur] = (fGraphV.verts[cur] - fGraphV.verts[fPrevV[cur]]).length();
@@ -87,7 +87,7 @@ void Skeleton::initCompressed()
       cur = fPrevV[cur];
     } while(fcMapV[cur] == -1);
 
-    for(hash_map<int, double>::iterator it = lengths.begin(); it != lengths.end(); ++it)
+    for(_HASH_NAMESPACE::hash_map<int, double>::iterator it = lengths.begin(); it != lengths.end(); ++it)
       fcFractionV[it->first] = it->second / cLengthV[i];
   }
 }
@@ -455,7 +455,7 @@ FileSkeleton::FileSkeleton(const std::string &filename)
 
   while(!strm.eof())
   {
-    vector<std::string> line = readWords(strm);
+    std::vector<std::string> line = readWords(strm);
     if(line.size() < 5)
       //error
       continue;

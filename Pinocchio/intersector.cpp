@@ -38,8 +38,8 @@ void Intersector::getIndex(const Vector2 &pt, int &x, int &y) const
 void Intersector::init()
 {
   int i, j, k;
-  const vector<MeshVertex> &vtc = mesh->vertices;
-  const vector<MeshEdge> &edg = mesh->edges;
+  const std::vector<MeshVertex> &vtc = mesh->vertices;
+  const std::vector<MeshEdge> &edg = mesh->edges;
 
   dir = dir.normalize();
   getBasis(dir, v1, v2);
@@ -82,13 +82,13 @@ void Intersector::init()
 }
 
 
-vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndices) const
+std::vector<Vector3> Intersector::intersect(const Vector3 &pt, std::vector<int> *outIndices) const
 {
   int i;
-  const vector<MeshVertex> &vtc = mesh->vertices;
-  const vector<MeshEdge> &edg = mesh->edges;
+  const std::vector<MeshVertex> &vtc = mesh->vertices;
+  const std::vector<MeshEdge> &edg = mesh->edges;
 
-  vector<Vector3> out;
+  std::vector<Vector3> out;
 
   Vector2 pt2(pt * v1, pt * v2);
   if(!bounds.contains(pt2))
@@ -97,7 +97,7 @@ vector<Vector3> Intersector::intersect(const Vector3 &pt, vector<int> *outIndice
 
   int x, y;
   getIndex(pt2, x, y);
-  const vector<int> &tris = triangles[y * cells + x];
+  const std::vector<int> &tris = triangles[y * cells + x];
   for(i = 0; i < (int)tris.size(); ++i)
   {
     int j;

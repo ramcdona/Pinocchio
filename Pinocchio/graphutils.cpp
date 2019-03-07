@@ -36,7 +36,7 @@ bool PtGraph::integrityCheck() const
       //no self edges
       CHECK(cur != i);
 
-      vector<int>::const_iterator it = find(edges[cur].begin(), edges[cur].end(), i);
+      std::vector<int>::const_iterator it = find(edges[cur].begin(), edges[cur].end(), i);
       CHECK(it != edges[cur].end());
 
       //duplicates
@@ -53,7 +53,7 @@ ShortestPather::ShortestPather(const PtGraph &g, int root)
 {
   int sz = g.verts.size();
   std::priority_queue<Inf> todo;
-  vector<bool> done(sz, false);
+  std::vector<bool> done(sz, false);
   prev.resize(sz, -1);
   dist.resize(sz, -1);
 
@@ -68,7 +68,7 @@ ShortestPather::ShortestPather(const PtGraph &g, int root)
     prev[cur.node] = cur.prev;
     dist[cur.node] = cur.dist;
 
-    const vector<int> &e = g.edges[cur.node];
+    const std::vector<int> &e = g.edges[cur.node];
     for(int i = 0; i < (int)e.size(); ++i)
     {
       if(!done[e[i]])

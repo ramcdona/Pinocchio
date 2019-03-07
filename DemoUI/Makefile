@@ -53,9 +53,9 @@ depend: .depend
 clean:
 	$(RM) $(OBJS) DemoUI
 
-distclean: clean
+distclean cleanall: clean
 	$(RM) *~ .depend core *.out *.bak
 
 include .depend
 
-.PHONY: all depend clean distclean
+.PHONY: all depend clean distclean cleanall

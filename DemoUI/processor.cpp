@@ -32,8 +32,6 @@ THE SOFTWARE.
 #include "defmesh.h"
 #include "motion.h"
 
-using namespace std;
-
 struct ArgData
 {
   ArgData() :
@@ -44,13 +42,13 @@ struct ArgData
 
   bool stopAtMesh;
   bool stopAfterCircles;
-  string filename;
-  string motionname;
+  std::string filename;
+  std::string motionname;
   Quaternion<> meshTransform;
   double skelScale;
   bool noFit;
   Skeleton skeleton;
-  string skeletonname;
+  std::string skeletonname;
   // Indicates which skinning algorithm to use
   int skinAlgorithm;
   // Indicates the blending weight for MIX algorithm
@@ -59,17 +57,17 @@ struct ArgData
 
 void printUsageAndExit()
 {
-  cout << "Usage: DemoUI filename.{obj | ply | off | gts | stl}" << endl;
-  cout << "              [-skel skelname] [-rot x y z deg]* [-scale s]" << endl;
-  cout << "              [-meshonly | -mo] [-circlesonly | -co]" << endl;
-  cout << "              [-motion motionname] [-nofit]" << endl;
-  cout << "              [-algo skinning_algorithm [blend_weight]]" << endl;
+  std::cout << "Usage: DemoUI filename.{obj | ply | off | gts | stl}" << std::endl;
+  std::cout << "              [-skel skelname] [-rot x y z deg]* [-scale s]" << std::endl;
+  std::cout << "              [-meshonly | -mo] [-circlesonly | -co]" << std::endl;
+  std::cout << "              [-motion motionname] [-nofit]" << std::endl;
+  std::cout << "              [-algo skinning_algorithm [blend_weight]]" << std::endl;
 
   exit(0);
 }
 
 
-ArgData processArgs(const vector<string> &args)
+ArgData processArgs(const std::vector<std::string> &args)
 {
   ArgData out;
   int cur = 2;
@@ -85,32 +83,32 @@ ArgData processArgs(const vector<string> &args)
 
   while(cur < num)
   {
-    string curStr = args[cur++];
-    if(curStr == string("-skel"))
+    std::string curStr = args[cur++];
+    if(curStr == std::string("-skel"))
     {
       if(cur == num)
       {
-        cout << "No skeleton specified; ignoring." << endl;
+        std::cout << "No skeleton specified; ignoring." << std::endl;
         continue;
       }
       curStr = args[cur++];
-      if(curStr == string("human"))
+      if(curStr == std::string("human"))
         out.skeleton = HumanSkeleton();
-      else if(curStr == string("horse"))
+      else if(curStr == std::string("horse"))
         out.skeleton = HorseSkeleton();
-      else if(curStr == string("quad"))
+      else if(curStr == std::string("quad"))
         out.skeleton = QuadSkeleton();
-      else if(curStr == string("centaur"))
+      else if(curStr == std::string("centaur"))
         out.skeleton = CentaurSkeleton();
       else
         out.skeleton = FileSkeleton(curStr);
       out.skeletonname = curStr;
     }
-    else if(curStr == string("-rot"))
+    else if(curStr == std::string("-rot"))
     {
       if(cur + 3 >= num)
       {
-        cout << "Too few rotation arguments; exiting." << endl;
+        std::cout << "Too few rotation arguments; exiting." << std::endl;
         printUsageAndExit();
       }
       double x, y, z, deg;
@@ -121,53 +119,53 @@ ArgData processArgs(const vector<string> &args)
 
       out.meshTransform = Quaternion<>(Vector3(x, y, z), deg * M_PI / 180.) * out.meshTransform;
     }
-    else if(curStr == string("-scale"))
+    else if(curStr == std::string("-scale"))
     {
       if(cur >= num)
       {
-        cout << "No scale provided; exiting." << endl;
+        std::cout << "No scale provided; exiting." << std::endl;
         printUsageAndExit();
       }
       sscanf(args[cur++].c_str(), "%lf", &out.skelScale);
     }
-    else if(curStr == string("-meshonly") || curStr == string("-mo"))
+    else if(curStr == std::string("-meshonly") || curStr == std::string("-mo"))
     {
       out.stopAtMesh = true;
     }
-    else if(curStr == string("-circlesonly") || curStr == string("-co"))
+    else if(curStr == std::string("-circlesonly") || curStr == std::string("-co"))
     {
       out.stopAfterCircles = true;
     }
-    else if (curStr == string("-nofit"))
+    else if (curStr == std::string("-nofit"))
     {
       out.noFit = true;
     }
-    else if(curStr == string("-motion"))
+    else if(curStr == std::string("-motion"))
     {
       if(cur == num)
       {
-        cout << "No motion filename specified; ignoring." << endl;
+        std::cout << "No motion filename specified; ignoring." << std::endl;
         continue;
       }
       out.motionname = args[cur++];
     }
-    else if (curStr == string("-algo"))
+    else if (curStr == std::string("-algo"))
     {
       /*  Option to use a different skinning algorithm than the
        *  default LBS. Currently, options are LBS, DQS, and MIX */
-      string algo = args[cur++];
-      if (algo == string("LBS"))
+      std::string algo = args[cur++];
+      if (algo == std::string("LBS"))
         out.skinAlgorithm = Mesh::LBS;
-      else if (algo == string("DQS"))
+      else if (algo == std::string("DQS"))
         out.skinAlgorithm = Mesh::DQS;
-      else if (algo == string("MIX"))
+      else if (algo == std::string("MIX"))
       {
         /*  Grab the desired blending weight for LBS, i.e
          *  how much of the result of LBS you want to see */
         if(cur >= num)
         {
-          cout << "No blending weight given; exiting." << endl;
-          cout << args[cur] << endl;
+          std::cout << "No blending weight given; exiting." << std::endl;
+          std::cout << args[cur] << std::endl;
           printUsageAndExit();
         }
         out.skinAlgorithm = Mesh::MIX;
@@ -175,13 +173,13 @@ ArgData processArgs(const vector<string> &args)
       }
       else
       {
-        cout << "Unrecognized skinning algorithm" << endl;
+        std::cout << "Unrecognized skinning algorithm" << std::endl;
         printUsageAndExit();
       }
     }
     else
     {
-      cout << "Unrecognized option: " << curStr << endl;
+      std::cout << "Unrecognized option: " << curStr << std::endl;
       printUsageAndExit();
     }
   }
@@ -190,17 +188,17 @@ ArgData processArgs(const vector<string> &args)
 }
 
 
-void process(const vector<string> &args, MyWindow *w)
+void process(const std::vector<std::string> &args, MyWindow *w)
 {
   int i;
   ArgData a = processArgs(args);
 
-  Debugging::setOutStream(cout);
+  Debugging::setOutStream(std::cout);
 
   Mesh m(a.filename, a.skinAlgorithm, a.blendWeight);
   if(m.vertices.size() == 0)
   {
-    cout << "Error reading file.  Aborting." << endl;
+    std::cout << "Error reading file.  Aborting." << std::endl;
     exit(0);
     return;
   }
@@ -244,7 +242,7 @@ void process(const vector<string> &args, MyWindow *w)
 
   if(o.embedding.size() == 0)
   {
-    cout << "Error embedding" << endl;
+    std::cout << "Error embedding" << std::endl;
     exit(0);
   }
 
@@ -266,11 +264,11 @@ void process(const vector<string> &args, MyWindow *w)
   //output skeleton embedding
   for(i = 0; i < (int)o.embedding.size(); ++i)
     o.embedding[i] = (o.embedding[i] - m.toAdd) / m.scale;
-  ofstream os("skeleton.out");
+  std::ofstream os("skeleton.out");
   for(i = 0; i < (int)o.embedding.size(); ++i)
   {
     os << i << " " << o.embedding[i][0] << " " << o.embedding[i][1] <<
-      " " << o.embedding[i][2] << " " << a.skeleton.fPrev()[i] << endl;
+      " " << o.embedding[i][2] << " " << a.skeleton.fPrev()[i] << std::endl;
   }
 
   //output attachment
@@ -283,7 +281,7 @@ void process(const vector<string> &args, MyWindow *w)
       double d = floor(0.5 + v[j] * 10000.) / 10000.;
       astrm << d << " ";
     }
-    astrm << endl;
+    astrm << std::endl;
   }
 
   delete o.attachment;

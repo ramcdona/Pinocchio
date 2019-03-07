@@ -22,12 +22,12 @@
 //information for penalty functions
 struct FP
 {
-  FP(const PtGraph &inG, const Skeleton &inSk, const vector<Sphere> &inS)
+  FP(const PtGraph &inG, const Skeleton &inSk, const std::vector<Sphere> &inS)
     : graph(inG), given(inSk), sph(inS), paths(inG) {}
 
   const PtGraph &graph;
   const Skeleton &given;
-  const vector<Sphere> &sph;
+  const std::vector<Sphere> &sph;
   AllShortestPather paths;
   double footBase;
 };
@@ -36,7 +36,7 @@ struct PartialMatch
 {
   PartialMatch(int vsz) : penalty(0), heuristic(0) { vTaken.resize(vsz, false); }
 
-  vector<int> match;
+  std::vector<int> match;
   double penalty;
   double heuristic;
   //smallest penalty first
@@ -45,7 +45,7 @@ struct PartialMatch
     return heuristic > pm.heuristic;
   }
 
-  vector<bool> vTaken;
+  std::vector<bool> vTaken;
 };
 
 class PenaltyFunction
@@ -60,17 +60,17 @@ class PenaltyFunction
     double weight;
 };
 
-vector<vector<int> > computePossibilities(const PtGraph &graph, const vector<Sphere> &spheres,
+std::vector<std::vector<int> > computePossibilities(const PtGraph &graph, const std::vector<Sphere> &spheres,
 const Skeleton &skeleton)
 {
   int i, j;
 
-  vector<vector<int> > out(skeleton.cGraph().verts.size());
-  vector<int> allVerts, limbVerts, fatVerts;
+  std::vector<std::vector<int> > out(skeleton.cGraph().verts.size());
+  std::vector<int> allVerts, limbVerts, fatVerts;
   for(i = 0; i < (int)graph.verts.size(); ++i)
   {
     allVerts.push_back(i);
-    const vector<int> &edg = graph.edges[i];
+    const std::vector<int> &edg = graph.edges[i];
     double rad = spheres[i].radius;
     Vector3 cur = graph.verts[i];
     for(j = 0; j < (int)edg.size(); ++j)
@@ -91,7 +91,7 @@ const Skeleton &skeleton)
       break;
     }
   }
-  vector<double> rads;
+  std::vector<double> rads;
   for(i = 0; i < (int)graph.verts.size(); ++i)
     rads.push_back(spheres[i].radius);
   sort(rads.begin(), rads.end());
@@ -119,9 +119,9 @@ const Skeleton &skeleton)
 
 
 //user responsible for deletion of penalties
-vector<PenaltyFunction *> getPenaltyFunctions(FP *fp);
+std::vector<PenaltyFunction *> getPenaltyFunctions(FP *fp);
 
-double computePenalty(const vector<PenaltyFunction *> &penaltyFunctions,
+double computePenalty(const std::vector<PenaltyFunction *> &penaltyFunctions,
 const PartialMatch &cur, int next, int idx = -1)
 {
   if(idx == -1)
@@ -141,8 +141,8 @@ const PartialMatch &cur, int next, int idx = -1)
 }
 
 
-vector<int> discreteEmbed(const PtGraph &graph, const vector<Sphere> &spheres,
-const Skeleton &skeleton, const vector<vector<int> > &possibilities)
+std::vector<int> discreteEmbed(const PtGraph &graph, const std::vector<Sphere> &spheres,
+const Skeleton &skeleton, const std::vector<std::vector<int> > &possibilities)
 {
   int i, j;
   FP fp(graph, skeleton, spheres);
@@ -151,7 +151,7 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
   for(i = 0; i < (int)graph.verts.size(); ++i)
     fp.footBase = std::min(fp.footBase, graph.verts[i][1]);
 
-  vector<PenaltyFunction *> penaltyFunctions = getPenaltyFunctions(&fp);
+  std::vector<PenaltyFunction *> penaltyFunctions = getPenaltyFunctions(&fp);
 
   int toMatch = skeleton.cGraph().verts.size();
 
@@ -204,7 +204,7 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
         //compute taken vertices and edges
         if(idx > 0)
         {
-          vector<int> path = fp.paths.path(candidate, next.match[skeleton.cPrev()[idx]]);
+          std::vector<int> path = fp.paths.path(candidate, next.match[skeleton.cPrev()[idx]]);
           for(j = 0; j < (int)path.size(); ++j)
             next.vTaken[path[j]] = true;
         }
@@ -244,13 +244,13 @@ const Skeleton &skeleton, const vector<vector<int> > &possibilities)
 }
 
 
-vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
+std::vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
 {
   int i;
-  vector<int> newPath = fp->paths.path(prevIdx, curIdx);
+  std::vector<int> newPath = fp->paths.path(prevIdx, curIdx);
 
   //stores the indices of the path in the unsimplified skeleton
-  vector<int> uncompIdx;
+  std::vector<int> uncompIdx;
   uncompIdx.push_back(fp->given.cfMap()[joint]);
   do
   {
@@ -258,20 +258,20 @@ vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
   } while(fp->given.fcMap()[uncompIdx.back()] == -1);
   reverse(uncompIdx.begin(), uncompIdx.end());
 
-  vector<Vector3> pathPts(uncompIdx.size(), fp->graph.verts[newPath[0]]);
+  std::vector<Vector3> pathPts(uncompIdx.size(), fp->graph.verts[newPath[0]]);
 
   //if there is a meaningful path in the extracted graph
   if(newPath.size() > 1)
   {
     double dist = fp->paths.dist(newPath[0], newPath.back());
 
-    vector<double> lengths(1, 0.);
+    std::vector<double> lengths(1, 0.);
     for(i = 1; i < (int)uncompIdx.size(); ++i)
     {
       lengths.push_back(lengths.back() + dist * fp->given.fcFraction()[uncompIdx[i]]);
     }
 
-    vector<Vector3> newPathPts(newPath.size());
+    std::vector<Vector3> newPathPts(newPath.size());
     for(i = 0; i < (int)newPath.size(); ++i)
       newPathPts[i] = fp->graph.verts[newPath[i]];
 
@@ -299,19 +299,19 @@ vector<Vector3> splitPath(FP *fp, int joint, int curIdx, int prevIdx)
 }
 
 
-vector<Vector3> splitPaths(const vector<int> &discreteEmbedding, const PtGraph &graph,
+std::vector<Vector3> splitPaths(const std::vector<int> &discreteEmbedding, const PtGraph &graph,
 const Skeleton &skeleton)
 {
-  FP fp(graph, skeleton, vector<Sphere>());
+  FP fp(graph, skeleton, std::vector<Sphere>());
 
-  vector<Vector3> out;
+  std::vector<Vector3> out;
 
   out.push_back(graph.verts[discreteEmbedding[0]]);
   for(int i = 1; i < (int)discreteEmbedding.size(); ++i)
   {
     int prev = skeleton.cPrev()[i];
 
-    vector<Vector3> pathPts = splitPath(&fp, i, discreteEmbedding[i], discreteEmbedding[prev]);
+    std::vector<Vector3> pathPts = splitPath(&fp, i, discreteEmbedding[i], discreteEmbedding[prev]);
     out.insert(out.end(), pathPts.begin() + 1, pathPts.end());
   }
 
@@ -361,9 +361,9 @@ class DistPF : public PenaltyFunction
     }
 };
 
-vector<Vector3> computeDirs(FP * fp, const PartialMatch &cur, int next, int idx = -1)
+std::vector<Vector3> computeDirs(FP * fp, const PartialMatch &cur, int next, int idx = -1)
 {
-  vector<Vector3> out;
+  std::vector<Vector3> out;
   if(idx == -1)
     idx = cur.match.size();
 
@@ -373,7 +373,7 @@ vector<Vector3> computeDirs(FP * fp, const PartialMatch &cur, int next, int idx 
   if(idx == 0 || next == cur.match[prev])
     return out;
 
-  vector<Vector3> pathPts = splitPath(fp, idx, next, cur.match[prev]);
+  std::vector<Vector3> pathPts = splitPath(fp, idx, next, cur.match[prev]);
 
   out.resize(pathPts.size() - 1);
 
@@ -414,7 +414,7 @@ class DotPF : public PenaltyFunction
         return sDir.lengthsq() * 50. * SQR(penalty);
       }
 
-      vector<int> uncompIdx;
+      std::vector<int> uncompIdx;
       uncompIdx.push_back(fp->given.cfMap()[idx]);
       do
       {
@@ -422,7 +422,7 @@ class DotPF : public PenaltyFunction
       } while(fp->given.fcMap()[uncompIdx.back()] == -1);
       reverse(uncompIdx.begin(), uncompIdx.end());
 
-      vector<Vector3> dirs = computeDirs(fp, cur, next, idx);
+      std::vector<Vector3> dirs = computeDirs(fp, cur, next, idx);
       if(dirs.size() == 0)
         return out;
 
@@ -522,7 +522,7 @@ class DoublePF : public PenaltyFunction
       int prev = fp->given.cPrev()[idx];
 
       double out = 0.;
-      vector<int> newPath = fp->paths.path(next, cur.match[prev]);
+      std::vector<int> newPath = fp->paths.path(next, cur.match[prev]);
 
       //check if tail of path is in use
       for(int i = (int)newPath.size() - 2; i >= 0; --i)
@@ -634,9 +634,9 @@ class DisjointPF : public PenaltyFunction
 };
 
 //user responsible for deletion of penalties
-vector<PenaltyFunction *> getPenaltyFunctions(FP *fp)
+std::vector<PenaltyFunction *> getPenaltyFunctions(FP *fp)
 {
-  vector<PenaltyFunction *> out;
+  std::vector<PenaltyFunction *> out;
 
   out.push_back(new DistPF(fp));
   out.push_back(new GlobalDotPF(fp));

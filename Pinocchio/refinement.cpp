@@ -23,10 +23,10 @@
 //information for refined embedding
 struct RP
 {
-  RP(TreeType *inD, const Skeleton &inSk, const vector<Vector3> &medialSurface)
+  RP(TreeType *inD, const Skeleton &inSk, const std::vector<Vector3> &medialSurface)
     : distanceField(inD), given(inSk)
   {
-    vector<Vec3Object> mpts;
+    std::vector<Vec3Object> mpts;
     for(int i = 0; i < (int)medialSurface.size(); ++i)
       mpts.push_back(medialSurface[i]);
 
@@ -38,7 +38,7 @@ struct RP
   ObjectProjector<3, Vec3Object> medProjector;
 };
 
-template<class Real> Real computeFineError(const vector<Vector<Real, 3> > &match, RP *rp)
+template<class Real> Real computeFineError(const std::vector<Vector<Real, 3> > &match, RP *rp)
 {
   Real out = Real();
   int i;
@@ -100,7 +100,7 @@ template<class Real> Real computeFineError(const vector<Vector<Real, 3> > &match
 }
 
 
-vector<Vector3> optimizeEmbedding1D(vector<Vector3> fineEmbedding, vector<Vector3> dir, RP *rp)
+std::vector<Vector3> optimizeEmbedding1D(std::vector<Vector3> fineEmbedding, std::vector<Vector3> dir, RP *rp)
 {
   int i;
   double step = 0.001;
@@ -144,13 +144,13 @@ vector<Vector3> optimizeEmbedding1D(vector<Vector3> fineEmbedding, vector<Vector
 
 
 //refines embedding
-vector<Vector3> refineEmbedding(TreeType *distanceField, const vector<Vector3> &medialSurface,
-const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
+std::vector<Vector3> refineEmbedding(TreeType *distanceField, const std::vector<Vector3> &medialSurface,
+const std::vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
 {
   RP rp(distanceField, skeleton, medialSurface);
 
   int sz = initialEmbedding.size();
-  vector<Vector3> fineEmbedding = initialEmbedding;
+  std::vector<Vector3> fineEmbedding = initialEmbedding;
   int i, k;
   for(k = 0; k < 10; ++k)
   {
@@ -161,7 +161,7 @@ const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
 
     for(int j = 0; j < 2; ++j)
     {
-      vector<Vector<DType1, 3> > dMatch(sz);
+      std::vector<Vector<DType1, 3> > dMatch(sz);
       for(i = 0; i < sz; ++i)
       {
         dMatch[i][0] = DType1(fineEmbedding[i][0], i * 3);
@@ -170,7 +170,7 @@ const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
       }
 
       DType1 err = computeFineError(dMatch, &rp) + (DType1() * DType1(0., 3 * sz));
-      vector<Vector3> dir(sz);
+      std::vector<Vector3> dir(sz);
 
       for(i = 0; i < sz; ++i)
       {
@@ -186,7 +186,7 @@ const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
     {
       int prev = skeleton.fPrev()[cur];
 
-      vector<Vector<DType, 3> > dMatch(sz);
+      std::vector<Vector<DType, 3> > dMatch(sz);
       for(i = 0; i < sz; ++i)
       {
         dMatch[i][0] = DType(fineEmbedding[i][0]);
@@ -209,7 +209,7 @@ const vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
 
       DType err = computeFineError(dMatch, &rp);
 
-      vector<Vector3> dir(sz);
+      std::vector<Vector3> dir(sz);
 
       for(i = 0; i < sz; ++i)
       {

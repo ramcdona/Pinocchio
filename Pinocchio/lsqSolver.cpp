@@ -174,7 +174,7 @@ std::vector<int> SPDMatrix::computePerm() const
 
   //initialize
   std::set<std::pair<int, int> > neighborSize;
-  std::vector<hash_set<int> > neighbors(sz);
+  std::vector<_HASH_NAMESPACE::hash_set<int> > neighbors(sz);
   for(i = 0; i < sz; ++i)
   {
     for(j = 0; j < (int)m[i].size() - 1; ++j)
