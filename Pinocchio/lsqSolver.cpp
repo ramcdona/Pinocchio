@@ -21,6 +21,8 @@
 #include <queue>
 #include <set>
 #include <iostream>
+#include <unordered_set>
+
 #include "hashutils.h"
 #include "debugging.h"
 
@@ -174,7 +176,7 @@ std::vector<int> SPDMatrix::computePerm() const
 
   //initialize
   std::set<std::pair<int, int> > neighborSize;
-  std::vector<_HASH_NAMESPACE::hash_set<int> > neighbors(sz);
+  std::vector<std::unordered_set<int> > neighbors(sz);
   for(i = 0; i < sz; ++i)
   {
     for(j = 0; j < (int)m[i].size() - 1; ++j)
