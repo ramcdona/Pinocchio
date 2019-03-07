@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 class DisplayMesh
 {
-public:
+  public:
     virtual ~DisplayMesh() {}
 
     virtual const Mesh &getMesh(int &framenum) = 0;
@@ -36,13 +36,14 @@ public:
 
 class StaticDisplayMesh : public DisplayMesh
 {
-public:
+  public:
     StaticDisplayMesh(const Mesh &inM) : m(inM) {}
 
     virtual const Mesh &getMesh(int &framenum) { return m; }
-private:
+  private:
 
     Mesh m;
 };
 
-#endif //DISPLAYMESH_H
+//DISPLAYMESH_H
+#endif

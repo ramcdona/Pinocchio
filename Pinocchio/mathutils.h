@@ -28,7 +28,8 @@
 #pragma warning(disable:4355)
 #pragma warning(disable:4996)
 #pragma warning(disable:4251)
-#endif //_WIN32
+//_WIN32
+#endif
 
 using namespace std;
 
@@ -44,37 +45,37 @@ template<class T> T QUAD(const T & x) { return SQR(SQR(x)); }
 
 template <class T> class maximum : public binary_function<T, T, T>
 {
-public:
+  public:
     T operator()(const T &a1, const T &a2) const { return max(a1, a2); }
 };
 
 template <class T> class minimum : public binary_function<T, T, T>
 {
-public:
+  public:
     T operator()(const T &a1, const T &a2) const { return min(a1, a2); }
 };
 
 template <class A1, class A2, class R> class myMult : public binary_function<A1, A2, R>
 {
-public:
+  public:
     R operator()(const A1 &a1, const A2 &a2) const { return a1 * a2; }
 };
 
 template <class A1, class A2, class R> class myDiv : public binary_function<A1, A2, R>
 {
-public:
+  public:
     R operator()(const A1 &a1, const A2 &a2) const { return a1 / a2; }
 };
 
 template <class T> class ident : public unary_function<T, T>
 {
-public:
+  public:
     T operator()(const T &v) const { return v; }
 };
 
 template<class T> class construct
 {
-public:
+  public:
     typedef T result_type;
     template<class From> T operator()(const From &x) const { return T(x); }
 };
@@ -84,4 +85,5 @@ inline bool operator==(const string &s1, const string &s2) { return s1.compare(s
 inline bool operator<(const string &s1, const string &s2) { return s1.compare(s2) < 0; }
 #endif
 
-#endif //MATHUTILS_H_INCLUDED
+//MATHUTILS_H_INCLUDED
+#endif

@@ -27,4 +27,5 @@ THE SOFTWARE.
 
 void process(const vector<string> &args, MyWindow *w);
 
-#endif //PROCESSOR_H
+//PROCESSOR_H
+#endif

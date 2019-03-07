@@ -24,51 +24,58 @@
 #include "vector.h"
 #include "rect.h"
 
-//#define 
+//#define
 
 struct MeshVertex
 {
-    MeshVertex() : edge(-1) {}
-    
-    Vector3 pos;
-    Vector3 normal;
-    int edge; //an edge such that edge->prev->vertex is this
+  MeshVertex() : edge(-1) {}
+
+  Vector3 pos;
+  Vector3 normal;
+//an edge such that edge->prev->vertex is this
+  int edge;
 };
 
 struct MeshEdge
 {
-    MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
-    
-    //the vertex the edge points to--the start vertex is prev->vertex
-    int vertex; 
-    int prev; //ccw, next is prev->prev
-    int twin;
+  MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
+
+  //the vertex the edge points to--the start vertex is prev->vertex
+  int vertex;
+//ccw, next is prev->prev
+  int prev;
+  int twin;
 };
 
-class PINOCCHIO_API Mesh {
-public:
+class PINOCCHIO_API Mesh
+{
+  public:
     Mesh() : scale(1.) {}
     Mesh(const string &file, int algo=Mesh::LBS, float weight=1.);
 
     bool integrityCheck() const;
-    bool isConnected() const; //returns true if the mesh consists of a single connected component
+  //returns true if the mesh consists of a single connected component
+    bool isConnected() const;
     void computeVertexNormals();
     void normalizeBoundingBox();
     void computeTopology();
     void writeObj(const string &filename) const;
-    
-private:
+
+  private:
     void readObj(istream &strm);
     void readOff(istream &strm);
     void readPly(istream &strm);
     void readGts(istream &strm);
     void readStl(istream &strm);
     void fixDupFaces();
-    void sortEdges(); //sort edges so that triplets forming faces are adjacent
+  //sort edges so that triplets forming faces are adjacent
+    void sortEdges();
 
-public: //data
+  //data
+  public:
     vector<MeshVertex> vertices;
-    vector<MeshEdge> edges; //halfEdges, really
+  //halfEdges, really
+    vector<MeshEdge> edges;
 
     Vector3 toAdd;
     double scale;
@@ -78,5 +85,4 @@ public: //data
     static int DQS;
     static int MIX;
 };
-
 #endif

@@ -29,15 +29,15 @@ THE SOFTWARE.
 
 class MotionFilter
 {
-public:
+  public:
     MotionFilter(const vector<Vector3> &inJoints, const vector<int> inPrev)
-        : joints(inJoints), prev(inPrev) {}
+      : joints(inJoints), prev(inPrev) {}
 
     void step(const vector<Transform<> > &transforms, vector<Vector3> feet);
 
     const vector<Transform<> > &getTransforms() const { return curTransforms; }
 
-private:
+  private:
     Matrixn<double> getJac(const vector<Transform<> > &transforms) const;
     void addTranslation();
 
@@ -49,4 +49,5 @@ private:
     vector<Transform<> > curTransforms;
 };
 
-#endif //FILTER_H_INCLUDED
+//FILTER_H_INCLUDED
+#endif

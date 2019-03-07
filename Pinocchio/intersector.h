@@ -22,25 +22,30 @@
 #include "mesh.h"
 #include "vecutils.h"
 
-class PINOCCHIO_API Intersector {
-public:
+class PINOCCHIO_API Intersector
+{
+  public:
     Intersector() : mesh(NULL) {}
     Intersector(const Mesh &m, const Vector3 &inDir) : mesh(&m), dir(inDir) { init(); }
-    
-    vector<Vector3> intersect(const Vector3 &pt, vector<int> *outIndices = NULL) const;    
+
+    vector<Vector3> intersect(const Vector3 &pt, vector<int> *outIndices = NULL) const;
     const Vector3 &getDir() const { return dir; }
-private:
+  private:
     void init();
     void getIndex(const Vector2 &pt, int &x, int &y) const;
-    
+
     const Mesh *mesh;
     Vector3 dir;
-    Vector3 v1, v2; //basis
-    Rect2 bounds; //within the basis
-    
+  //basis
+    Vector3 v1, v2;
+  //within the basis
+    Rect2 bounds;
+
     vector<Vector2> points;
-    vector<Vector3> sNormals; //they are scaled for intersection
+  //they are scaled for intersection
+    vector<Vector3> sNormals;
     vector<vector<int> > triangles;
 };
 
-#endif //INTERSECTOR_H
+//INTERSECTOR_H
+#endif

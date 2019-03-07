@@ -25,53 +25,55 @@
 template<class Value, int Dim>
 class Multilinear
 {
-public:
-  Multilinear()
-  {
-    for(int i = 0; i < num; ++i)
-      values[i] = Value();
-  }
+  public:
+    Multilinear()
+    {
+      for(int i = 0; i < num; ++i)
+        values[i] = Value();
+    }
 
-  void setValue(int idx, const Value &value) { values[idx] = value; }
-  const Value &getValue(int idx) const { return values[idx]; }
+    void setValue(int idx, const Value &value) { values[idx] = value; }
+    const Value &getValue(int idx) const { return values[idx]; }
 
-  template<class Real>
-  Real evaluate(const Vector<Real, Dim> &v) const
-  {
-    Real out(0);
-    for(int i = 0; i < num; ++i) {
+    template<class Real>
+      Real evaluate(const Vector<Real, Dim> &v) const
+    {
+      Real out(0);
+      for(int i = 0; i < num; ++i)
+      {
         Vector<Real, Dim> corner;
         BitComparator<Dim>::assignCorner(i, v, Vector<Real, Dim>(1.) - v, corner);
         Real factor = corner.accumulate(ident<Real>(), multiplies<Real>());
         out += (factor * Real(values[i]));
+      }
+      return out;
     }
-    return out;
-  }
 
-  template<class Real>
-  Real integrate(const Rect<Real, Dim> &r) const
-  {
-    return r.isEmpty() ? Real() : evaluate(r.getCenter()) * r.getContent();
-  }
+    template<class Real>
+      Real integrate(const Rect<Real, Dim> &r) const
+    {
+      return r.isEmpty() ? Real() : evaluate(r.getCenter()) * r.getContent();
+    }
 
-private:
-  Multilinear(const Multilinear &); //noncopyable
+  private:
+  //noncopyable
+    Multilinear(const Multilinear &);
 
-  template<class Real>
-  static Real pos(const Real &r1, const Real &r2)
-  {
-    if(r1 <= Real(0) && r2 <= Real(0))
-      return Real(0);
-    if(r1 >= Real(0) && r2 >= Real(0))
-      return Real(1);
-    if(r2 >= r1)
-      return r2 / (r2 - r1);
-    return r1 / (r1 - r2);
-  }
+    template<class Real>
+      static Real pos(const Real &r1, const Real &r2)
+    {
+      if(r1 <= Real(0) && r2 <= Real(0))
+        return Real(0);
+      if(r1 >= Real(0) && r2 >= Real(0))
+        return Real(1);
+      if(r2 >= r1)
+        return r2 / (r2 - r1);
+      return r1 / (r1 - r2);
+    }
 
-
-  static const int num = (1 << Dim);
-  Value values[num];
+    static const int num = (1 << Dim);
+    Value values[num];
 };
 
-#endif //MULTILINEAR_H_INCLUDED
+//MULTILINEAR_H_INCLUDED
+#endif

@@ -31,13 +31,13 @@ class Motion;
 
 class DefMesh : public DisplayMesh
 {
-public:
+  public:
     DefMesh(const Mesh inMesh, const Skeleton &inOrigSkel, const vector<Vector3> &inMatch,
-            const Attachment &inAttachment, Motion *inMotion = NULL) 
+      const Attachment &inAttachment, Motion *inMotion = NULL)
       : origSkel(inOrigSkel), match(inMatch), attachment(inAttachment),
-        origMesh(inMesh), motion(inMotion), filter(match, origSkel.fPrev())
+      origMesh(inMesh), motion(inMotion), filter(match, origSkel.fPrev())
     {
-        transforms.resize(origSkel.fPrev().size() - 1);
+      transforms.resize(origSkel.fPrev().size() - 1);
     }
 
     void setMotion(Motion *inMotion) { motion = inMotion; }
@@ -49,12 +49,13 @@ public:
 
     const Attachment &getAttachment() const { return attachment; }
 
-    const Mesh &getMesh(int &framenum) {
-        updateMesh(framenum); 
-        return curMesh; 
+    const Mesh &getMesh(int &framenum)
+    {
+      updateMesh(framenum);
+      return curMesh;
     }
 
-private:
+  private:
     double getLegRatio() const;
     vector<Transform<> > computeTransforms() const;
     void updateMesh(int &framenum) const;
@@ -71,4 +72,5 @@ private:
     mutable MotionFilter filter;
 };
 
-#endif //DEFMESH_H_INCLUDED
+//DEFMESH_H_INCLUDED
+#endif

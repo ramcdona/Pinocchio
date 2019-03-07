@@ -34,18 +34,18 @@ THE SOFTWARE.
 
 struct LineSegment
 {
-    LineSegment() : thickness(1.) {}
-    LineSegment(const Vector3 &inP1, const Vector3 &inP2,
-        const Vector3 &inColor = Vector3(1, 1, 1), double inThickness = 1.)
-        : p1(inP1), p2(inP2), color(inColor), thickness(inThickness) {}
+  LineSegment() : thickness(1.) {}
+  LineSegment(const Vector3 &inP1, const Vector3 &inP2,
+    const Vector3 &inColor = Vector3(1, 1, 1), double inThickness = 1.)
+    : p1(inP1), p2(inP2), color(inColor), thickness(inThickness) {}
 
-    Vector3 p1, p2, color;
-    double thickness;
+  Vector3 p1, p2, color;
+  double thickness;
 };
 
 class MyWindow : public Fl_Gl_Window
 {
-public:
+  public:
     MyWindow(int width, int height, const char* title);
 
     virtual ~MyWindow() {}
@@ -56,7 +56,7 @@ public:
     void addLine(const LineSegment &l) { lines.push_back(l); }
     void clearLines() { lines.clear(); }
 
-private:
+  private:
     bool flatShading, floor, skeleton;
     Transform<> transform;
     vector<DisplayMesh *> meshes;
@@ -66,8 +66,9 @@ private:
     void initGL();
     void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
     void drawFloor();
-    void changeAngle(Vector3 axis, double angle, 
-            double scale, Vector3 v2);
+    void changeAngle(Vector3 axis, double angle,
+      double scale, Vector3 v2);
 };
 
-#endif //MYWINDOW_H
+//MYWINDOW_H
+#endif

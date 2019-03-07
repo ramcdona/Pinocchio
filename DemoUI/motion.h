@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 class Motion
 {
-public:
+  public:
     Motion(const string &filename);
 
     bool empty() const { return data.empty(); }
@@ -40,7 +40,7 @@ public:
 
     const vector<vector<Transform<> > > &getData() const { return data; }
     void setFixedFrame(int inFrame) { fixedFrame = inFrame < 0 ? -1 : (int)(inFrame % data.size()); }
-private:
+  private:
     int getFrameIdx() const;
     void readH(istream &strm);
     vector<vector<Transform<> > > data;
@@ -53,5 +53,4 @@ private:
 
 // Time functions
 long getT();
-
 #endif

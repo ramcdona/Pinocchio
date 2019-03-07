@@ -24,56 +24,54 @@
 
 struct PtGraph
 {
-    vector<Vector3> verts;
-    vector<vector<int> > edges;
-    
-    bool integrityCheck() const;
+  vector<Vector3> verts;
+  vector<vector<int> > edges;
+
+  bool integrityCheck() const;
 };
-    
+
 class ShortestPather
 {
-public:
+  public:
     ShortestPather(const PtGraph &g, int root);
-        
+
     vector<int> pathFrom(int vtx) const
     {
-        vector<int> out(1, vtx);
-        while(prev[vtx] >= 0)
-            out.push_back(vtx = prev[vtx]);
-        return out;
+      vector<int> out(1, vtx);
+      while(prev[vtx] >= 0)
+        out.push_back(vtx = prev[vtx]);
+      return out;
     }
     double distFrom(int vtx) const { return dist[vtx]; }
-            
-private:
+
+  private:
     struct Inf
     {
-        Inf(double inDist, int inNode, int inPrev) : dist(inDist), node(inNode), prev(inPrev) {}
-        bool operator<(const Inf &inf) const { return dist > inf.dist; }
-        double dist;
-        int node, prev;
+      Inf(double inDist, int inNode, int inPrev) : dist(inDist), node(inNode), prev(inPrev) {}
+      bool operator<(const Inf &inf) const { return dist > inf.dist; }
+      double dist;
+      int node, prev;
     };
-        
+
     vector<int> prev;
     vector<double> dist;
 };
 
 class AllShortestPather
 {
-public:
+  public:
     AllShortestPather() {}
-    
+
     AllShortestPather(const PtGraph &g)
     {
-        for(int i = 0; i < (int)g.verts.size(); ++i)
-            paths.push_back(ShortestPather(g, i));
+      for(int i = 0; i < (int)g.verts.size(); ++i)
+        paths.push_back(ShortestPather(g, i));
     }
-    
+
     vector<int> path(int from, int to) const { return paths[to].pathFrom(from); }
     double dist(int from, int to) const { return paths[to].distFrom(from); }
-    
-private:
+
+  private:
     vector<ShortestPather> paths;
 };
-
-
 #endif

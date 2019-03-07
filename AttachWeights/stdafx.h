@@ -5,13 +5,15 @@
 
 #pragma once
 
-
 #include <stdio.h>
-#ifdef WIN32		// Windows defs
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+// Windows defs
+#ifdef WIN32
+// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN
 #include <tchar.h>
 
-#else				// linux / OSX defs
+// linux / OSX defs
+#else
 #include <stdlib.h>
 #include <fcntl.h>
 #include <math.h>
@@ -62,7 +64,8 @@ typedef void* OVERLAPPED;
 typedef void* LPVOID;
 typedef void* PVOID;
 typedef void VOID;
-typedef int HANDLE; // note that handle here is assumed to be
+// note that handle here is assumed to be
+typedef int HANDLE;
 // a pointer to a file decriptor
 typedef int* PHANDLE;
 typedef int BOOL;
@@ -89,8 +92,6 @@ typedef unsigned char BYTE;
 #define _stscanf sscanf
 #define _stprintf sprintf
 #define _tprintf printf
-
-
 
 /* common constants */
 #define SUCCESS 0
@@ -125,6 +126,7 @@ typedef double VWTIME;
 /** returns the amount of time in seconds since some arbitrary moment. */
 inline VWTIME VWGetTime() { return 0.0; }
 
-#endif  // end linux defs
+// end linux defs
+#endif
 
 // TODO: reference additional headers your program requires here

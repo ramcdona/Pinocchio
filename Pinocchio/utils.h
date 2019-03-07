@@ -23,44 +23,49 @@
 #include <sstream>
 
 template <class T>
-inline string toString(const T& obj) {
- ostringstream stream;
- stream << obj;
- return stream.str();
+inline string toString(const T& obj)
+{
+  ostringstream stream;
+  stream << obj;
+  return stream.str();
 }
+
 
 inline vector<string> readWords(istream &stream)
 {
-    string whitespace = " \n\t\r";
-    stream >> noskipws;
-    
-    char tmp[10000];
+  string whitespace = " \n\t\r";
+  stream >> noskipws;
+
+  char tmp[10000];
+  stream.getline(tmp, 9990);
+  string line(tmp);
+
+  if(line.size() == 0)
+    return vector<string>();
+
+  while(line[line.size() - 1] == '\\')
+  {
+    line[line.size() - 1] = ' ';
     stream.getline(tmp, 9990);
-    string line(tmp);
+    line = line + string(tmp);
+  }
 
-    if(line.size() == 0)
-        return vector<string>();
+  //split the line into words
+  vector<string> words;
+  string::size_type pos = 0;
+  while(pos != string::npos)
+  {
+    pos = line.find_first_not_of(whitespace, pos);
+    if(pos == string::npos)
+      break;
+    string::size_type eow = line.find_first_of(whitespace, pos);
+    words.push_back(string(line, pos, eow - pos));
+    pos = eow;
+  }
 
-    while(line[line.size() - 1] == '\\') {
-        line[line.size() - 1] = ' ';
-        stream.getline(tmp, 9990);
-        line = line + string(tmp);
-    }
-        
-    //split the line into words
-    vector<string> words;
-    string::size_type pos = 0;
-    while(pos != string::npos) {
-        pos = line.find_first_not_of(whitespace, pos);
-        if(pos == string::npos)
-            break;
-        string::size_type eow = line.find_first_of(whitespace, pos);
-        words.push_back(string(line, pos, eow - pos));
-        pos = eow;
-    }
-    
-    return words;
+  return words;
 }
 
 
-#endif //UTILS_H_INCLUDED
+//UTILS_H_INCLUDED
+#endif

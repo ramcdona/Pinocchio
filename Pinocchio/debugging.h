@@ -23,12 +23,13 @@
 
 class Debugging
 {
-public:
+  public:
     static ostream &out() { return *outStream; }
     static void PINOCCHIO_API setOutStream(ostream &os) { outStream = &os; }
 
-private:
+  private:
     static ostream *outStream;
 };
 
-#endif //DEBUGGING_H
+//DEBUGGING_H
+#endif

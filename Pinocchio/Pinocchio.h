@@ -16,18 +16,22 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// The following ifdef block is the standard way of creating macros which make exporting 
+// The following ifdef block is the standard way of creating macros which make exporting
 // from a DLL simpler. All files within this DLL are compiled with the PINOCCHIO_EXPORTS
 // symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
+// that uses this DLL. This way any other project whose source files include this file see
 // PINOCCHIO_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef _WIN32
 #ifdef PINOCCHIO_EXPORTS
 #define PINOCCHIO_API __declspec(dllexport)
-#else //PINOCCHIO_EXPORTS
+//PINOCCHIO_EXPORTS
+#else
 #define PINOCCHIO_API __declspec(dllimport)
-#endif //PINOCCHIO_EXPORTS
-#else //_WIN32
+//PINOCCHIO_EXPORTS
+#endif
+//_WIN32
+#else
 #define PINOCCHIO_API
-#endif //_WIN32
+//_WIN32
+#endif
