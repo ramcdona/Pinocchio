@@ -1,7 +1,7 @@
 #ifndef TOOL_BOX_MAT3_HPP__
 #define TOOL_BOX_MAT3_HPP__
 
-#include "vec3.hpp"
+#include "vec3.h"
 #include <cmath>
 #include <cassert>
 #include <stdlib.h>

@@ -20,10 +20,10 @@
 #define QUATINTERFACE_H
 
 #include "vector.h"
-#include "transfo.hpp"
+#include "transfo.h"
 #include "transform.h"
-#include "quat_cu.hpp"
-#include "dual_quat_cu.hpp"
+#include "quat_cu.h"
+#include "dual_quat_cu.h"
 
 Tbx::Dual_quat_cu getQuatFromMat(Transform<> matrix);
 Vector3 transformPoint(Vector3 vpos, Tbx::Dual_quat_cu &dquat_blend);

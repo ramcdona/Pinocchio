@@ -1,7 +1,7 @@
 #ifndef TOOL_BOX_DUAL_QUAT_CU_HPP__
 #define TOOL_BOX_DUAL_QUAT_CU_HPP__
 
-#include "quat_cu.hpp"
+#include "quat_cu.h"
 
 // =============================================================================
 namespace Tbx

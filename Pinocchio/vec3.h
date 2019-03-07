@@ -46,7 +46,7 @@ namespace Tbx
 
     Vec3(float v) { x = v; y = v; z = v; }
 
-    /// @note implemented in point3.hpp because of cross definitions
+    /// @note implemented in point3.h because of cross definitions
     /// @note explicit constructor to avoid unwanted automatic conversions
     inline explicit Vec3(const Point3& p3);
 
@@ -438,7 +438,7 @@ namespace Tbx
     /// @name Accessors
     // -------------------------------------------------------------------------
 
-    /// @note implemented in Point3.hpp because of cross definitions
+    /// @note implemented in Point3.h because of cross definitions
     inline Point3 to_point3() const;
 
     inline const float& operator[](int i) const

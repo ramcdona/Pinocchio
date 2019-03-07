@@ -472,7 +472,7 @@ Q63. How do I use quaternions to rotate a vector?
 #ifndef TOOL_BOX_QUAT_CU_HPP__
 #define TOOL_BOX_QUAT_CU_HPP__
 
-#include "transfo.hpp"
+#include "transfo.h"
 
 // =============================================================================
 namespace Tbx

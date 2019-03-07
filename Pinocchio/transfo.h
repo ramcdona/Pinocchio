@@ -2,9 +2,9 @@
 #define TOOL_BOX_Transfo_HPP__
 
 #include <cassert>
-#include "vec3.hpp"
-#include "mat3.hpp"
-#include "point3.hpp"
+#include "vec3.h"
+#include "mat3.h"
+#include "point3.h"
 
 // =============================================================================
 namespace Tbx
