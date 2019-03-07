@@ -16,6 +16,11 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/* 06.11.2014 RR: * makeJoint(), if defineed PINOCCHIO_SKEL_XYZ_ROT
+                    rotate the positon componentes for the joints.
+                    X Y Z  -->  Z Y X
+*/
+
 #include "skeleton.h"
 #include "utils.h"
 #include "debugging.h"
@@ -105,8 +110,15 @@ void Skeleton::makeJoint(const std::string &name, const Vector3 &pos, const std:
 {
   int cur = fSymV.size();
   fSymV.push_back(-1);
+
+  #if PINOCCHIO_SKEL_XYZ_ROT
+  //skeletons specified in [-1,1] will be fit to object in [0,1]
+  fGraphV.verts.push_back(Vector3( pos[2], pos[0], pos[1]) * 0.5);
+  #else
   //skeletons specified in [-1,1] will be fit to object in [0,1]
   fGraphV.verts.push_back(pos * 0.5);
+  #endif
+
   fGraphV.edges.resize(cur + 1);
   jointNames[name] = cur;
 
@@ -201,6 +213,45 @@ HumanSkeleton::HumanSkeleton()
 
 QuadSkeleton::QuadSkeleton()
 {
+
+  #ifndef USE_KINECSDK_ORDER
+
+  //order of makeJoint calls is very important
+  makeJoint("shoulders",  Vector3(0., 0.5, 0.));
+  makeJoint("back",       Vector3(0., 0.15, 0.),      "shoulders");
+  makeJoint("hips",       Vector3(0., 0., 0.),        "back");
+  makeJoint("head",       Vector3(0., 0.7, 0.),       "shoulders");
+
+  makeJoint("lthigh",     Vector3(-0.1, 0., 0.),      "hips");
+  makeJoint("lknee",      Vector3(-0.15, -0.35, 0.),  "lthigh");
+  makeJoint("lankle",      Vector3(-0.15, -0.8, 0.),  "lknee");
+  makeJoint("lfoot",      Vector3(-0.15, -0.8, 0.1),  "lankle");
+
+  makeJoint("rthigh",     Vector3(0.1, 0., 0.),       "hips");
+  makeJoint("rknee",      Vector3(0.15, -0.35, 0.),   "rthigh");
+  makeJoint("rankle",      Vector3(0.15, -0.8, 0.),   "rknee");
+  makeJoint("rfoot",      Vector3(0.15, -0.8, 0.1),   "rankle");
+
+  makeJoint("lshoulder",  Vector3(-0.2, 0.5, 0.),     "shoulders");
+  makeJoint("lelbow",     Vector3(-0.4, 0.25, 0.075), "lshoulder");
+  makeJoint("lhand",      Vector3(-0.6, 0.0, 0.15),   "lelbow");
+
+  makeJoint("rshoulder",  Vector3(0.2, 0.5, 0.),      "shoulders");
+  makeJoint("relbow",     Vector3(0.4, 0.25, 0.075),  "rshoulder");
+  makeJoint("rhand",      Vector3(0.6, 0.0, 0.15),    "relbow");
+
+  //symmetry
+  makeSymmetric("lthigh", "rthigh");
+  makeSymmetric("lknee", "rknee");
+  makeSymmetric("lankle", "rankle");
+  makeSymmetric("lfoot", "rfoot");
+
+  makeSymmetric("lshoulder", "rshoulder");
+  makeSymmetric("lelbow", "relbow");
+  makeSymmetric("lhand", "rhand");
+
+  #else
+
   //order of makeJoint calls is very important
   makeJoint("shoulders",  Vector3(0., 0., 0.5));
   makeJoint("back",       Vector3(0., 0., 0.),         "shoulders");
@@ -234,6 +285,8 @@ QuadSkeleton::QuadSkeleton()
   makeSymmetric("lshoulder", "rshoulder");
   makeSymmetric("lfknee", "rfknee");
   makeSymmetric("lffoot", "rffoot");
+
+  #endif
 
   initCompressed();
 
