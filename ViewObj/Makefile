@@ -25,7 +25,7 @@ LIBS= \
 	-lm -L../Pinocchio/ -lpinocchio \
 	$(shell $(PKGCONFIG) --libs $(PACKAGES))
 
-SRCS= main.cpp obj_parser.cpp
+SRCS= main.cpp
 OBJS= $(subst .cpp,.o,$(SRCS))
 
 BINARY= ViewObj

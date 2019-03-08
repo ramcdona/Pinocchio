@@ -4,7 +4,6 @@
 // 21 Dec 2014
 //
 #include "maths_funcs.hpp"
-#include "obj_parser.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h" // https://github.com/nothings/stb/
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -24,6 +23,8 @@
 #include "../Pinocchio/debugging.h"
 #include "../Pinocchio/attachment.h"
 #include "../Pinocchio/pinocchioApi.h"
+
+#include "cube_model.h"
 
 //
 // for parsing CL params
@@ -204,12 +205,6 @@ int main (int argc, char** argv) {
 		return 1;
 	} 
 
-	/* change to 3.2 if on Apple OS X
-	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 0);
-	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); */
-
 	glfwWindowHint (GLFW_SAMPLES, msaa_samples);
 
 	sprintf (win_title, "obj viewer: %s", obj_file_name);
@@ -232,20 +227,19 @@ int main (int argc, char** argv) {
 	// Set up vertex buffers and vertex array object
 	// --------------------------------------------------------------------------
 	{
-		GLfloat* vp = NULL; // array of vertex points
-		GLfloat* vn = NULL; // array of vertex normals (we haven't used these yet)
-		GLfloat* vt = NULL; // array of texture coordinates (or these)
+		const GLfloat * vp = NULL; // array of vertex points
+		const GLfloat * vn = NULL; // array of vertex normals (we haven't used these yet)
+		const GLfloat * vt = NULL; // array of texture coordinates (or these)
 
-
-		assert (load_obj_file (obj_file_name, &vp, &vt, &vn, &point_count));
+		vp = cube_vp;
+		vt = cube_vt;
+		vn = cube_vn;
+		point_count = cube_point_count;
 
 		printf("point_count: %d\n", point_count);
-
-		printf("vp: ");
-		for (int i=0; i<point_count; i++) {
-			printf("%f ", vp[i]);
-		}
-		printf("\n");
+		printf("vp (%d): ", point_count*3); for (int i=0; i<point_count*3; i++) { printf("%f ", vp[i]); } printf("\n");
+		printf("vt (%d): ", point_count*2); for (int i=0; i<point_count*2; i++) { printf("%f ", vt[i]); } printf("\n");
+		printf("vn (%d): ", point_count*3); for (int i=0; i<point_count*3; i++) { printf("%f ", vn[i]); } printf("\n");
 
 
 		// Calculate Skeleton and Attachment Values with Pinocchio
@@ -347,10 +341,9 @@ int main (int argc, char** argv) {
 		glBindBuffer (GL_ARRAY_BUFFER, normals_vbo);
 		glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-
-		free (vp);
-		free (vn);
-		free (vt);
+		//free (vp);
+		//free (vn);
+		//free (vt);
 	}
 	
 	//
