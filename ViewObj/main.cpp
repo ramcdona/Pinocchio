@@ -235,9 +235,18 @@ int main (int argc, char** argv) {
 		GLfloat* vp = NULL; // array of vertex points
 		GLfloat* vn = NULL; // array of vertex normals (we haven't used these yet)
 		GLfloat* vt = NULL; // array of texture coordinates (or these)
-		GLuint points_vbo, texcoord_vbo, normals_vbo;
+
 
 		assert (load_obj_file (obj_file_name, &vp, &vt, &vn, &point_count));
+
+		printf("point_count: %d\n", point_count);
+
+		printf("vp: ");
+		for (int i=0; i<point_count; i++) {
+			printf("%f ", vp[i]);
+		}
+		printf("\n");
+
 
 		// Calculate Skeleton and Attachment Values with Pinocchio
 		Mesh m(obj_file_name, Mesh::DQS);
@@ -304,23 +313,30 @@ int main (int argc, char** argv) {
 		}
 		delete o.attachment;
 
+
 		// Set up OpenGL elements
+		GLuint points_vbo;
 		glGenBuffers (1, &points_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+
 		// copy our points from the header file into our VBO on graphics hardware
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vp,
-			GL_STATIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vp, GL_STATIC_DRAW);
+
+		GLuint texcoord_vbo;
 		glGenBuffers (1, &texcoord_vbo);
+
 		glBindBuffer (GL_ARRAY_BUFFER, texcoord_vbo);
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 2 * point_count, vt,
-			GL_STATIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 2 * point_count, vt, GL_STATIC_DRAW);
+
+		GLuint normals_vbo;
 		glGenBuffers (1, &normals_vbo);
+
 		glBindBuffer (GL_ARRAY_BUFFER, normals_vbo);
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vn,
-			GL_STATIC_DRAW);
-	
+		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vn, GL_STATIC_DRAW);
+
 		glGenVertexArrays (1, &vao);
 		glBindVertexArray (vao);
+
 		glEnableVertexAttribArray (0);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
 		glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -330,6 +346,8 @@ int main (int argc, char** argv) {
 		glEnableVertexAttribArray (2);
 		glBindBuffer (GL_ARRAY_BUFFER, normals_vbo);
 		glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+
 		free (vp);
 		free (vn);
 		free (vt);
