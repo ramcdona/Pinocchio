@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef FILTER_H_INCLUDED
-#define FILTER_H_INCLUDED
+#ifndef FILTER_H_EC263456_4190_11E9_9DFC_3FEA32820406
+#define FILTER_H_EC263456_4190_11E9_9DFC_3FEA32820406
 
 #include "../Pinocchio/matrix.h"
 #include "../Pinocchio/vector.h"
@@ -49,5 +49,4 @@ class MotionFilter
     std::vector<Transform<> > curTransforms;
 };
 
-//FILTER_H_INCLUDED
 #endif

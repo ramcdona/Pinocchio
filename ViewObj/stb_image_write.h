@@ -36,8 +36,8 @@ formats do not. (Thus you cannot write a native-format BMP through the BMP
 writer, both because it is in BGR order and because it may have padding
 at the end of the line.)
 */
-#ifndef INCLUDE_STB_IMAGE_WRITE_H
-#define INCLUDE_STB_IMAGE_WRITE_H
+#ifndef STB_IMAGE_WRITE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
+#define STB_IMAGE_WRITE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,7 +47,7 @@ extern int stbi_write_tga(char const *filename, int w, int h, int comp, const vo
 #ifdef __cplusplus
 }
 #endif
-#endif//INCLUDE_STB_IMAGE_WRITE_H
+#endif//INCLUDE_STB_IMAGE_WRITE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
 #ifdef STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stdarg.h>
 #include <stdlib.h>
@@ -439,6 +439,7 @@ free(png);
 return 1;
 }
 #endif // STB_IMAGE_WRITE_IMPLEMENTATION
+
 /* Revision history
 0.95 (2014-08-17)
 add monochrome TGA output

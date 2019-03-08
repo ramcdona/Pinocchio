@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HASHUTILS_H
-#define HASHUTILS_H
+#ifndef HASHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define HASHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "mathutils.h"
 
@@ -30,5 +30,4 @@ namespace std {
     };
 }
 
-//HASHUTILS_H
 #endif

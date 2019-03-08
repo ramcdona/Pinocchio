@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef MOTION_H
-#define MOTION_H
+#ifndef MOTION_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
+#define MOTION_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
 
 #include "../Pinocchio/transform.h"
 #include "shared.h"
@@ -53,4 +53,5 @@ class Motion
 
 // Time functions
 long getT();
+
 #endif

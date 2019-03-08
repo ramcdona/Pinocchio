@@ -15,8 +15,13 @@
  * =====================================================================================
  */
 
+#ifndef SHARED_H_2B06FEB2_4191_11E9_8EAE_2F0A23DDB7E8
+#define SHARED_H_2B06FEB2_4191_11E9_8EAE_2F0A23DDB7E8
+
 // Global indicating whether or not program is paused
 extern bool paused;
 
 // Global variable indicating the start time of each run of the animation.
 extern unsigned long runStartTime;
+
+#endif

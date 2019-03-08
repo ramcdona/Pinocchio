@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef MYWINDOW_H
-#define MYWINDOW_H
+#ifndef MYWINDOW_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
+#define MYWINDOW_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
 
 #include <FL/Fl_Gl_Window.H>
 #include <stdlib.h>
@@ -70,5 +70,4 @@ class MyWindow : public Fl_Gl_Window
       double scale, Vector3 v2);
 };
 
-//MYWINDOW_H
 #endif

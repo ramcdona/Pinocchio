@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef DTREE_H
-#define DTREE_H
+#ifndef DTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define DTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "rect.h"
 #include "indexer.h"

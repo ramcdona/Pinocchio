@@ -78,8 +78,8 @@
                                                  Michal Cichon
 */
 
-#ifndef STBI_INCLUDE_STB_IMAGE_H
-#define STBI_INCLUDE_STB_IMAGE_H
+#ifndef STB_IMAGE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
+#define STB_IMAGE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
 
 // Limitations:
 //    - no jpeg progressive support
@@ -342,7 +342,7 @@ STBIDEF void stbi_install_YCbCr_to_RGB(stbi_YCbCr_to_RGB_run func);
 //
 //
 ////   end header file   /////////////////////////////////////////////////////
-#endif // STBI_INCLUDE_STB_IMAGE_H
+#endif // STB_IMAGE_H_D15D9A28_4191_11E9_9ADD_BB963C4C117C
 
 #ifdef STB_IMAGE_IMPLEMENTATION
 
@@ -4685,4 +4685,3 @@ STBIDEF int stbi_info_from_callbacks(stbi_io_callbacks const *c, void *user, int
              on 'test' only check type, not whether we support this variant
       0.50   first released version
 */
-

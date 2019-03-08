@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef DEFMESH_H_INCLUDED
-#define DEFMESH_H_INCLUDED
+#ifndef DEFMESH_H_06A9B2EE_4191_11E9_B41E_3320261E5D0F
+#define DEFMESH_H_06A9B2EE_4191_11E9_B41E_3320261E5D0F
 
 #include "../Pinocchio/attachment.h"
 #include "filter.h"
@@ -72,5 +72,4 @@ class DefMesh : public DisplayMesh
     mutable MotionFilter filter;
 };
 
-//DEFMESH_H_INCLUDED
 #endif

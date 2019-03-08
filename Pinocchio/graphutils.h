@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAPHUTILS_H
-#define GRAPHUTILS_H
+#ifndef GRAPHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define GRAPHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include <queue>
 #include "vector.h"

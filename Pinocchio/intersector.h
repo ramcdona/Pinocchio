@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INTERSECTOR_H
-#define INTERSECTOR_H
+#ifndef INTERSECTOR_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define INTERSECTOR_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "mesh.h"
 #include "vecutils.h"
@@ -47,5 +47,4 @@ class PINOCCHIO_API Intersector
     std::vector<std::vector<int> > triangles;
 };
 
-//INTERSECTOR_H
 #endif

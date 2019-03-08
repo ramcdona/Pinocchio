@@ -16,8 +16,8 @@
  * =====================================================================================
  */
 
-#ifndef QUATINTERFACE_H
-#define QUATINTERFACE_H
+#ifndef QUATINTERFACE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define QUATINTERFACE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "vector.h"
 #include "transfo.h"

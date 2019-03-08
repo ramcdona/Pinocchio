@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef DEBUGGING_H
-#define DEBUGGING_H
+#ifndef DEBUGGING_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define DEBUGGING_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "mathutils.h"
 
@@ -31,5 +31,4 @@ class Debugging
     static std::ostream *outStream;
 };
 
-//DEBUGGING_H
 #endif

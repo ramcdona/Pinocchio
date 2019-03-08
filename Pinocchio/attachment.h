@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ATTACHMENT_H
-#define ATTACHMENT_H
+#ifndef ATTACHMENT_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define ATTACHMENT_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "mesh.h"
 #include "skeleton.h"

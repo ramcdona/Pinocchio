@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef QUADDISTTREE_H
-#define QUADDISTTREE_H
+#ifndef QUADDISTTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define QUADDISTTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "hashutils.h"
 #include "dtree.h"

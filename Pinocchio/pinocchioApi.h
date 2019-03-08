@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PINOCCHIOAPI_H
-#define PINOCCHIOAPI_H
+#ifndef PINOCCHIOAPI_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
+#define PINOCCHIOAPI_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include "mesh.h"
 #include "quaddisttree.h"
@@ -85,5 +85,4 @@ const std::vector<Vector3> &initialEmbedding, const Skeleton &skeleton);
 
 //to compute the attachment, create a new Attachment object
 
-//PINOCCHIOAPI_H
 #endif
