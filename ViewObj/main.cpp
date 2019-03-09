@@ -307,6 +307,18 @@ int main (int argc, char** argv) {
 		}
 		delete o.attachment;
 
+		printf("Mesh vertices: ");
+		for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
+			printf("(%f, %f, %f) ", it->pos[0], it->pos[1], it->pos[2]);
+		}
+		printf("\n");
+
+		printf("Mesh normals: ");
+		for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
+			printf("(%f, %f, %f) ", it->normal[0], it->normal[1], it->normal[2]);
+		}
+		printf("\n");
+
 
 		// Set up OpenGL elements
 		GLuint points_vbo;
