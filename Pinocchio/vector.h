@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VECTOR_H_INCLUDED
-#define VECTOR_H_INCLUDED
+#ifndef VECTOR_H_77813B1A_4284_11E9_A288_10FEED04CD1C
+#define VECTOR_H_77813B1A_4284_11E9_A288_10FEED04CD1C
 
 #include <iostream>
 #include <functional>
@@ -26,15 +26,13 @@
 #include "hashutils.h"
 #include "mathutils.h"
 
-namespace _VectorPrivate
-{
+namespace _VectorPrivate {
   template <int Dim> class VecOp;
 }
 
 
 template <class Real, int Dim>
-class Vector
-{
+class Vector {
   public:
     typedef Vector<Real, Dim> Self;
     typedef _VectorPrivate::VecOp<Dim> VO;
@@ -49,7 +47,7 @@ class Vector
     Real &operator[](int n) { return m[n]; }
     const Real &operator[](int n) const { return m[n]; }
 
-    //basic recursive functions
+    // Basic recursive functions
     template<class F> Vector<typename F::result_type, Dim> apply(const F &func) const
       { return VO::apply(func, *this); }
 
@@ -64,7 +62,7 @@ class Vector
       typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
       { return VO::accumulate(op, accum, *this, other); }
 
-    //operators
+    // Operators
     Real operator*(const Self &other) const { return accumulate(std::multiplies<Real>(), std::plus<Real>(), other); }
     Self operator+(const Self &other) const { return apply(std::plus<Real>(), other); }
     Self operator-(const Self &other) const { return apply(std::minus<Real>(), other); }
@@ -73,14 +71,14 @@ class Vector
     Self operator-() const { return apply(std::negate<Real>()); }
     bool operator==(const Self &other) const { return accumulate(std::equal_to<Real>(), std::logical_and<Real>(), other); }
 
-  #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
-    OPAS(+, Self)
+    #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
+      OPAS(+, Self)
       OPAS(-, Self)
       OPAS(*, Real)
       OPAS(/, Real)
     #undef OPAS
 
-      Real lengthsq() const { return (*this) * (*this); }
+    Real lengthsq() const { return (*this) * (*this); }
     Real length() const { return sqrt(lengthsq()); }
 
     Self normalize() const { return (*this) / length(); }
@@ -95,8 +93,7 @@ class Vector
 };
 
 template <class Real>
-class Vector<Real, -1>
-{
+class Vector<Real, -1> {
   public:
     typedef Vector<Real, -1> Self;
 
@@ -109,27 +106,22 @@ class Vector<Real, -1>
     const Real &operator[](int n) const { if((int)m.size() <= n) const_cast<Vector<Real, -1> *>(this)->m.resize(n + 1); return m[n]; }
 
     //basic recursive functions
-    template<class F> Vector<typename F::result_type, -1> apply(const F &func) const
-    {
+    template<class F> Vector<typename F::result_type, -1> apply(const F &func) const {
       std::vector<typename F::result_type> out(m.size());
       transform(m.begin(), m.end(), out.begin(), func);
       return Vector<typename F::result_type, -1>(out);
     }
 
-    template<class F> Vector<typename F::result_type, -1> apply(const F &func, const Self &other) const
-    {
+    template<class F> Vector<typename F::result_type, -1> apply(const F &func, const Self &other) const {
       std::vector<typename F::result_type> out(std::max(m.size(), other.m.size()));
-      if(m.size() == other.m.size())
+      if(m.size() == other.m.size()) {
         transform(m.begin(), m.end(), other.m.begin(), out.begin(), func);
-      else if(m.size() < other.m.size())
-      {
+      } else if(m.size() < other.m.size()) {
         transform(m.begin(), m.end(), other.m.begin(), out.begin(), func);
-        for(int i = m.size(); i < (int)other.m.size(); ++i) out[i] = func(Real(), other.m[i]);
-      }
-      else
-      {
+        for (int i = m.size(); i < (int)other.m.size(); ++i) out[i] = func(Real(), other.m[i]);
+      } else {
         transform(m.begin(), m.begin() + (other.m.end() - other.m.begin()), other.m.begin(), out.begin(), func);
-        for(int i = other.m.size(); i < (int)m.size(); ++i) out[i] = func(m[i], Real());
+        for (int i = other.m.size(); i < (int)m.size(); ++i) out[i] = func(m[i], Real());
       }
       return Vector<typename F::result_type, -1>(out);
     }
@@ -140,7 +132,7 @@ class Vector<Real, -1>
       if(m.empty())
         return typename Accum::result_type();
       typename Accum::result_type out = op(m[0]);
-      for(int i = 1; i < (int)m.size(); ++i) out = accum(out, op(m[i]));
+      for (int i = 1; i < (int)m.size(); ++i) { out = accum(out, op(m[i])); }
       return out;
     }
 
@@ -148,24 +140,21 @@ class Vector<Real, -1>
       typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
     {
       typename Accum::result_type out;
-      if(m.empty() || other.m.empty())
-      {
+      if(m.empty() || other.m.empty()) {
         if(m.empty() && other.m.empty()) return typename Accum::result_type();
         if(m.empty()) out = op(Real(), other.m[0]);
         else out = op(m[0], Real());
+      } else {
+        out = op(m[0], other.m[0]);
       }
-      else out = op(m[0], other.m[0]);
-      if(m.size() == other.m.size())
-        for(int i = 1; i < (int)m.size(); ++i) out = accum(out, op(m[i], other.m[i]));
-      else if(m.size() < other.m.size())
-      {
-        for(int i = 1; i < (int)m.size(); ++i) out = accum(out, op(m[i], other.m[i]));
-        for(int i = m.size(); i < (int)other.m.size(); ++i) out = accum(out, op(Real(), other.m[i]));
-      }
-      else
-      {
-        for(int i = 1; i < (int)other.m.size(); ++i) out = accum(out, op(m[i], other.m[i]));
-        for(int i = other.m.size(); i < (int)m.size(); ++i) out = accum(out, op(m[i], Real()));
+      if(m.size() == other.m.size()) {
+        for (int i = 1; i < (int)m.size(); ++i) { out = accum(out, op(m[i], other.m[i])); }
+      } else if (m.size() < other.m.size()) {
+        for (int i = 1; i < (int)m.size(); ++i) { out = accum(out, op(m[i], other.m[i])); }
+        for (int i = m.size(); i < (int)other.m.size(); ++i) { out = accum(out, op(Real(), other.m[i])); }
+      } else {
+        for (int i = 1; i < (int)other.m.size(); ++i) { out = accum(out, op(m[i], other.m[i])); }
+        for (int i = other.m.size(); i < (int)m.size(); ++i) { out = accum(out, op(m[i], Real())); }
       }
       return out;
     }
@@ -178,14 +167,14 @@ class Vector<Real, -1>
     Self operator/(const Real &scalar) const { return apply(bind2nd(std::divides<Real>(), scalar)); }
     Self operator-() const { return apply(std::negate<Real>()); }
 
-  #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
-    OPAS(+, Self)
+    #define OPAS(op, typ) Self &operator op##=(const typ &x) { (*this) = (*this) op x; return *this; }
+      OPAS(+, Self)
       OPAS(-, Self)
       OPAS(*, Real)
       OPAS(/, Real)
     #undef OPAS
 
-      Real lengthsq() const { return (*this) * (*this); }
+    Real lengthsq() const { return (*this) * (*this); }
     Real length() const { return sqrt(lengthsq()); }
 
     Self normalize() const { return (*this) / length(); }
@@ -224,11 +213,11 @@ std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& o
   int ms = Dim;
   if(ms == -1)
     ms = v.size();
-  for(int i = 0; i < ms; ++i)
-  {
+  for (int i = 0; i < ms; ++i) {
     os << v[i];
-    if(i < ms - 1)
+    if(i < ms - 1) {
       os << ", ";
+    }
   }
   os << "]";
   return os;
@@ -313,7 +302,6 @@ namespace _VectorPrivate
         static void _apply(const F &func, const VRD &v, const VRD &other, Vector<typename F::result_type, D> &out)
         { out[0] = func(v[0], other[0]); }
   };
-  //namespace _VectorPrivate
 }
 
 
@@ -343,5 +331,4 @@ template<> class BitComparator<1>
 #undef VRD
 #undef VRD1
 
-//VECTOR_H_INCLUDED
-#endif
+#endif // VECTOR_H_77813B1A_4284_11E9_A288_10FEED04CD1C

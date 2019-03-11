@@ -24,38 +24,29 @@
 #include "vector.h"
 #include "rect.h"
 
-//#define
-
-struct MeshVertex
-{
+struct MeshVertex {
   MeshVertex() : edge(-1) {}
 
   Vector3 pos;
   Vector3 normal;
-  //an edge such that edge->prev->vertex is this
-  int edge;
+  int edge; // An edge such that edge->prev->vertex is this
 };
 
-struct MeshEdge
-{
+struct MeshEdge {
   MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
 
-  //the vertex the edge points to--the start vertex is prev->vertex
-  int vertex;
-  //ccw, next is prev->prev
-  int prev;
+  int vertex; // The vertex the edge points to--the start vertex is prev->vertex
+  int prev; // CCW, next is prev->prev
   int twin;
 };
 
-class PINOCCHIO_API Mesh
-{
+class PINOCCHIO_API Mesh {
   public:
     Mesh() : scale(1.) {}
     Mesh(const std::string &file, int algo=Mesh::LBS, float weight=1.);
 
     bool integrityCheck() const;
-    //returns true if the mesh consists of a single connected component
-    bool isConnected() const;
+    bool isConnected() const; // Returns true if the mesh consists of a single connected component
     void computeVertexNormals();
     void normalizeBoundingBox();
     void computeTopology();
@@ -68,14 +59,11 @@ class PINOCCHIO_API Mesh
     void readGts(std::istream &strm);
     void readStl(std::istream &strm);
     void fixDupFaces();
-    //sort edges so that triplets forming faces are adjacent
-    void sortEdges();
+    void sortEdges(); // Sort edges so that triplets forming faces are adjacent
 
-    //data
   public:
     std::vector<MeshVertex> vertices;
-    //halfEdges, really
-    std::vector<MeshEdge> edges;
+    std::vector<MeshEdge> edges; // Half-Edges, really
 
     Vector3 toAdd;
     double scale;
