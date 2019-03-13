@@ -66,8 +66,7 @@ class MyWindow : public Fl_Gl_Window
     void initGL();
     void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
     void drawFloor();
-    void changeAngle(Vector3 axis, double angle,
-      double scale, Vector3 v2);
+    void changeAngle(Vector3 axis, double angle, double scale, Vector3 v2);
 };
 
 #endif
