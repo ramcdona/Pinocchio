@@ -47,7 +47,8 @@ void print_log(GLuint object) {
 
     if (glIsShader(object)) {
         glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
-    } else if (glIsProgram(object)) {
+    }
+    else if (glIsProgram(object)) {
         glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
     } else {
         fprintf(stderr, "printlog: Not a shader or a program\n");
@@ -58,7 +59,8 @@ void print_log(GLuint object) {
 
     if (glIsShader(object)) {
         glGetShaderInfoLog(object, log_length, NULL, log);
-    } else if (glIsProgram(object)) {
+    }
+    else if (glIsProgram(object)) {
         glGetProgramInfoLog(object, log_length, NULL, log);
     }
 
@@ -80,16 +82,16 @@ GLuint create_shader(const char* filename, GLenum type) {
 
     GLuint res = glCreateShader(type);
     const GLchar* sources[] = {
-    // Define GLSL version
-    #ifdef GL_ES_VERSION_2_0
-        "#version 100\n" // OpenGL ES 2.0
-    #else
-        "#version 120\n" // OpenGL 2.1
-    #endif
+// Define GLSL version
+#ifdef GL_ES_VERSION_2_0
+        "#version 100\n"                          // OpenGL ES 2.0
+#else
+        "#version 120\n"                          // OpenGL 2.1
+#endif
         ,
-    // GLES2 precision specifiers
-    #ifdef GL_ES_VERSION_2_0
-    // Define default float precision for fragment shaders:
+// GLES2 precision specifiers
+#ifdef GL_ES_VERSION_2_0
+// Define default float precision for fragment shaders:
         (type == GL_FRAGMENT_SHADER) ?
         "#ifdef GL_FRAGMENT_PRECISION_HIGH\n"
         "precision highp float;           \n"
@@ -97,14 +99,14 @@ GLuint create_shader(const char* filename, GLenum type) {
         "precision mediump float;         \n"
         "#endif                           \n"
         : ""
-    // Note: OpenGL ES automatically defines this:
-    // #define GL_ES
-    #else
-    // Ignore GLES 2 precision specifiers:
+// Note: OpenGL ES automatically defines this:
+// #define GL_ES
+#else
+// Ignore GLES 2 precision specifiers:
         "#define lowp   \n"
         "#define mediump\n"
         "#define highp  \n"
-    #endif
+#endif
         ,
         source
     };
