@@ -25,7 +25,7 @@ LIBS= \
 	-lm -L../Pinocchio/ -lpinocchio -lfltk -lfltk_gl \
 	$(shell $(PKGCONFIG) --libs $(PACKAGES))
 
-SRCS= demoUI.cpp MyWindow.cpp defmesh.cpp processor.cpp motion.cpp filter.cpp
+SRCS= DemoUI.cpp MyWindow.cpp defmesh.cpp processor.cpp motion.cpp filter.cpp
 OBJS= $(subst .cpp,.o,$(SRCS))
 
 BINARY= DemoUI
