@@ -52,22 +52,20 @@ class AnimatedModel {
         }
 
     public:
-        AnimatedModel() {}
+        AnimatedModel() : flatShading(false) {}
 
         void loadObject(std::string obj_filename, std::string motion_filenamename);
+        void drawModel();
 
     private:
         void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
         void drawFloor(bool flatShading);
-        void drawModel(Transform<> transform, std::vector<DisplayMesh *> meshes, std::vector<LineSegment> lines, HumanSkeleton human);
 
         bool flatShading;
-        bool wantDrawFloor;
-        bool wantDrawSkeleton;
-        bool isPaused;
 
         Transform<> transform;
         std::vector<DisplayMesh *> meshes;
         std::vector<LineSegment> lines;
 };
+
 #endif // MODEL_H_A1618EBE_4575_11E9_87B7_AF0032045DC6

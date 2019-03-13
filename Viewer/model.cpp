@@ -93,7 +93,7 @@ SkelHuman::SkelHuman() {
 }
 
 void AnimatedModel::loadObject(std::string obj_filename, std::string motion_filenamename) {
-// Calculate Skeleton and Attachment Values with Pinocchio
+    // Calculate Skeleton and Attachment Values with Pinocchio
     Mesh m(obj_filename, Mesh::DQS);
     Quaternion<> meshTransform;
     double skelScale = 1.;
@@ -137,7 +137,7 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
         }
     }
 
-// output skeleton embedding
+    // Output skeleton embedding
     std::string skelOutName("skeleton.out");
     for (int i = 0; i < (int)o.embedding.size(); ++i) {
         o.embedding[i] = (o.embedding[i] - m.toAdd) / m.scale;
@@ -148,7 +148,7 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
             " " << o.embedding[i][2] << " " << skeleton.fPrev()[i] << std::endl;
     }
 
-// output attachment
+    // Output attachment
     std::string weightOutName("attachment.out");
     std::ofstream astrm(weightOutName.c_str());
     for (int i = 0; i < (int)m.vertices.size(); ++i) {
@@ -161,17 +161,17 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
     }
     delete o.attachment;
 
-//printf("Mesh vertices: ");
-//for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
-//	printf("(%f, %f, %f) ", it->pos[0], it->pos[1], it->pos[2]);
-//}
-//printf("\n");
+    //printf("Mesh vertices: ");
+    //for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
+    //    printf("(%f, %f, %f) ", it->pos[0], it->pos[1], it->pos[2]);
+    //}
+    //printf("\n");
 
-//printf("Mesh normals: ");
-//for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
-//	printf("(%f, %f, %f) ", it->normal[0], it->normal[1], it->normal[2]);
-//}
-//printf("\n");
+    //printf("Mesh normals: ");
+    //for (std::vector<MeshVertex>::iterator it = m.vertices.begin() ; it != m.vertices.end(); ++it) {
+    //    printf("(%f, %f, %f) ", it->normal[0], it->normal[1], it->normal[2]);
+    //}
+    //printf("\n");
 }
 
 void AnimatedModel::drawMesh(const Mesh &m, bool flatShading, Vector3 trans) {
@@ -252,165 +252,37 @@ void AnimatedModel::drawFloor(bool flatShading) {
     glDisable(GL_BLEND);
 }
 
-
-
-void AnimatedModel::drawModel(Transform<> transform, std::vector<DisplayMesh *> meshes, std::vector<LineSegment> lines, HumanSkeleton human) {
+void AnimatedModel::drawModel() {
     int i;
     static int framenum;
+    SkelHuman human;
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    // Transform
-    Vector3 trans = transform.getTrans();
-    glTranslated(trans[0], trans[1], -10 + trans[2]);
-
-    double scale = transform.getScale();
-    glScaled(scale, scale, scale);
-
-    Quaternion<> r = transform.getRot();
-    double ang = r.getAngle();
-    if (fabs(ang) > 1e-6) {
-        Vector3 ax = r.getAxis();
-        glRotated(ang * 180. / M_PI, ax[0], ax[1], ax[2]);
-    }
-
-    if (wantDrawFloor) {
-        drawFloor(flatShading);
-    }
-
-    // Get mesh to draw, but only if not paused.
-    static std::vector<const Mesh *> ms(meshes.size());
-    if (!isPaused) {
-        for (i = 0; i < (int)meshes.size(); ++i) {
-            ms[i] = &(meshes[i]->getMesh(framenum));
-        }
-    }
-
-    // display frame number
-    std::stringstream strs;
-    strs << framenum;
-    std::string temp = strs.str();
-    //const char* strFramenum = temp.c_str();
-
-    // Shadows
-    if (wantDrawFloor) {
-        Vector3 lightRay = transform.getRot().inverse() * Vector3(1, 2, 2);
-        if (lightRay[1] == 0)
-            lightRay[1] = 1e-5;
-        lightRay = -lightRay / lightRay[1];
-
-        glDisable(GL_LIGHTING);
-        glColor3f(0.1f, 0.1f, 0.1f);
-        glPushMatrix();
-        float matr[16] = {1,0,0,0, (float)lightRay[0],0,(float)lightRay[2],0, 0,0,1,0, 0,0.01f,0,1};
-        glMultMatrixf(matr);
-        glDepthMask(0);
-        for (i = 0; i < (int)ms.size(); ++i) {
-            drawMesh(*(ms[i]), flatShading);
-        }
-        glDepthMask(1);
-        glEnable(GL_LIGHTING);
-        glPopMatrix();
-    }
-
-    static GLfloat colr[4] = {1.f, .9f, .75f, 1.0f };
-    static GLfloat colrb[4] = {1.f, .9f, .75f, 1.0f };
-    glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colr);
-    glMaterialfv( GL_BACK, GL_AMBIENT_AND_DIFFUSE, colrb);
-
-// Draw meshes
+    std::vector<const Mesh *> model_mesh(meshes.size());
     for (i = 0; i < (int)meshes.size(); ++i) {
-        drawMesh(*(ms[i]), flatShading);
+        model_mesh[i] = &(meshes[i]->getMesh(framenum));
     }
 
-// Draw lines
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-    for (i = 0; i < (int)lines.size(); ++i) {
-        glColor3d(lines[i].color[0], lines[i].color[1], lines[i].color[2]);
-        glLineWidth((float)lines[i].thickness);
+    for (i = 0; i < (int)meshes.size(); ++i) {
+        drawMesh(*(model_mesh[i]), flatShading);
+    }
+
+    glLineWidth(5);
+    for (i = 0; i < (int)meshes.size(); ++i) {
+        std::vector<Vector3> v = meshes[i]->getSkel();
+        if (v.size() == 0) {
+            continue;
+        }
+        glColor3d(.5, 0, 0);
+
+        const std::vector<int> &prev = human.fPrev();
         glBegin(GL_LINES);
-        glVertex3d(lines[i].p1[0], lines[i].p1[1], lines[i].p1[2]);
-        glVertex3d(lines[i].p2[0], lines[i].p2[1], lines[i].p2[2]);
+        for (int j = 1; j < (int)prev.size(); ++j) {
+            int k = prev[j];
+            glVertex3d(v[j][0], v[j][1], v[j][2]);
+            glVertex3d(v[k][0], v[k][1], v[k][2]);
+        }
         glEnd();
     }
 
-    if (wantDrawSkeleton) {
-        glLineWidth(5);
-        for (i = 0; i < (int)meshes.size(); ++i) {
-            std::vector<Vector3> v = meshes[i]->getSkel();
-            if (v.size() == 0)
-            {
-                continue;
-            }
-            glColor3d(.5, 0, 0);
-
-            const std::vector<int> &prev = human.fPrev();
-            glBegin(GL_LINES);
-            for (int j = 1; j < (int)prev.size(); ++j)
-            {
-                int k = prev[j];
-                glVertex3d(v[j][0], v[j][1], v[j][2]);
-                glVertex3d(v[k][0], v[k][1], v[k][2]);
-            }
-            glEnd();
-        }
-    }
+    return;
 }
-
-
-#if 0
-
-void initGL() {
-    static GLfloat pos[4] = { 5.0, 5.0, 10.0, 1.0 };
-
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-    glLightfv( GL_LIGHT0, GL_POSITION, pos );
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-    glDisable(GL_ALPHA_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_FLAT);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
-}
-
-
-void init_draw(double w, double h) {
-// Init viewport and projection
-    initGL();
-
-    glViewport(0, 0, (int)w, (int)h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    double left = -.1;
-    double bottom = -.1;
-    double right = 1.1;
-    double top = 1.1;
-
-    if (w > 1 && h > 1) {
-        if (w > h) {
-            right = -0.1 + 1.2 * w / h;
-        }
-        if (h > w) {
-            bottom = 1.1 - 1.2 * h / w;
-        }
-    }
-
-    double scale = 1. / 1000.;
-    left = -w * scale;
-    right = w * scale;
-    bottom = -h * scale;
-    top = h * scale;
-    glFrustum(left, right, bottom, top, 5., 30.);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
-#endif

@@ -3,6 +3,7 @@
  * This file is in the public domain.
  * Contributors: Sylvain Beucler
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,10 +11,13 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+
 /* Use glew.h instead of gl.h to get all the GL prototypes declared */
 #include <GL/glew.h>
+
 /* Using the GLUT library for the base windowing setup */
 #include <GL/glut.h>
+
 /* GLM */
 // #define GLM_MESSAGES
 #define GLM_FORCE_RADIANS
@@ -35,6 +39,8 @@ GLint uniform_m_3x3_inv_transp = -1, uniform_v_inv = -1;
 bool compute_arcball;
 int last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
 int arcball_on = false;
+
+AnimatedModel model;
 
 using namespace std;
 
@@ -70,10 +76,10 @@ class ObjectMesh {
             }
         }
 
-/**
- * Store object vertices, normals and/or elements in graphic card
- * buffers
- */
+        /**
+         * Store object vertices, normals and/or elements in graphic card
+         * buffers
+         */
         void upload() {
             if (this->vertices.size() > 0) {
                 glGenBuffers(1, &this->vbo_vertices);
@@ -97,9 +103,9 @@ class ObjectMesh {
             }
         }
 
-/**
- * Draw the object
- */
+        /**
+         * Draw the object
+         */
         void draw() {
             if (this->vbo_vertices != 0) {
                 glEnableVertexAttribArray(attribute_v_coord);
@@ -127,40 +133,39 @@ class ObjectMesh {
                     );
             }
 
-/* Apply object's transformation matrix */
+            /* Apply object's transformation matrix */
             glUniformMatrix4fv(uniform_m, 1, GL_FALSE, glm::value_ptr(this->object2world));
-/* Transform normal vectors with transpose of inverse of upper left
-   3x3 model matrix (ex-gl_NormalMatrix): */
+            /* Transform normal vectors with transpose of inverse of upper left 3x3 model matrix (ex-gl_NormalMatrix): */
             glm::mat3 m_3x3_inv_transp = glm::transpose(glm::inverse(glm::mat3(this->object2world)));
             glUniformMatrix3fv(uniform_m_3x3_inv_transp, 1, GL_FALSE, glm::value_ptr(m_3x3_inv_transp));
 
-/* Push each element in buffer_vertices to the vertex shader */
+            /* Push each element in buffer_vertices to the vertex shader */
             if (this->ibo_elements != 0) {
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ibo_elements);
                 int size;  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
                 glDrawElements(GL_TRIANGLES, size/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-            }
-            else {
+            } else {
                 glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
             }
 
             if (this->vbo_normals != 0) {
                 glDisableVertexAttribArray(attribute_v_normal);
             }
+
             if (this->vbo_vertices != 0) {
                 glDisableVertexAttribArray(attribute_v_coord);
             }
         }
 
-/**
- * Draw object bounding box
- */
+        /**
+         * Draw object bounding box
+         */
         void draw_bbox() {
             if (this->vertices.size() == 0) {
                 return;
             }
 
-// Cube 1x1x1, centered on origin
+            // Cube 1x1x1, centered on origin
             GLfloat vertices[] = {
                 -0.5, -0.5, -0.5, 1.0,
                 0.5, -0.5, -0.5, 1.0,
@@ -204,7 +209,7 @@ class ObjectMesh {
             glm::vec3 center = glm::vec3((min_x+max_x)/2, (min_y+max_y)/2, (min_z+max_z)/2);
             glm::mat4 transform = glm::scale(glm::mat4(1), size) * glm::translate(glm::mat4(1), center);
 
-/* Apply object's transformation matrix */
+            /* Apply object's transformation matrix */
             glm::mat4 m = this->object2world * transform;
             glUniformMatrix4fv(uniform_m, 1, GL_FALSE, glm::value_ptr(m));
 
@@ -287,7 +292,7 @@ void load_obj(const char* filename, ObjectMesh* mesh) {
 
 int init_resources(char* model_filename, char* vshader_filename, char* fshader_filename) {
     load_obj(model_filename, &main_object);
-// mesh position initialized in init_view()
+    // mesh position initialized in init_view()
 
     for (int i = -GROUND_SIZE/2; i < GROUND_SIZE/2; i++) {
         for (int j = -GROUND_SIZE/2; j < GROUND_SIZE/2; j++) {
@@ -317,7 +322,7 @@ int init_resources(char* model_filename, char* vshader_filename, char* fshader_f
     ground.upload();
     light_bbox.upload();
 
-/* Compile and link shaders */
+    /* Compile and link shaders */
     GLint link_ok = GL_FALSE;
     GLint validate_ok = GL_FALSE;
 
@@ -491,101 +496,93 @@ glm::vec3 get_arcball_vector(int x, int y) {
 
 
 void logic() {
-    /* FPS count */ {
+    /* FPS count */
     fps_frames++;
-    int delta_t = glutGet(GLUT_ELAPSED_TIME) - fps_start;
-    if (delta_t > 1000) {
-        cout << 1000.0 * fps_frames / delta_t << endl;
+    int delta_time = glutGet(GLUT_ELAPSED_TIME) - fps_start;
+    if (delta_time > 1000) {
+        cout << 1000.0 * fps_frames / delta_time << endl;
         fps_frames = 0;
         fps_start = glutGet(GLUT_ELAPSED_TIME);
     }
-}
 
 
-/* Handle keyboard-based transformations */
-int delta_t = glutGet(GLUT_ELAPSED_TIME) - last_ticks;
-last_ticks = glutGet(GLUT_ELAPSED_TIME);
+    /* Handle keyboard-based transformations */
+    int delta_t = glutGet(GLUT_ELAPSED_TIME) - last_ticks;
+    last_ticks = glutGet(GLUT_ELAPSED_TIME);
 
-// 5 units per second
-float delta_transZ = transZ_direction * delta_t / 1000.0 * 5 * speed_factor;
-float delta_transX = 0, delta_transY = 0, delta_rotY = 0, delta_rotX = 0;
-if (strife) {
-// 3 units per second
-    delta_transX = rotY_direction * delta_t / 1000.0 * 3 * speed_factor;
-// 3 units per second
-    delta_transY = rotX_direction * delta_t / 1000.0 * 3 * speed_factor;
-}
-
-
-else {
-// 120° per second
-    delta_rotY =  rotY_direction * delta_t / 1000.0 * 120 * speed_factor;
-// 120° per second
-    delta_rotX = -rotX_direction * delta_t / 1000.0 * 120 * speed_factor;
-}
-
-
-if (view_mode == MODE_OBJECT) {
-    main_object.object2world = glm::rotate(main_object.object2world, glm::radians(delta_rotY), glm::vec3(0.0, 1.0, 0.0));
-    main_object.object2world = glm::rotate(main_object.object2world, glm::radians(delta_rotX), glm::vec3(1.0, 0.0, 0.0));
-    main_object.object2world = glm::translate(main_object.object2world, glm::vec3(0.0, 0.0, delta_transZ));
-}
-
-
-else if (view_mode == MODE_CAMERA) {
-// Camera is reverse-facing, so reverse Z translation and X rotation.
-// Plus, the View matrix is the inverse of the camera2world (it's
-// world->camera), so we'll reverse the transformations.
-// Alternatively, imagine that you transform the world, instead of positioning the camera.
-
+    float delta_transZ = transZ_direction * delta_t / 1000.0 * 5 * speed_factor; // 5 units per second
+    float delta_transX = 0, delta_transY = 0, delta_rotY = 0, delta_rotX = 0;
     if (strife) {
-        transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(delta_transX, 0.0, 0.0)) * transforms[MODE_CAMERA];
+        delta_transX = rotY_direction * delta_t / 1000.0 * 3 * speed_factor; // 3 units per second
+        delta_transY = rotX_direction * delta_t / 1000.0 * 3 * speed_factor; // 3 units per second
     } else {
-        glm::vec3 y_axis_world = glm::mat3(transforms[MODE_CAMERA]) * glm::vec3(0.0, 1.0, 0.0);
-        transforms[MODE_CAMERA] = glm::rotate(glm::mat4(1.0), glm::radians(-delta_rotY), y_axis_world) * transforms[MODE_CAMERA];
+        delta_rotY =  rotY_direction * delta_t / 1000.0 * 120 * speed_factor; // 120° per second
+        delta_rotX = -rotX_direction * delta_t / 1000.0 * 120 * speed_factor; // 120° per second
     }
 
-    if (strife) {
-        transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(0.0, delta_transY, 0.0)) * transforms[MODE_CAMERA];
-    } else {
-        transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, delta_transZ)) * transforms[MODE_CAMERA];
+
+    if (view_mode == MODE_OBJECT) {
+
+        main_object.object2world = glm::rotate(main_object.object2world, glm::radians(delta_rotY), glm::vec3(0.0, 1.0, 0.0));
+        main_object.object2world = glm::rotate(main_object.object2world, glm::radians(delta_rotX), glm::vec3(1.0, 0.0, 0.0));
+        main_object.object2world = glm::translate(main_object.object2world, glm::vec3(0.0, 0.0, delta_transZ));
+
+    } else if (view_mode == MODE_CAMERA) {
+
+        // Camera is reverse-facing, so reverse Z translation and X rotation.
+        // Plus, the View matrix is the inverse of the camera2world (it's
+        // world->camera), so we'll reverse the transformations.
+        // Alternatively, imagine that you transform the world, instead of positioning the camera.
+
+        if (strife) {
+            transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(delta_transX, 0.0, 0.0)) * transforms[MODE_CAMERA];
+        } else {
+            glm::vec3 y_axis_world = glm::mat3(transforms[MODE_CAMERA]) * glm::vec3(0.0, 1.0, 0.0);
+            transforms[MODE_CAMERA] = glm::rotate(glm::mat4(1.0), glm::radians(-delta_rotY), y_axis_world) * transforms[MODE_CAMERA];
+        }
+
+        if (strife) {
+            transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(0.0, delta_transY, 0.0)) * transforms[MODE_CAMERA];
+        } else {
+            transforms[MODE_CAMERA] = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, delta_transZ)) * transforms[MODE_CAMERA];
+        }
+
+        transforms[MODE_CAMERA] = glm::rotate(glm::mat4(1.0), glm::radians(delta_rotX), glm::vec3(1.0, 0.0, 0.0)) * transforms[MODE_CAMERA];
+
     }
 
-    transforms[MODE_CAMERA] = glm::rotate(glm::mat4(1.0), glm::radians(delta_rotX), glm::vec3(1.0, 0.0, 0.0)) * transforms[MODE_CAMERA];
-}
+
+    /* Handle arcball */
+    if (cur_mx != last_mx || cur_my != last_my) {
+        glm::vec3 va = get_arcball_vector(last_mx, last_my);
+        glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
+        float angle = acos(min(1.0f, glm::dot(va, vb)));
+        glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
+        glm::mat3 camera2object = glm::inverse(glm::mat3(transforms[MODE_CAMERA]) * glm::mat3(main_object.object2world));
+        glm::vec3 axis_in_object_coord = camera2object * axis_in_camera_coord;
+        main_object.object2world = glm::rotate(main_object.object2world, angle, axis_in_object_coord);
+        last_mx = cur_mx;
+        last_my = cur_my;
+    }
 
 
-/* Handle arcball */
-if (cur_mx != last_mx || cur_my != last_my) {
-    glm::vec3 va = get_arcball_vector(last_mx, last_my);
-    glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
-    float angle = acos(min(1.0f, glm::dot(va, vb)));
-    glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
-    glm::mat3 camera2object = glm::inverse(glm::mat3(transforms[MODE_CAMERA]) * glm::mat3(main_object.object2world));
-    glm::vec3 axis_in_object_coord = camera2object * axis_in_camera_coord;
-    main_object.object2world = glm::rotate(main_object.object2world, angle, axis_in_object_coord);
-    last_mx = cur_mx;
-    last_my = cur_my;
-}
+    // Model
+    // Set in onDisplay() - cf. main_object.object2world
 
+    // View
+    glm::mat4 world2camera = transforms[MODE_CAMERA];
 
-// Model
-// Set in onDisplay() - cf. main_object.object2world
+    // Projection
+    glm::mat4 camera2screen = glm::perspective(45.0f, 1.0f*screen_width/screen_height, 0.1f, 100.0f);
 
-// View
-glm::mat4 world2camera = transforms[MODE_CAMERA];
+    glUseProgram(program);
+    glUniformMatrix4fv(uniform_v, 1, GL_FALSE, glm::value_ptr(world2camera));
+    glUniformMatrix4fv(uniform_p, 1, GL_FALSE, glm::value_ptr(camera2screen));
 
-// Projection
-glm::mat4 camera2screen = glm::perspective(45.0f, 1.0f*screen_width/screen_height, 0.1f, 100.0f);
+    glm::mat4 v_inv = glm::inverse(world2camera);
+    glUniformMatrix4fv(uniform_v_inv, 1, GL_FALSE, glm::value_ptr(v_inv));
 
-glUseProgram(program);
-glUniformMatrix4fv(uniform_v, 1, GL_FALSE, glm::value_ptr(world2camera));
-glUniformMatrix4fv(uniform_p, 1, GL_FALSE, glm::value_ptr(camera2screen));
-
-glm::mat4 v_inv = glm::inverse(world2camera);
-glUniformMatrix4fv(uniform_v_inv, 1, GL_FALSE, glm::value_ptr(v_inv));
-
-glutPostRedisplay();
+    glutPostRedisplay();
 }
 
 
@@ -597,6 +594,9 @@ void draw() {
 
     main_object.draw();
     ground.draw();
+
+    model.drawModel();
+
     light_bbox.draw_bbox();
 }
 
@@ -667,7 +667,6 @@ int main(int argc, char* argv[]) {
         f_shader_filename = argv[3];
     }
 
-    AnimatedModel model;
     model.loadObject(obj_filename, "paths/walk.txt");
 
     if (init_resources(obj_filename, v_shader_filename, f_shader_filename)) {
