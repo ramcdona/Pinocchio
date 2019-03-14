@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "../Pinocchio/deriv.h"
 
+using namespace Pinocchio;
+
 template<class Real>
 Vectorn<Real> getFeet(const std::vector<Transform<Real> > &transforms, const std::vector<Vector3> &joints,
 const std::vector<int> &prev) {

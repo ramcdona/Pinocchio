@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include <fstream>
 #include <sstream>
 
+using namespace Pinocchio;
+
 Motion::Motion(const std::string &file) : fixedFrame(-1)
 {
   std::ifstream strm(file.c_str());

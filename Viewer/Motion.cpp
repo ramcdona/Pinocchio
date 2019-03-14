@@ -26,6 +26,8 @@ THE SOFTWARE.
 #include "../Pinocchio/skeleton.h"
 #include "../Pinocchio/utils.h"
 
+using namespace Pinocchio;
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

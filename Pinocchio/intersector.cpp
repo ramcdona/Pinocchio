@@ -23,6 +23,8 @@
 
 //------------------Intersector-----------------
 
+namespace Pinocchio {
+
 static const int cells = 200;
 
 void Intersector::getIndex(const Vector2 &pt, int &x, int &y) const
@@ -137,3 +139,5 @@ std::vector<Vector3> Intersector::intersect(const Vector3 &pt, std::vector<int> 
 
   return out;
 }
+
+} // namespace Pinocchio

@@ -32,8 +32,7 @@ THE SOFTWARE.
 #include "DisplayMesh.h"
 #include "shared.h"
 
-struct LineSegment
-{
+struct LineSegment {
   LineSegment() : thickness(1.) {}
   LineSegment(const Vector3 &inP1, const Vector3 &inP2,
     const Vector3 &inColor = Vector3(1, 1, 1), double inThickness = 1.)
@@ -43,8 +42,7 @@ struct LineSegment
   double thickness;
 };
 
-class MyWindow : public Fl_Gl_Window
-{
+class MyWindow : public Fl_Gl_Window {
   public:
     MyWindow(int width, int height, const char* title);
 
@@ -58,15 +56,15 @@ class MyWindow : public Fl_Gl_Window
 
   private:
     bool flatShading, floor, skeleton;
-    Transform<> transform;
+    Pinocchio::Transform<> transform;
     std::vector<DisplayMesh *> meshes;
     std::vector<LineSegment> lines;
 
     void resetTransform();
     void initGL();
-    void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
+    void drawMesh(const Pinocchio::Mesh &m, bool flatShading, Vector3 trans = Vector3());
     void drawFloor();
     void changeAngle(Vector3 axis, double angle, double scale, Vector3 v2);
 };
 
-#endif
+#endif // MYWINDOW_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5

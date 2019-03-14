@@ -19,6 +19,8 @@
 #include "pinocchioApi.h"
 #include "debugging.h"
 
+namespace Pinocchio {
+
 //information for penalty functions
 struct FP
 {
@@ -655,3 +657,5 @@ std::vector<PenaltyFunction *> getPenaltyFunctions(FP *fp)
 
   return out;
 }
+
+} // namespace Pinocchio

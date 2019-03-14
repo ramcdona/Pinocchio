@@ -21,6 +21,8 @@
 #include <fstream>
 #include <sys/time.h>
 
+namespace Pinocchio {
+
 std::ostream *Debugging::outStream = new std::ofstream();
 
 PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
@@ -83,3 +85,5 @@ PinocchioOutput autorig(const Skeleton &given, const Mesh &m)
 
   return out;
 }
+
+} // namespace Pinocchio

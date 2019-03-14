@@ -20,9 +20,12 @@
 #define MESH_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
 #include <vector>
+#include <string>
 
 #include "vector.h"
 #include "rect.h"
+
+namespace Pinocchio {
 
 struct MeshVertex {
   MeshVertex() : edge(-1) {}
@@ -73,4 +76,7 @@ class PINOCCHIO_API Mesh {
     static int DQS;
     static int MIX;
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // MESH_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

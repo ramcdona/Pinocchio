@@ -16,10 +16,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MULTILINEAR_H_INCLUDED
-#define MULTILINEAR_H_INCLUDED
+#ifndef MULTILINEAR_H_51AD961C_4631_11E9_9473_47528FDA74F6
+#define MULTILINEAR_H_51AD961C_4631_11E9_9473_47528FDA74F6
 
 #include "rect.h"
+
+namespace Pinocchio {
 
 //multilinear function over unit hypercube
 template<class Value, int Dim>
@@ -75,5 +77,6 @@ class Multilinear
     Value values[num];
 };
 
-//MULTILINEAR_H_INCLUDED
-#endif
+} // namespace Pinocchio
+
+#endif // MULTILINEAR_H_51AD961C_4631_11E9_9473_47528FDA74F6

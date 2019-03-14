@@ -16,10 +16,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VECUTILS_H_INCLUDED
-#define VECUTILS_H_INCLUDED
+#ifndef VECUTILS_H_D30BB6CC_4630_11E9_82EF_BBA014A6BD0E
+#define VECUTILS_H_D30BB6CC_4630_11E9_82EF_BBA014A6BD0E
 
 #include "vector.h"
+
+namespace Pinocchio {
 
 template<class Real>
 void getBasis(const Vector<Real, 3> &n, Vector<Real, 3> &v1, Vector<Real, 3> &v2)
@@ -157,6 +159,6 @@ Vector<Real, 3> projToTri(const Vector<Real, 3> &from, const Vector<Real, 3> &p1
   return projToLine(from, p1, p2p1);
 }
 
+} // namespace Pinocchio
 
-//VECUTILS_H_INCLUDED
-#endif
+#endif // VECUTILS_H_D30BB6CC_4630_11E9_82EF_BBA014A6BD0E

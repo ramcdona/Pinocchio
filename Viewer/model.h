@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef MODEL_H_A1618EBE_4575_11E9_87B7_AF0032045DC6
-#define MODEL_H_A1618EBE_4575_11E9_87B7_AF0032045DC6
+#ifndef MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA
+#define MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA
 
 #include "DisplayMesh.h"
 
@@ -58,14 +58,14 @@ class AnimatedModel {
         void drawModel();
 
     private:
-        void drawMesh(const Mesh &m, bool flatShading, Vector3 trans = Vector3());
+        void drawMesh(const Pinocchio::Mesh &m, bool flatShading, Vector3 trans = Vector3());
         void drawFloor(bool flatShading);
 
         bool flatShading;
 
-        Transform<> transform;
+        Pinocchio::Transform<> transform;
         std::vector<DisplayMesh *> meshes;
         std::vector<LineSegment> lines;
 };
 
-#endif // MODEL_H_A1618EBE_4575_11E9_87B7_AF0032045DC6
+#endif // MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA

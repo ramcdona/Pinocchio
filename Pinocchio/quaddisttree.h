@@ -28,6 +28,8 @@
 #include <map>
 #include <unordered_map>
 
+namespace Pinocchio {
+
 template<int Dim>
 class DistFunction : public Multilinear<double, Dim>
 {
@@ -282,4 +284,7 @@ template<class RootNode = OctTreeRoot> class OctTreeMaker
         const RootNode *dTree;
     };
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // QUADDISTTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

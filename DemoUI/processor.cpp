@@ -32,8 +32,9 @@ THE SOFTWARE.
 #include "defmesh.h"
 #include "motion.h"
 
-struct ArgData
-{
+using namespace Pinocchio;
+
+struct ArgData {
   ArgData() :
   stopAtMesh(false), stopAfterCircles(false), skelScale(1.), noFit(false),
     skeleton(HumanSkeleton())
@@ -55,8 +56,8 @@ struct ArgData
   float blendWeight;
 };
 
-void printUsageAndExit()
-{
+
+void printUsageAndExit() {
   std::cout << "Usage: DemoUI filename.{obj | ply | off | gts | stl}" << std::endl;
   std::cout << "              [-skel skelname] [-rot x y z deg]* [-scale s]" << std::endl;
   std::cout << "              [-meshonly | -mo] [-circlesonly | -co]" << std::endl;

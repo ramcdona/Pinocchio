@@ -27,4 +27,4 @@ THE SOFTWARE.
 
 void process(const std::vector<std::string> &args, MyWindow *w);
 
-#endif
+#endif // PROCESSOR_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5

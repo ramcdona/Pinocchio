@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MATHUTILS_H_INCLUDED
-#define MATHUTILS_H_INCLUDED
+#ifndef MATHUTILS_H_2686C802_462F_11E9_BF34_F7BC72BBEB09
+#define MATHUTILS_H_2686C802_462F_11E9_BF34_F7BC72BBEB09
 
 #include <math.h>
 #include <functional>
@@ -41,38 +41,32 @@ template<class T> T SQR(const T & x) { return x * x; }
 template<class T> T CUBE(const T & x) { return x * x * x; }
 template<class T> T QUAD(const T & x) { return SQR(SQR(x)); }
 
-template <class T> class maximum : public std::binary_function<T, T, T>
-{
+template <class T> class maximum : public std::binary_function<T, T, T> {
   public:
     T operator()(const T &a1, const T &a2) const { return std::max(a1, a2); }
 };
 
-template <class T> class minimum : public std::binary_function<T, T, T>
-{
+template <class T> class minimum : public std::binary_function<T, T, T> {
   public:
     T operator()(const T &a1, const T &a2) const { return std::min(a1, a2); }
 };
 
-template <class A1, class A2, class R> class myMult : public std::binary_function<A1, A2, R>
-{
+template <class A1, class A2, class R> class myMult : public std::binary_function<A1, A2, R> {
   public:
     R operator()(const A1 &a1, const A2 &a2) const { return a1 * a2; }
 };
 
-template <class A1, class A2, class R> class myDiv : public std::binary_function<A1, A2, R>
-{
+template <class A1, class A2, class R> class myDiv : public std::binary_function<A1, A2, R> {
   public:
     R operator()(const A1 &a1, const A2 &a2) const { return a1 / a2; }
 };
 
-template <class T> class ident : public std::unary_function<T, T>
-{
+template <class T> class ident : public std::unary_function<T, T> {
   public:
     T operator()(const T &v) const { return v; }
 };
 
-template<class T> class construct
-{
+template<class T> class construct {
   public:
     typedef T result_type;
     template<class From> T operator()(const From &x) const { return T(x); }
@@ -83,5 +77,4 @@ inline bool operator==(const string &s1, const string &s2) { return s1.compare(s
 inline bool operator<(const string &s1, const string &s2) { return s1.compare(s2) < 0; }
 #endif
 
-//MATHUTILS_H_INCLUDED
-#endif
+#endif // MATHUTILS_H_2686C802_462F_11E9_BF34_F7BC72BBEB09

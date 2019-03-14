@@ -24,6 +24,8 @@
 
 using namespace Tbx;
 
+namespace Pinocchio {
+
 /* 
  * Given a transofrmation matrix, it converts it to a dual quaternion and returns that */
 Dual_quat_cu getQuatFromMat(Transform<> matrix)
@@ -65,3 +67,5 @@ Vector3 transformPoint(Vector3 vpos, Dual_quat_cu &dquat_blend)
   Point3 newPos = dquat_blend.transform(restPos);
   return Vector3(newPos.x, newPos.y, newPos.z);
 }
+
+} // namespace Pinocchio

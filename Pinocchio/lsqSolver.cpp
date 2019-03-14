@@ -36,6 +36,7 @@ extern "C"
   #include "taucs.h"
 }
 
+namespace Pinocchio {
 
 std::vector<int> SPDMatrix::computePerm() const
 {
@@ -134,8 +135,12 @@ LLTMatrix *SPDMatrix::factor() const
   return out;
 }
 
+} // namespace Pinocchio
 
 #else
+
+namespace Pinocchio {
+
 class MyLLTMatrix : public LLTMatrix
 {
   public:
@@ -425,4 +430,7 @@ bool MyLLTMatrix::solve(std::vector<double> &b) const
 
   return true;
 }
+
+} // namespace Pinocchio
+
 #endif

@@ -26,6 +26,8 @@
 
 #include "cube_model.h"
 
+using namespace Pinocchio;
+
 //
 // for parsing CL params
 int my_argc;

@@ -20,6 +20,8 @@
 #include "deriv.h"
 #include "debugging.h"
 
+namespace Pinocchio {
+
 //fits mesh inside unit cube, makes sure there's exactly one connected
 //component
 Mesh  prepareMesh(const Mesh &m)
@@ -265,3 +267,5 @@ const std::vector<Sphere> &spheres)
 
   return out;
 }
+
+} // namespace Pinocchio

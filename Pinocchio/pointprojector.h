@@ -26,6 +26,8 @@
 #include "vecutils.h"
 #include "debugging.h"
 
+namespace Pinocchio {
+
 struct Vec3Object
 {
   Vec3Object(const Vector3 &inV) : v(inV) {}
@@ -204,4 +206,7 @@ class ObjectProjector
     std::vector<RNode> rnodes;
     std::vector<Obj> objs;
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // POINTPROJECTOR_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

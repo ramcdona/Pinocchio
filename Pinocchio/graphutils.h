@@ -22,6 +22,8 @@
 #include <queue>
 #include "vector.h"
 
+namespace Pinocchio {
+
 struct PtGraph
 {
   std::vector<Vector3> verts;
@@ -74,4 +76,7 @@ class AllShortestPather
   private:
     std::vector<ShortestPather> paths;
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // GRAPHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

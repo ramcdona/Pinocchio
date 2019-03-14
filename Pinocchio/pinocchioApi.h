@@ -23,6 +23,8 @@
 #include "quaddisttree.h"
 #include "attachment.h"
 
+namespace Pinocchio {
+
 struct PinocchioOutput
 {
   PinocchioOutput() : attachment(NULL) {}
@@ -85,4 +87,6 @@ const std::vector<Vector3> &initialEmbedding, const Skeleton &skeleton);
 
 //to compute the attachment, create a new Attachment object
 
-#endif
+} // namespace Pinocchio
+
+#endif // PINOCCHIOAPI_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

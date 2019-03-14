@@ -24,6 +24,8 @@ THE SOFTWARE.
 #include "motion.h"
 #include "../Pinocchio/intersector.h"
 
+using namespace Pinocchio;
+
 std::vector<Transform<> > DefMesh::computeTransforms() const
 {
   std::vector<Transform<> > out;

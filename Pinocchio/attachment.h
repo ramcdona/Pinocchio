@@ -24,14 +24,16 @@
 #include "transform.h"
 #include "quatinterface.h"
 
-class VisibilityTester
-{
+namespace Pinocchio {
+
+class VisibilityTester {
   public:
     virtual ~VisibilityTester() {}
     virtual bool canSee(const Vector3 &v1, const Vector3 &v2) const = 0;
 };
 
-template<class T> class VisTester : public VisibilityTester
+template<class T>
+class VisTester : public VisibilityTester
 {
   public:
     VisTester(const T *t) : tree(t) {}
@@ -88,4 +90,7 @@ class PINOCCHIO_API Attachment
   private:
     AttachmentPrivate *a;
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // ATTACHMENT_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

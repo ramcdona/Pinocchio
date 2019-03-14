@@ -22,8 +22,9 @@
 #include "mesh.h"
 #include "vecutils.h"
 
-class PINOCCHIO_API Intersector
-{
+namespace Pinocchio {
+
+class PINOCCHIO_API Intersector {
   public:
     Intersector() : mesh(NULL) {}
     Intersector(const Mesh &m, const Vector3 &inDir) : mesh(&m), dir(inDir) { init(); }
@@ -47,4 +48,6 @@ class PINOCCHIO_API Intersector
     std::vector<std::vector<int> > triangles;
 };
 
-#endif
+} // namespace Pinocchio
+
+#endif // INTERSECTOR_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

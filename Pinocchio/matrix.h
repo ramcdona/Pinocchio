@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MATRIX_H_INCLUDED
-#define MATRIX_H_INCLUDED
+#ifndef MATRIX_H_F98B57FA_462E_11E9_B919_735E08FEE676
+#define MATRIX_H_F98B57FA_462E_11E9_B919_735E08FEE676
 
 #include <vector>
 #include <algorithm>
@@ -26,9 +26,10 @@
 
 #include "mathutils.h"
 
+namespace Pinocchio {
+
 template<class Real>
-class Vectorn : public std::vector<Real>
-{
+class Vectorn : public std::vector<Real> {
   public:
     typedef Vectorn<Real> Self;
     typedef std::vector<Real> super;
@@ -325,6 +326,6 @@ inline std::ostream &operator<<(std::ostream &os, const Matrixn<Real> &m)
   return os;
 }
 
+} // namespace Pinocchio
 
-//MATRIX_H_INCLUDED
-#endif
+#endif // MATRIX_H_F98B57FA_462E_11E9_B919_735E08FEE676

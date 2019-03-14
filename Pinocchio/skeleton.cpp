@@ -27,6 +27,8 @@
 #include <fstream>
 #include <unordered_map>
 
+namespace Pinocchio {
+
 void Skeleton::initCompressed() {
   int i;
 
@@ -437,3 +439,5 @@ FileSkeleton::FileSkeleton(const std::string &filename) {
 
   initCompressed();
 }
+
+} // namespace Pinocchio

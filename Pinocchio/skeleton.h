@@ -22,6 +22,8 @@
 #include <map>
 #include "graphutils.h"
 
+namespace Pinocchio {
+
 class PINOCCHIO_API Skeleton
 {
   public:
@@ -115,4 +117,7 @@ class PINOCCHIO_API FileSkeleton : public Skeleton
   public:
     FileSkeleton(const std::string &filename);
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // SKELETON_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

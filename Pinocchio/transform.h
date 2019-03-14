@@ -21,47 +21,37 @@
 
 #include "vector.h"
 
-template<class Real = double>
-//normalized quaternion for representing rotations
-class Quaternion
-{
+namespace Pinocchio {
+
+template<class Real = double> class Quaternion { // Normalized quaternion for representing rotations
   public:
-    //constructors
-    //initialize to identity
-    Quaternion() : r(1.)
-    {
-    }
-    //copy constructor
-    Quaternion(const Quaternion &q) : r(q.r), v(q.v)
-    {
-    }
-    template<class R> Quaternion(const Quaternion<R> &q) :
-    //convert quaternions of other types
-    r(q.r), v(q.v)
-    {
-    }
-    //axis angle constructor:
+    // Constructors
+    Quaternion() : r(1.) { } // Initialize to identity
+    Quaternion(const Quaternion &q) : r(q.r), v(q.v) {} // Copy constructor
+    template<class R> Quaternion(const Quaternion<R> &q) : r(q.r), v(q.v) {} //Convert quaternions of other types
+
+    // Axis angle constructor:
     template<class R> Quaternion(const Vector<R, 3> &axis,
       const R &angle) : r(cos(angle * Real(0.5))),
       v(sin(angle * Real(0.5)) * axis.normalize()) {}
-    //minimum rotation constructor:
+
+    // Minimum rotation constructor:
     template<class R> Quaternion(const Vector<R, 3> &from,
       const Vector<R, 3> &to) : r(1.)
     {
       R fromLenSq = from.lengthsq(), toLenSq = to.lengthsq();
-      if(fromLenSq < toLenSq)
-      {
-        if(fromLenSq < R(1e-16))
+      if (fromLenSq < toLenSq) {
+        if (fromLenSq < R(1e-16)) {
           return;
+        }
         Vector<R, 3> mid = from * sqrt(toLenSq / fromLenSq) + to;
         R fac = 1. / sqrt(mid.lengthsq() * toLenSq);
         r = (mid * to) * fac;
         v = (mid % to) * fac;
-      }
-      else
-      {
-        if(toLenSq < R(1e-16))
+      } else {
+        if(toLenSq < R(1e-16)) {
           return;
+        }
         Vector<R, 3> mid = from + to * sqrt(fromLenSq / toLenSq);
         R fac = 1. / sqrt(mid.lengthsq() * fromLenSq);
         r = (from * mid) * fac;
@@ -84,9 +74,8 @@ class Quaternion
         p[2] * (Real(1.) - vsq2[0] - vsq2[1]) + p[0] * (vv2[1] - rv2[1]) + p[1] * (vv2[0] + rv2[0]));
     }
 
-    //equality
-    template<class R> bool operator==(const Quaternion<R> &oth) const
-    {
+    // Equality
+    template<class R> bool operator==(const Quaternion<R> &oth) const {
       return (r == oth.r && v == oth.v) || (r == -oth.r && v == -oth.v);
     }
 
@@ -96,8 +85,7 @@ class Quaternion
     Vector<Real, 3> getAxis() const { return v.normalize(); }
 
     const Real &operator[](int i) const { return (i == 0) ? r : v[i - 1]; }
-    void set(const Real &inR, const Vector<Real, 3> &inV)
-    {
+    void set(const Real &inR, const Vector<Real, 3> &inV) {
       Real ratio = Real(1.) / sqrt(inR * inR + inV.lengthsq());
       //normalize
       r = inR * ratio; v = inV * ratio;
@@ -110,24 +98,7 @@ class Quaternion
     Vector<Real, 3> v;
 };
 
-// overide <<  opertator to allows us to print a Quaternion object to terminal
-inline std::ostream& operator<<(std::ostream& os,
-const Quaternion<double> &obj)
-{
-  // print angle
-  std::cout << "   Rotation Angle: " << obj.getAngle() << std::endl;
-
-  // print axis std::vector
-  Vector3 axis = obj.getAxis();
-  std::cout << " Rotation Axis (a std::vector): (" << axis[0] << " ," << axis[1] <<
-    " ," << axis[2] << ")" << std::endl;
-  return os;
-}
-
-
-//T(v) = (rot * v * scale) + trans
-template<class Real = double> class Transform
-{
+template<class Real = double> class Transform { // T(v) = (rot * v * scale) + trans
   public:
     typedef Vector<Real, 3> Vec;
 
@@ -154,27 +125,7 @@ template<class Real = double> class Transform
     Vec trans;
 };
 
-// override << operator to allows us to print a Transform object to terminal
-inline std::ostream& operator<<(std::ostream& os,
-const Transform<double> &obj)
-{
-  // print rotation quaternion
-  std::cout << "Rotation Quaternion:\n " << obj.getRot() << std::endl;
-
-  // print scale std::vector
-  double scale = obj.getScale();
-  std::cout << "Scale: " << scale << std::endl;
-
-  // print translation std::vector
-  Vector3 trans = obj.getTrans();
-  std::cout << "Translation Vector: (" << trans[0] << " ," <<
-    trans[1] << " ," << trans[2] << ")" << std::endl;
-  return os;
-}
-
-
-template<class Real = double> class Matrix3
-{
+template<class Real = double> class Matrix3 {
   public:
     typedef Vector<Real, 3> Vec;
     typedef Matrix3<Real> Self;
@@ -268,8 +219,31 @@ template<class Real = double> class Matrix3
     Real m[9];
 };
 
+} // namespace Pinocchio
+
+// overide <<  operator to allows us to print a Quaternion object to terminal
+inline std::ostream& operator<<(std::ostream& os, const Pinocchio::Quaternion<double> &obj) {
+  std::cout << "   Rotation Angle: " << obj.getAngle() << std::endl; // Print angle
+  Vector3 axis = obj.getAxis(); // Print axis std::vector
+  std::cout << " Rotation Axis (a std::vector): (" << axis[0] << " ," << axis[1] << " ," << axis[2] << ")" << std::endl;
+  return os;
+}
+
+
+// override << operator to allows us to print a Transform object to terminal
+inline std::ostream& operator<<(std::ostream& os, const Pinocchio::Transform<double> &obj) {
+  std::cout << "Rotation Quaternion:\n " << obj.getRot() << std::endl; // Print rotation quaternion
+
+  double scale = obj.getScale(); // Print scale std::vector
+  std::cout << "Scale: " << scale << std::endl;
+
+  Vector3 trans = obj.getTrans();  // Print translation std::vector
+  std::cout << "Translation Vector: (" << trans[0] << " ," << trans[1] << " ," << trans[2] << ")" << std::endl;
+  return os;
+}
+
 template <class charT, class traits, class Real>
-std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Matrix3<Real> &m)
+std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& os, const Pinocchio::Matrix3<Real> &m)
 {
   os << "[[" << m[0] << "," << m[1] << "," << m[2] << "]";
   os << "[" << m[3] << "," << m[4] << "," << m[5] << "]";

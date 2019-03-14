@@ -12,6 +12,7 @@
 #include "../Pinocchio/pinocchioApi.h"
 
 using namespace std;
+using namespace Pinocchio;
 
 struct ArgData
 {

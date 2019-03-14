@@ -22,6 +22,8 @@
 #include "rect.h"
 #include "indexer.h"
 
+namespace Pinocchio {
+
 template<class Data, int Dim>
 class DNode : public Data
 {
@@ -115,4 +117,7 @@ class DRootNode : public DNode<Data, Dim>, public Indexer<DNode<Data, Dim>, Dim>
       node->split();
     }
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // DTREE_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

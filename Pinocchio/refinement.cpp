@@ -20,6 +20,8 @@
 #include "deriv.h"
 #include "debugging.h"
 
+namespace Pinocchio {
+
 //information for refined embedding
 struct RP
 {
@@ -232,3 +234,5 @@ const std::vector<Vector3> &initialEmbedding, const Skeleton &skeleton)
 
   return fineEmbedding;
 }
+
+} // namespace Pinocchio

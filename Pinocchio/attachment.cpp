@@ -22,6 +22,8 @@
 #include "vecutils.h"
 #include "lsqSolver.h"
 
+namespace Pinocchio {
+
 class AttachmentPrivate
 {
   public:
@@ -464,3 +466,5 @@ double initialHeatWeight)
 {
   a = new AttachmentPrivate1(mesh, skeleton, match, tester, initialHeatWeight);
 }
+
+} // namespace Pinocchio

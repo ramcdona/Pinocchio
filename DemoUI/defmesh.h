@@ -32,8 +32,8 @@ class Motion;
 class DefMesh : public DisplayMesh
 {
   public:
-    DefMesh(const Mesh inMesh, const Skeleton &inOrigSkel, const std::vector<Vector3> &inMatch,
-      const Attachment &inAttachment, Motion *inMotion = NULL)
+    DefMesh(const Pinocchio::Mesh inMesh, const Pinocchio::Skeleton &inOrigSkel, const std::vector<Vector3> &inMatch,
+      const Pinocchio::Attachment &inAttachment, Motion *inMotion = NULL)
       : origSkel(inOrigSkel), match(inMatch), attachment(inAttachment),
       origMesh(inMesh), motion(inMotion), filter(match, origSkel.fPrev())
     {
@@ -45,31 +45,30 @@ class DefMesh : public DisplayMesh
     void updateIfHasMotion(int &fnum) const { if(motion) updateMesh(fnum); }
 
     std::vector<Vector3> getSkel() const;
-    const Skeleton &getOrigSkel() const { return origSkel; }
+    const Pinocchio::Skeleton &getOrigSkel() const { return origSkel; }
 
-    const Attachment &getAttachment() const { return attachment; }
+    const Pinocchio::Attachment &getAttachment() const { return attachment; }
 
-    const Mesh &getMesh(int &framenum)
-    {
+    const Pinocchio::Mesh &getMesh(int &framenum) {
       updateMesh(framenum);
       return curMesh;
     }
 
   private:
     double getLegRatio() const;
-    std::vector<Transform<> > computeTransforms() const;
+    std::vector<Pinocchio::Transform<> > computeTransforms() const;
     void updateMesh(int &framenum) const;
 
-    Skeleton origSkel;
+    Pinocchio::Skeleton origSkel;
     std::vector<Vector3> match;
-    Attachment attachment;
-    Mesh origMesh;
-    mutable Mesh curMesh;
-    std::vector<Quaternion<> > transforms;
+    Pinocchio::Attachment attachment;
+    Pinocchio::Mesh origMesh;
+    mutable Pinocchio::Mesh curMesh;
+    std::vector<Pinocchio::Quaternion<> > transforms;
     Motion *motion;
 
     std::vector<double> footOffsets;
     mutable MotionFilter filter;
 };
 
-#endif
+#endif // DEFMESH_H_06A9B2EE_4191_11E9_B41E_3320261E5D0F

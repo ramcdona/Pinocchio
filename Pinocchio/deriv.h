@@ -16,14 +16,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef DERIV_H_INCLUDED
-#define DERIV_H_INCLUDED
+#ifndef DERIV_H_BDB262D4_4631_11E9_84BF_67993DCD7514
+#define DERIV_H_BDB262D4_4631_11E9_84BF_67993DCD7514
 
 #include "vector.h"
 
-template<class Real, int Vars>
-class Deriv
-{
+template<class Real, int Vars> class Deriv {
   public:
     typedef Deriv<Real, Vars> Self;
 
@@ -99,6 +97,4 @@ std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,traits>& o
   return os;
 }
 
-
-//DERIV_H_INCLUDED
-#endif
+#endif // DERIV_H_BDB262D4_4631_11E9_84BF_67993DCD7514

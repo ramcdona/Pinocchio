@@ -30,19 +30,19 @@ class DisplayMesh
   public:
     virtual ~DisplayMesh() {}
 
-    virtual const Mesh &getMesh(int &framenum) = 0;
+    virtual const Pinocchio::Mesh &getMesh(int &framenum) = 0;
     virtual std::vector<Vector3> getSkel() const { return std::vector<Vector3>(); }
 };
 
 class StaticDisplayMesh : public DisplayMesh
 {
   public:
-    StaticDisplayMesh(const Mesh &inM) : m(inM) {}
+    StaticDisplayMesh(const Pinocchio::Mesh &inM) : m(inM) {}
 
-    virtual const Mesh &getMesh(int &framenum) { return m; }
+    virtual const Pinocchio::Mesh &getMesh(int &framenum) { return m; }
   private:
 
-    Mesh m;
+    Pinocchio::Mesh m;
 };
 
-#endif
+#endif // DISPLAYMESH_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5

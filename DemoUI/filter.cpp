@@ -23,17 +23,17 @@ THE SOFTWARE.
 #include "filter.h"
 #include "../Pinocchio/deriv.h"
 
+using namespace Pinocchio;
+
 template<class Real>
 Vectorn<Real> getFeet(const std::vector<Transform<Real> > &transforms, const std::vector<Vector3> &joints,
-const std::vector<int> &prev)
-{
+const std::vector<int> &prev) {
   int i;
   Vectorn<Real> out;
   Vectorn<Vector<Real, 3> > results(joints.size());
 
   results[0] = transforms[0] * Vector<Real, 3>(joints[0]);
-  for(i = 1; i < (int)joints.size(); ++i)
-  {
+  for (i = 1; i < (int)joints.size(); ++i) {
     results[i] = results[prev[i]] + transforms[i - 1].getRot() * Vector<Real, 3>(joints[i] - joints[prev[i]]);
   }
 
@@ -51,15 +51,13 @@ const std::vector<int> &prev)
 }
 
 
-Vectorn<double> toVector(const std::vector<Transform<> > &transforms)
-{
+Vectorn<double> toVector(const std::vector<Transform<> > &transforms) {
   Vectorn<double> out(3 + 4 * transforms.size());
   out[0] = transforms[0].getTrans()[0];
   out[1] = transforms[0].getTrans()[1];
   out[2] = transforms[0].getTrans()[2];
 
-  for(int i = 0; i < (int)transforms.size(); ++i)
-  {
+  for (int i = 0; i < (int)transforms.size(); ++i) {
     out[3 + i * 4 + 0] = transforms[i].getRot()[0];
     out[3 + i * 4 + 1] = transforms[i].getRot()[1];
     out[3 + i * 4 + 2] = transforms[i].getRot()[2];
@@ -70,57 +68,52 @@ Vectorn<double> toVector(const std::vector<Transform<> > &transforms)
 }
 
 
-std::vector<Transform<> > fromVector(const Vectorn<double> &v)
-{
+std::vector<Transform<> > fromVector(const Vectorn<double> &v) {
   std::vector<Transform<> > out;
 
   int i;
   Vector3 trans0(v[0], v[1], v[2]);
-  for(i = 3; i + 3 < (int)v.size(); i += 4)
-  {
+  for (i = 3; i + 3 < (int)v.size(); i += 4) {
     Quaternion<> rot;
     rot.set(v[i], Vector3(v[i + 1], v[i + 2], v[i + 3]));
 
-    if(i == 3)
+    if (i == 3) {
       out.push_back(Transform<>(rot, 1., trans0));
-    else
+    } else {
       out.push_back(Transform<>(rot));
+    }
   }
 
   return out;
 }
 
 
-Vectorn<double> adjVector(const Vectorn<double> &v, const Vectorn<double> &dirs)
-{
+Vectorn<double> adjVector(const Vectorn<double> &v, const Vectorn<double> &dirs) {
   Vectorn<double> out = v;
-  int i;
-  for(i = 3; i + 3 < (int)v.size(); i += 4)
-  {
-    if(Vectorn<double>(v.begin() + i, v.begin() + i + 4) *
-      Vectorn<double>(dirs.begin() + i, dirs.begin() + i + 4) < 0.)
-    {
-      for(int j = i; j < i + 4; ++j)
+  for (int i = 3; i + 3 < (int)v.size(); i += 4) {
+    if (Vectorn<double>(v.begin() + i, v.begin() + i + 4) *
+      Vectorn<double>(dirs.begin() + i, dirs.begin() + i + 4) < 0.) {
+      for (int j = i; j < i + 4; ++j) {
         out[j] = -out[j];
+      }
     }
   }
   return out;
 }
 
 
-Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms) const
-{
+Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms) const {
   typedef Deriv<double, -1> D;
   std::vector<Transform<D> > transD(transforms.size());
   int i, j;
 
   Vectorn<double> transVec = toVector(transforms);
   Vector<D, 3> trans0;
-  for(i = 0; i < 3; ++i)
+  for (i = 0; i < 3; ++i) {
     trans0[i] = D(transVec[i], i);
+  }
 
-  for(i = 0; i < (int)transforms.size(); ++i)
-  {
+  for (i = 0; i < (int)transforms.size(); ++i) {
     int curIdx = 3 + i * 4;
 
     Quaternion<D> rot;
@@ -128,7 +121,7 @@ Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms
       D(transVec[curIdx + 2], curIdx + 2),
       D(transVec[curIdx + 3], curIdx + 3)));
 
-    if(i == 0)
+    if (i == 0)
       transD[i] = Transform<D>(rot, 1., trans0);
     else
       transD[i] = Transform<D>(rot);
@@ -136,8 +129,7 @@ Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms
 
   Vectorn<D> feet = getFeet(transD, joints, prev);
   Matrixn<double> out(feet.size(), 3 + 4 * transforms.size());
-  for(i = 0; i < out.getRows(); ++i) for(j = 0; j < out.getCols(); ++j)
-  {
+  for (i = 0; i < out.getRows(); ++i) for (j = 0; j < out.getCols(); ++j) {
     out[i][j] = feet[i].getDeriv(j);
   }
 
@@ -145,15 +137,15 @@ Matrixn<double> MotionFilter::getJac(const std::vector<Transform<> > &transforms
 }
 
 
-void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector<Vector3> feet)
-{
+void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector<Vector3> feet) {
   Vectorn<double> feetV;
   int i, j;
-  for(i = 0; i < (int)feet.size(); ++i) for(j = 0; j < 3; ++j)
-    feetV.push_back(feet[i][j]);
+  for (i = 0; i < (int)feet.size(); ++i)
+    for (j = 0; j < 3; ++j) {
+      feetV.push_back(feet[i][j]);
+    }
 
-  if(curTransforms.size() == 0)
-  {
+  if (curTransforms.size() == 0) {
     prevFeet = feetV;
     prevTrans = feet.back();
     curTransforms = transforms;
@@ -161,8 +153,7 @@ void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector
     return;
   }
 
-  if(false)
-  {
+  if (false) {
     curTransforms = fromVector(toVector(transforms));
     addTranslation();
     return;
@@ -185,11 +176,9 @@ void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector
 
   sigma = getSVD(~jac, u, v);
   double minSV = 1e-6;
-  for(i = 0; i < (int)sigma.size(); ++i)
-  {
+  for (i = 0; i < (int)sigma.size(); ++i) {
     //?
-    if(fabs(sigma[i]) < minSV)
-    {
+    if (fabs(sigma[i]) < minSV) {
       sigma[i] = sigma[i] > 0 ? minSV : -minSV;
     }
     sigma[i] = 1. / sigma[i];
@@ -199,7 +188,7 @@ void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector
   #endif
 
   Vectorn<double> delta = feetV - prevFeet;
-  if(delta.length() > .1)
+  if (delta.length() > .1)
     delta = delta.normalize() * .1;
 
   Vectorn<double> error = (feetV - getFeet(curTransforms, joints, prev)) * 0.5;
@@ -225,15 +214,13 @@ void MotionFilter::step(const std::vector<Transform<> > &transforms, std::vector
 }
 
 
-void MotionFilter::addTranslation()
-{
+void MotionFilter::addTranslation() {
   int i;
   std::vector<Vector3> pts = joints;
 
   pts[0] = curTransforms[0] * pts[0];
   pts[1] = curTransforms[0] * pts[1];
-  for(i = 1; i < (int)curTransforms.size(); ++i)
-  {
+  for (i = 1; i < (int)curTransforms.size(); ++i) {
     int pi = prev[i + 1];
 
     curTransforms[i] = Transform<>(pts[pi]) * Transform<>(curTransforms[i].getRot()) * Transform<>(-joints[pi]);

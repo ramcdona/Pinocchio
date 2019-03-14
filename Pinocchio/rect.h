@@ -16,16 +16,17 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef RECT_H_INCLUDED
-#define RECT_H_INCLUDED
+#ifndef RECT_H_EEDC461A_462F_11E9_8109_4BDCBFDF28DE
+#define RECT_H_EEDC461A_462F_11E9_8109_4BDCBFDF28DE
 
 #include "vector.h"
+
+namespace Pinocchio {
 
 namespace _RectPrivate
 {
   template <int Dim> class RectOp;
 }
-
 
 template<class Real, int Dim>
 class Rect
@@ -207,9 +208,9 @@ namespace _RectPrivate
       }
 
   };
-  //namespace _RectPrivate
-}
 
+} // namespace _RectPrivate
 
-//RECT_H_INCLUDED
-#endif
+} // namespace Pinocchio
+
+#endif // RECT_H_EEDC461A_462F_11E9_8109_4BDCBFDF28DE

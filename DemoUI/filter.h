@@ -33,20 +33,20 @@ class MotionFilter
     MotionFilter(const std::vector<Vector3> &inJoints, const std::vector<int> inPrev)
       : joints(inJoints), prev(inPrev) {}
 
-    void step(const std::vector<Transform<> > &transforms, std::vector<Vector3> feet);
+    void step(const std::vector<Pinocchio::Transform<> > &transforms, std::vector<Vector3> feet);
 
-    const std::vector<Transform<> > &getTransforms() const { return curTransforms; }
+    const std::vector<Pinocchio::Transform<> > &getTransforms() const { return curTransforms; }
 
   private:
-    Matrixn<double> getJac(const std::vector<Transform<> > &transforms) const;
+    Pinocchio::Matrixn<double> getJac(const std::vector<Pinocchio::Transform<> > &transforms) const;
     void addTranslation();
 
     std::vector<Vector3> joints;
     std::vector<int> prev;
 
     Vector3 prevTrans;
-    Vectorn<double> prevFeet;
-    std::vector<Transform<> > curTransforms;
+    Pinocchio::Vectorn<double> prevFeet;
+    std::vector<Pinocchio::Transform<> > curTransforms;
 };
 
-#endif
+#endif // FILTER_H_EC263456_4190_11E9_9DFC_3FEA32820406

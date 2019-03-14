@@ -21,6 +21,8 @@
 
 #include "mathutils.h"
 
+namespace Pinocchio {
+
 class Debugging
 {
   public:
@@ -31,4 +33,6 @@ class Debugging
     static std::ostream *outStream;
 };
 
-#endif
+} // namespace Pinocchio
+
+#endif // DEBUGGING_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

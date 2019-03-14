@@ -19,6 +19,8 @@
 #include "matrix.h"
 #include "debugging.h"
 
+namespace Pinocchio {
+
 namespace EigPrivate
 {
   std::pair<int, double> findMaxAbs(const Vectorn<double> &vec, int maxElem)
@@ -151,3 +153,5 @@ Vectorn<double> getEigensystem(Matrixn<double> m, Matrixn<double> *vectors)
 
   return out;
 }
+
+} // namespace Pinocchio

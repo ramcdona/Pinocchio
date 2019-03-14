@@ -21,6 +21,8 @@
 
 #define CHECK(pred) { if(!(pred)) { Debugging::out() << "Graph integrity error: " #pred << " in line " << __LINE__ << std::endl; return false; } }
 
+namespace Pinocchio {
+
 bool PtGraph::integrityCheck() const
 {
   CHECK(verts.size() == edges.size());
@@ -79,3 +81,5 @@ ShortestPather::ShortestPather(const PtGraph &g, int root)
     }
   }
 }
+
+} // namespace Pinocchio

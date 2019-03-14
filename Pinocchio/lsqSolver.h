@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef LSQSOLVER_H_INCLUDED
-#define LSQSOLVER_H_INCLUDED
+#ifndef LSQSOLVER_H_69993332_462F_11E9_BC3D_13F24415EC5E
+#define LSQSOLVER_H_69993332_462F_11E9_BC3D_13F24415EC5E
 
 #include <vector>
 #include <map>
@@ -25,6 +25,8 @@
 #include <assert.h>
 
 #include "mathutils.h"
+
+namespace Pinocchio {
 
 /**
  * Represents a factored spd matrix -- primary intended use is inside LSQSystem
@@ -474,5 +476,6 @@ template<class V, class C> class LSQSystem
     LLTMatrix *factoredMatrix;
 };
 
-//LSQSOLVER_H_INCLUDED
-#endif
+} // namespace Pinocchio
+
+#endif // LSQSOLVER_H_69993332_462F_11E9_BC3D_13F24415EC5E

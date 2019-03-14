@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include "../Pinocchio/mesh.h"
 #include "../Pinocchio/pinocchioApi.h"
 
+using namespace Pinocchio;
+
 #include "DefMesh.h"
 #include "Motion.h"
 

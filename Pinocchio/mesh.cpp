@@ -27,6 +27,8 @@
 #include <algorithm>
 #include <unordered_map>
 
+namespace Pinocchio {
+
 // Some constants to make it easier to specify different algorithms.
 // linear blend skinning
 int Mesh::LBS = 0;
@@ -611,13 +613,17 @@ class StlVtx : public Vector3
     }
 };
 
+} // namespace Pinocchio
+
 namespace std {
-  template<> struct hash<StlVtx> {
-      std::size_t operator()(const StlVtx &p) const {
+  template<> struct hash<Pinocchio::StlVtx> {
+      std::size_t operator()(const Pinocchio::StlVtx &p) const {
         return (int)(p[0] * 100000. + p[1] * 200000. + p[2] * 400000.);
       }
     };
 }
+
+namespace Pinocchio {
 
 void Mesh::readStl(std::istream &strm)
 {
@@ -812,3 +818,5 @@ bool Mesh::integrityCheck() const
 
   return true;
 }
+
+} // namespace Pinocchio

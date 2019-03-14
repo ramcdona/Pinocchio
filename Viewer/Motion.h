@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef MOTION_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
-#define MOTION_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
+#ifndef MOTION_H_A392C7F8_465A_11E9_B3D0_97689AA152DC
+#define MOTION_H_A392C7F8_465A_11E9_B3D0_97689AA152DC
 
 #include "../Pinocchio/transform.h"
 
@@ -30,19 +30,19 @@ class Motion {
         Motion(const std::string &filename);
 
         bool empty() const { return data.empty(); }
-        std::vector<Transform<> > get();
+        std::vector<Pinocchio::Transform<> > get();
         std::vector<Vector3> getPose(int &framenum);
         std::vector<Vector3> getRefPose() const { return refPose; }
         double getLegLength() const { return legLength; }
         double getLegWidth() const { return legWidth; }
 
-        const std::vector<std::vector<Transform<> > > &getData() const { return data; }
+        const std::vector<std::vector<Pinocchio::Transform<> > > &getData() const { return data; }
         void setFixedFrame(int inFrame) { fixedFrame = inFrame < 0 ? -1 : (int)(inFrame % data.size()); }
 
     private:
         int getFrameIdx();
         void readH(std::istream &strm);
-        std::vector<std::vector<Transform<> > > data;
+        std::vector<std::vector<Pinocchio::Transform<> > > data;
         std::vector<std::vector<Vector3> > poses;
         std::vector<Vector3> refPose;
         double legLength;
@@ -53,4 +53,4 @@ class Motion {
         bool paused;
 };
 
-#endif
+#endif // MOTION_H_A392C7F8_465A_11E9_B3D0_97689AA152DC
