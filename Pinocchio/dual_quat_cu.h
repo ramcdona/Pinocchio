@@ -1,11 +1,10 @@
-#ifndef TOOL_BOX_DUAL_QUAT_CU_HPP__
-#define TOOL_BOX_DUAL_QUAT_CU_HPP__
+#ifndef DUAL_QUAT_CU_H_A20A5EFE_467E_11E9_859D_10FEED04CD1C
+#define DUAL_QUAT_CU_H_A20A5EFE_467E_11E9_859D_10FEED04CD1C
 
 #include "quat_cu.h"
 
 // =============================================================================
-namespace Tbx
-{
+namespace Tbx {
   // =============================================================================
 
   /** @class Dual_quat_cu
@@ -43,8 +42,7 @@ namespace Tbx
 
       @note Article: "Geometric skinning with approximate dual quaternion blending"
    */
-  class Dual_quat_cu
-  {
+  class Dual_quat_cu {
     public:
 
       // -------------------------------------------------------------------------
@@ -53,31 +51,27 @@ namespace Tbx
 
       /// Default constructor generates a dual quaternion with no translation
       /// and no rotation either
-      Dual_quat_cu()
-      {
+      Dual_quat_cu() {
         Dual_quat_cu res = dual_quat_from(Quat_cu(), Vec3(0.f, 0.f, 0.f));
         *this = res;
       }
 
       /// Fill directly the dual quaternion with two quaternion for the
       //non-dual and dual part
-      Dual_quat_cu(const Quat_cu& q0, const Quat_cu& qe)
-      {
+      Dual_quat_cu(const Quat_cu& q0, const Quat_cu& qe) {
         _quat_0 = q0;
         _quat_e = qe;
       }
 
       /// Construct a dual quaternion with a quaternion 'q' which express the
       /// rotation and a translation vector
-      Dual_quat_cu(const Quat_cu& q, const Vec3& t)
-      {
+      Dual_quat_cu(const Quat_cu& q, const Vec3& t) {
         Dual_quat_cu res = dual_quat_from(q, t);
         *this = res;
       }
 
       /// Construct from rigid transformation 't'
-      Dual_quat_cu(const Transfo& t)
-      {
+      Dual_quat_cu(const Transfo& t) {
         Quat_cu q(t);
         Vec3 translation(t.m[3], t.m[7], t.m[11]);
         Dual_quat_cu res = dual_quat_from(q, translation);
@@ -88,16 +82,14 @@ namespace Tbx
       /// @name Methods
       // -------------------------------------------------------------------------
 
-      void normalize()
-      {
+      void normalize() {
         float norm = _quat_0.norm();
         _quat_0 = _quat_0 / norm;
         _quat_e = _quat_e / norm;
       }
 
       /// Transformation of point p with the dual quaternion
-      Point3 transform(const Point3& p ) const
-      {
+      Point3 transform(const Point3& p ) const {
         // As the dual quaternions may be the results from a
         // linear blending we have to normalize it :
         float norm = _quat_0.norm();
@@ -115,15 +107,13 @@ namespace Tbx
       }
 
       /// Rotate a vector with the dual quaternion
-      Vec3 rotate(const Vec3& v) const
-      {
+      Vec3 rotate(const Vec3& v) const {
         Quat_cu tmp = _quat_0;
         tmp.normalize();
         return tmp.rotate(v);
       }
 
-      Dual_quat_cu dual_quat_from(const Quat_cu& q, const Vec3& t) const
-      {
+      Dual_quat_cu dual_quat_from(const Quat_cu& q, const Vec3& t) const {
         float w = -0.5f*( t.x * q.i() + t.y * q.j() + t.z * q.k());
         float i =  0.5f*( t.x * q.w() + t.y * q.k() - t.z * q.j());
         float j =  0.5f*(-t.x * q.k() + t.y * q.w() + t.z * q.i());
@@ -134,8 +124,7 @@ namespace Tbx
 
       /// Convert the dual quaternion to a homogenous matrix
       /// N.B: Dual quaternion is normalized before conversion
-      Transfo to_transformation()
-      {
+      Transfo to_transformation() {
         Vec3 t;
         float norm = _quat_0.norm();
 
@@ -154,19 +143,16 @@ namespace Tbx
       /// @name Operators
       // -------------------------------------------------------------------------
 
-      Dual_quat_cu operator+(const Dual_quat_cu& dq) const
-      {
+      Dual_quat_cu operator+(const Dual_quat_cu& dq) const {
         return Dual_quat_cu(_quat_0 + dq._quat_0, _quat_e + dq._quat_e);
       }
 
-      Dual_quat_cu operator*(float scalar) const
-      {
+      Dual_quat_cu operator*(float scalar) const {
         return Dual_quat_cu(_quat_0 * scalar, _quat_e * scalar);
       }
 
       /// Return a dual quaternion with no translation and no rotation
-      static Dual_quat_cu identity()
-      {
+      static Dual_quat_cu identity() {
         return Dual_quat_cu(Quat_cu(1.f, 0.f, 0.f, 0.f),
           Vec3(0.f, 0.f, 0.f) );
       }
@@ -208,6 +194,4 @@ namespace Tbx
   // END Tbx NAMESPACE ==========================================================
 }
 
-
-// TOOL_BOX_DUAL_QUAT_CU_HPP__
-#endif
+#endif // DUAL_QUAT_CU_H_A20A5EFE_467E_11E9_859D_10FEED04CD1C

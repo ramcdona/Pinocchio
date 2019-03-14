@@ -23,8 +23,7 @@
 
 namespace Pinocchio {
 
-class Debugging
-{
+class Debugging {
   public:
     static std::ostream &out() { return *outStream; }
     static void PINOCCHIO_API setOutStream(std::ostream &os) { outStream = &os; }

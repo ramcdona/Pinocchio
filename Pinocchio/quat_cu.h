@@ -421,8 +421,7 @@ Q61. How do I use quaternions to perform linear interpolation between matrices?
     m4_transpose(    mt, ms );                // Inverse
     m4_mult(         ms, mt, mb );            // Rotation matrix
     m4_to_axisangle( ms, axis, angle );       // Rotation axis/angle
-    for ( t = 0; t < 1.0; t += 0.05 )
-      {
+    for ( t = 0; t < 1.0; t += 0.05 ) {
       m4_from_axisangle( mi, axis, angle * t ); // Final interpolation
       ... whatever ...
       }
@@ -469,8 +468,8 @@ Q63. How do I use quaternions to rotate a vector?
   using a rotation matrix.
 */
 
-#ifndef TOOL_BOX_QUAT_CU_HPP__
-#define TOOL_BOX_QUAT_CU_HPP__
+#ifndef QUAT_CU_H_D48E854E_467E_11E9_899B_10FEED04CD1C
+#define QUAT_CU_H_D48E854E_467E_11E9_899B_10FEED04CD1C
 
 #include "transfo.h"
 
@@ -506,8 +505,7 @@ namespace Tbx
 
     @see Dual_quat_cu
   */
-  class Quat_cu
-  {
+  class Quat_cu {
     public:
 
       // -------------------------------------------------------------------------
@@ -515,74 +513,56 @@ namespace Tbx
       // -------------------------------------------------------------------------
 
       /// Default constructor : build a zero rotation.
-      Quat_cu()
-      {
+      Quat_cu() {
         coeff[0] = 1.f;
         coeff[1] = 0.f; coeff[2] = 0.f; coeff[3] = 0.f;
       }
 
       /// Copy constructor
-      Quat_cu(const Quat_cu& q)
-      {
+      Quat_cu(const Quat_cu& q) {
         coeff[0] = q.w();
         coeff[1] = q.i(); coeff[2] = q.j(); coeff[3] = q.k();
       }
 
       /// directly fill the quaternion
-      Quat_cu(float w, float i, float j, float k)
-      {
+      Quat_cu(float w, float i, float j, float k) {
         coeff[0] = w;
         coeff[1] = i; coeff[2] = j; coeff[3] = k;
       }
 
       /// directly fill the quaternion vector and scalar part
-      Quat_cu(float w, const Vec3& v)
-      {
+      Quat_cu(float w, const Vec3& v) {
         coeff[0] = w;
         coeff[1] = v.x; coeff[2] = v.y; coeff[3] = v.z;
       }
 
       /// Construct the quaternion from the transformation matrix 't'
       /// Translation of 't' is ignored as quaternions can't represent it
-      Quat_cu(const Transfo& t)
-      {
-        // Compute trace of matrix 't'
+      Quat_cu(const Transfo& t) { // Compute trace of matrix 't'
         float T = 1 + t.m[0] + t.m[5] + t.m[10];
 
         float S, X, Y, Z, W;
 
-        // to avoid large distortions!
-        if ( T > 0.00000001f )
-        {
+        if ( T > 0.00000001f ) { // To avoid large distortions!
           S = sqrt(T) * 2.f;
           X = ( t.m[6] - t.m[9] ) / S;
           Y = ( t.m[8] - t.m[2] ) / S;
           Z = ( t.m[1] - t.m[4] ) / S;
           W = 0.25f * S;
-        }
-        else
-        {
-          if ( t.m[0] > t.m[5] && t.m[0] > t.m[10] )
-          {
-            // Column 0 :
+        } else {
+          if ( t.m[0] > t.m[5] && t.m[0] > t.m[10] ) { // Column 0
             S  = sqrt( 1.0f + t.m[0] - t.m[5] - t.m[10] ) * 2.f;
             X = 0.25f * S;
             Y = (t.m[1] + t.m[4] ) / S;
             Z = (t.m[8] + t.m[2] ) / S;
             W = (t.m[6] - t.m[9] ) / S;
-          }
-          else if ( t.m[5] > t.m[10] )
-          {
-            // Column 1 :
+          } else if ( t.m[5] > t.m[10] ) { // Column 1
             S  = sqrt( 1.0f + t.m[5] - t.m[0] - t.m[10] ) * 2.f;
             X = (t.m[1] + t.m[4] ) / S;
             Y = 0.25f * S;
             Z = (t.m[6] + t.m[9] ) / S;
             W = (t.m[8] - t.m[2] ) / S;
-          }
-          else
-            // Column 2 :
-          {
+          } else { // Column 2
             S  = sqrt( 1.0f + t.m[10] - t.m[0] - t.m[5] ) * 2.f;
             X = (t.m[8] + t.m[2] ) / S;
             Y = (t.m[6] + t.m[9] ) / S;
@@ -596,8 +576,7 @@ namespace Tbx
 
       /// Construct the quaternion from the a rotation axis 'axis' and the angle
       /// 'angle' in radians
-      Quat_cu(const Vec3& axis, float angle)
-      {
+      Quat_cu(const Vec3& axis, float angle) {
         Vec3 vec_axis = axis.normalized();
         float sin_a = sin( angle * 0.5f );
         float cos_a = cos( angle * 0.5f );
@@ -616,8 +595,7 @@ namespace Tbx
 
       /// The conjugate of a quaternion is the inverse rotation
       /// (when the quaternion is normalized
-      Quat_cu conjugate() const
-      {
+      Quat_cu conjugate() const {
         return Quat_cu( coeff[0], -coeff[1],
           -coeff[2], -coeff[3]);
       }
@@ -627,8 +605,7 @@ namespace Tbx
       // Quat_cu(const Vec3& vec, float angle)
 
       /// Do the rotation of vector 'v' with the quaternion
-      Vec3 rotate(const Vec3& v) const
-      {
+      Vec3 rotate(const Vec3& v) const {
 
         // The conventionnal way to rotate a vector
         /*
@@ -647,16 +624,14 @@ namespace Tbx
       }
 
       /// Do the rotation of point 'p' with the quaternion
-      Point3 rotate(const Point3& p) const
-      {
+      Point3 rotate(const Point3& p) const {
         Vec3 v = rotate((Vec3)p);
         return Point3(v.x, v.y, v.z);
       }
 
       /// Convert the quaternion to a rotation matrix
       /// @warning don't forget to normalize it before conversion
-      Mat3 to_matrix3()
-      {
+      Mat3 to_matrix3() {
         float W = coeff[0], X = -coeff[1], Y = -coeff[2], Z = -coeff[3];
         float xx = X * X, xy = X * Y, xz = X * Z, xw = X * W;
         float yy = Y * Y, yz = Y * Z, yw = Y * W, zz = Z * Z;
@@ -670,21 +645,18 @@ namespace Tbx
         return mat;
       }
 
-      Vec3 get_vec_part() const
-      {
+      Vec3 get_vec_part() const {
         return Vec3(coeff[1], coeff[2], coeff[3]);
       }
 
-      float norm() const
-      {
+      float norm() const {
         return sqrt(coeff[0]*coeff[0] +
           coeff[1]*coeff[1] +
           coeff[2]*coeff[2] +
           coeff[3]*coeff[3]);
       }
 
-      float normalize()
-      {
+      float normalize() {
         float n = norm();
         coeff[0] /= n;
         coeff[1] /= n;
@@ -693,8 +665,7 @@ namespace Tbx
         return n;
       }
 
-      float dot(const Quat_cu& q)
-      {
+      float dot(const Quat_cu& q) {
         return w() * q.w() + i() * q.i() + j() * q.j() + k() * q.k();
       }
 
@@ -707,8 +678,7 @@ namespace Tbx
       /// @name Operators
       // -------------------------------------------------------------------------
 
-      Quat_cu operator/ (float scalar) const
-      {
+      Quat_cu operator/ (float scalar) const {
         Quat_cu q = *this;
         q.coeff[0] /= scalar;
         q.coeff[1] /= scalar;
@@ -717,8 +687,7 @@ namespace Tbx
         return q;
       }
 
-      Quat_cu operator/= (float scalar)
-      {
+      Quat_cu operator/= (float scalar) {
         coeff[0] /= scalar;
         coeff[1] /= scalar;
         coeff[2] /= scalar;
@@ -726,8 +695,7 @@ namespace Tbx
         return *this;
       }
 
-      Quat_cu operator* (const Quat_cu& q) const
-      {
+      Quat_cu operator* (const Quat_cu& q) const {
         return Quat_cu(
           coeff[0]*q.coeff[0] - coeff[1]*q.coeff[1] - coeff[2]*q.coeff[2] - coeff[3]*q.coeff[3],
           coeff[0]*q.coeff[1] + coeff[1]*q.coeff[0] + coeff[2]*q.coeff[3] - coeff[3]*q.coeff[2],
@@ -735,16 +703,14 @@ namespace Tbx
           coeff[0]*q.coeff[3] + coeff[3]*q.coeff[0] + coeff[1]*q.coeff[2] - coeff[2]*q.coeff[1]);
       }
 
-      Quat_cu operator* (float scalar) const
-      {
+      Quat_cu operator* (float scalar) const {
         return Quat_cu(coeff[0] * scalar,
           coeff[1] * scalar,
           coeff[2] * scalar,
           coeff[3] * scalar);
       }
 
-      Quat_cu operator+ (const Quat_cu& q) const
-      {
+      Quat_cu operator+ (const Quat_cu& q) const {
         return Quat_cu(coeff[0] + q.coeff[0],
           coeff[1] + q.coeff[1],
           coeff[2] + q.coeff[2],
@@ -752,14 +718,12 @@ namespace Tbx
       }
 
       /// Get vector part
-      operator Vec3 () const
-      {
+      operator Vec3 () const {
         return Vec3(coeff[1], coeff[2], coeff[3]);
       }
 
       /// Get scalar part
-      operator float () const
-      {
+      operator float () const {
         return coeff[0];
       }
 
@@ -776,6 +740,4 @@ namespace Tbx
   // END Tbx NAMESPACE ==========================================================
 }
 
-
-// TOOL_BOX_QUAT_CU_HPP__
-#endif
+#endif // QUAT_CU_H_D48E854E_467E_11E9_899B_10FEED04CD1C

@@ -47,7 +47,7 @@ class Vectorn : public std::vector<Real> {
     template<class F> Vectorn<typename F::result_type> apply(const F &func) const
     {
       Vectorn<typename F::result_type> out(size());
-      for(int i = 0; i < (int)size(); ++i)
+      for (int i = 0; i < (int)size(); ++i)
         out[i] = func((*this)[i]);
       return out;
     }
@@ -56,7 +56,7 @@ class Vectorn : public std::vector<Real> {
     {
       assert(size() == other.size());
       Vectorn<typename F::result_type> out(size());
-      for(int i = 0; i < (int)size(); ++i)
+      for (int i = 0; i < (int)size(); ++i)
         out[i] = func((*this)[i], other[i]);
       return out;
     }
@@ -64,10 +64,10 @@ class Vectorn : public std::vector<Real> {
     template<class Op, class Accum>
       typename Accum::result_type accumulate(const Op &op, const Accum &accum) const
     {
-      if(size() == 0)
+      if (size() == 0)
         return typename Accum::result_type();
       typename Accum::result_type out(op((*this)[0]));
-      for(int i = 1; i < (int)size(); ++i)
+      for (int i = 1; i < (int)size(); ++i)
         out = accum(out, op((*this)[i]));
       return out;
     }
@@ -75,11 +75,11 @@ class Vectorn : public std::vector<Real> {
     template<class Op, class Accum>
       typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
     {
-      if(size() == 0)
+      if (size() == 0)
         return typename Accum::result_type();
       assert(size() == other.size());
       typename Accum::result_type out(op((*this)[0], other[0]));
-      for(int i = 1; i < (int)size(); ++i)
+      for (int i = 1; i < (int)size(); ++i)
         out = accum(out, op((*this)[i], other[i]));
       return out;
     }
@@ -112,10 +112,10 @@ template<class Real>
 inline std::ostream &operator<<(std::ostream &os, const Vectorn<Real> &v)
 {
   os << "[";
-  for(int i = 0; i < (int)v.size(); ++i)
+  for (int i = 0; i < (int)v.size(); ++i)
   {
     os << v[i];
-    if(i < (int)v.size() - 1)
+    if (i < (int)v.size() - 1)
       os << " ";
   }
   os << "]";
@@ -132,19 +132,19 @@ class Matrixn
 
     Matrixn() {}
     Matrixn(int rows, int cols, const Real &init = Real()) : m(rows, Vec(cols, init)) {}
-    static Self identity(int sz, const Real &diag = Real(1.))
-    {
+    static Self identity(int sz, const Real &diag = Real(1.)) {
       Self out(sz, sz);
-      for(int i = 0; i < sz; ++i)
+      for (int i = 0; i < sz; ++i) {
         out[i][i] = diag;
+      }
       return out;
     }
 
-    static Self identity(const Vec &diag)
-    {
+    static Self identity(const Vec &diag) {
       Self out(diag.size(), diag.size());
-      for(int i = 0; i < (int)diag.size(); ++i)
+      for (int i = 0; i < (int)diag.size(); ++i) {
         out[i][i] = diag[i];
+      }
       return out;
     }
 
@@ -167,71 +167,60 @@ class Matrixn
 
     Vec operator*(const Vec &oth) const { return m.apply(bind2nd(myMult<Vec, Vec, Real>(), oth)); }
 
-    Self operator*(const Self &oth) const
-    {
+    Self operator*(const Self &oth) const {
       assert(getCols() == oth.getRows());
       Self out(getRows(), oth.getCols());
-      for(int i = 0; i < getRows(); ++i) for(int j = 0; j < oth.getCols(); ++j)
-      {
+      for (int i = 0; i < getRows(); ++i) for (int j = 0; j < oth.getCols(); ++j) {
         out[i][j] = m[i] * oth.getColumn(j);
       }
       return out;
     }
 
-    //transpose
-    Self operator~() const
-    {
+    Self operator~() const { // Transpose
       Self out(getCols(), getRows());
-      for(int i = 0; i < out.getRows(); ++i)
+      for (int i = 0; i < out.getRows(); ++i)
         out[i] = getColumn(i);
       return out;
     }
 
-    //invert
-    Self operator!() const
-    {
+    Self operator!() const { // Invert
       assert(getRows() == getCols());
 
       Self out = identity(m.size());
       Self tmp = *this;
 
-      int i, j;
-      for(i = 0; i < getRows(); ++i)
-      {
-        //find pivot
+      for (int i = 0; i < getRows(); ++i) { // Find pivot
         int pivot = -1;
         double biggestSoFar = -1.;
-        for(j = i; j < getRows(); ++j)
-        {
+        for (int j = i; j < getRows(); ++j) {
           double cur = myabs(tmp.m[j][i]);
-          if(cur > biggestSoFar)
-          {
+          if (cur > biggestSoFar) {
             biggestSoFar = cur;
             pivot = j;
           }
         }
 
-        //nonsingular
+        // Nonsingular
         assert(biggestSoFar > 1e-10);
-        if(biggestSoFar <= 1e-10)
-          //whatever
-          return out;
+        if (biggestSoFar <= 1e-10) {
+          return out; // Whatever
+        }
 
-        //move pivot to the right place
+        // Move pivot to the right place
         std::swap(tmp.m[i], tmp.m[pivot]);
         std::swap(out.m[i], out.m[pivot]);
 
         double cur = tmp.m[i][i];
 
-        //divide row by element
+        // Divide row by element
         tmp.m[i] /= cur;
         out.m[i] /= cur;
 
-        //now subtract something times this row from other rows
-        for(j = 0; j < getRows(); ++j)
-        {
-          if(j == i)
+        // Now subtract something times this row from other rows
+        for (int j = 0; j < getRows(); ++j) {
+          if (j == i) {
             continue;
+          }
 
           double cur = tmp.m[j][i];
           tmp.m[j] -= tmp.m[i] * cur;
@@ -246,7 +235,7 @@ class Matrixn
     {
       assert(idx >= 0 && idx < getCols());
       Vec out(getRows());
-      for(int i = 0; i < getRows(); ++i)
+      for (int i = 0; i < getRows(); ++i)
         out[i] = m[i][idx];
       return out;
     }
@@ -257,28 +246,25 @@ class Matrixn
 
       Self tmp = *this;
       int i, j;
-      for(i = 0; i < (int)m.size(); ++i)
-      {
+      for (i = 0; i < (int)m.size(); ++i) {
         //find pivot
         int pivot = -1;
         double biggestSoFar = -1.;
-        for(j = i; j < (int)m.size(); ++j)
-        {
+        for (j = i; j < (int)m.size(); ++j) {
           double cur = myabs(tmp.m[j][i]);
-          if(cur > biggestSoFar)
-          {
+          if (cur > biggestSoFar) {
             biggestSoFar = cur;
             pivot = j;
           }
         }
 
-        if(biggestSoFar <= 1e-10)
+        if (biggestSoFar <= 1e-10)
           //singular
           return Real(0.);
 
         //move pivot to the right place
         std::swap(tmp.m[i], tmp.m[pivot]);
-        if(pivot != i)
+        if (pivot != i)
           out = -out;
 
         Real cur = tmp.m[i][i];
@@ -287,11 +273,9 @@ class Matrixn
         out *= cur;
 
         //now subtract something times this row from other rows
-        for(j = i + 1; j < (int)m.size(); ++j)
-        {
+        for (j = i + 1; j < (int)m.size(); ++j) {
           Real fact = tmp.m[j][i] / cur;
-          for(int k = i + 1; k < (int)m.size(); ++k)
-          {
+          for (int k = i + 1; k < (int)m.size(); ++k) {
             tmp.m[j][k] -= fact * tmp.m[i][k];
           }
         }
@@ -310,22 +294,21 @@ class Matrixn
 Vectorn<double> getEigensystem(Matrixn<double> m, Matrixn<double> *eigenvectors = NULL);
 Vectorn<double> getSVD(const Matrixn<double> &m, Matrixn<double> &u, Matrixn<double> &v);
 
-template<class Real>
-inline std::ostream &operator<<(std::ostream &os, const Matrixn<Real> &m)
-{
+} // namespace Pinocchio
+
+template<class Real> inline std::ostream &operator<<(std::ostream &os, const Pinocchio::Matrixn<Real> &m) {
   os << "[";
-  for(int i = 0; i < (int)m.getRows(); ++i)
-  {
-    if(i > 0)
+  for (int i = 0; i < (int)m.getRows(); ++i) {
+    if (i > 0) {
       os << " ";
+    }
     os << m[i];
-    if(i + 1 < (int)m.getRows())
+    if (i + 1 < (int)m.getRows()) {
       os << std::endl;
+    }
   }
   os << "]" << std::endl;
   return os;
 }
-
-} // namespace Pinocchio
 
 #endif // MATRIX_H_F98B57FA_462E_11E9_B919_735E08FEE676

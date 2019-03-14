@@ -26,23 +26,22 @@ namespace Pinocchio {
 template<class Real>
 void getBasis(const Vector<Real, 3> &n, Vector<Real, 3> &v1, Vector<Real, 3> &v2)
 {
-  if(n.lengthsq() < Real(1e-16))
-  {
+  if (n.lengthsq() < Real(1e-16)) {
     v1 = Vector<Real, 3>(1., 0., 0.);
     v2 = Vector<Real, 3>(0., 1., 0.);
     return;
   }
-  if(fabs(n[0]) <= fabs(n[1]) && fabs(n[0]) <= fabs(n[2]))
-    v2 = Vector<Real, 3>(1., 0., 0.);
-  else if(fabs(n[1]) <= fabs(n[2]))
-    v2 = Vector<Real, 3>(0., 1., 0.);
-  else
-    v2 = Vector<Real, 3>(0., 0., 1.);
 
-  //first basis vector
-  v1 = (n % v2).normalize();
-  //second basis vector
-  v2 = (n % v1).normalize();
+  if (fabs(n[0]) <= fabs(n[1]) && fabs(n[0]) <= fabs(n[2])) {
+    v2 = Vector<Real, 3>(1., 0., 0.);
+  } else if (fabs(n[1]) <= fabs(n[2])) {
+    v2 = Vector<Real, 3>(0., 1., 0.);
+  } else {
+    v2 = Vector<Real, 3>(0., 0., 1.);
+  }
+
+  v1 = (n % v2).normalize(); // First basis vector
+  v2 = (n % v1).normalize(); // Second basis vector
 }
 
 
@@ -68,14 +67,16 @@ Real distsqToSeg(const Vector<Real, Dim> &v, const Vector<Real, Dim> &p1, const 
   Vec dir = p2 - p1;
   Vec difp2 = p2 - v;
 
-  if(difp2 * dir < Real())
+  if (difp2 * dir < Real()) {
     return difp2.lengthsq();
+  }
 
   Vec difp1 = v - p1;
   Real dot = difp1 * dir;
 
-  if(dot <= Real())
+  if (dot <= Real()) {
     return difp1.lengthsq();
+  }
 
   return std::max(Real(), difp1.lengthsq() - SQR(dot) / dir.lengthsq());
 }
@@ -88,13 +89,15 @@ Vector<Real, Dim> projToSeg(const Vector<Real, Dim> &v, const Vector<Real, Dim> 
 
   Vec dir = p2 - p1;
 
-  if((p2 - v) * dir < Real())
+  if ((p2 - v) * dir < Real()) {
     return p2;
+  }
 
   Real dot = (v - p1) * dir;
 
-  if(dot <= Real())
+  if (dot <= Real()) {
     return p1;
+  }
 
   return p1 + (dot / dir.lengthsq()) * dir;
 }
@@ -106,12 +109,15 @@ Real getCircleIntersectionArea(const Real &d, const Real &r1, const Real &r2)
 {
   Real tol(1e-8);
 
-  if(r1 + r2 <= d + tol)
+  if (r1 + r2 <= d + tol) {
     return Real();
-  if(r1 + d <= r2 + tol)
+  }
+  if (r1 + d <= r2 + tol) {
     return Real(M_PI) * SQR(r1);
-  if(r2 + d <= r1 + tol)
+  }
+  if (r2 + d <= r1 + tol) {
     return Real(M_PI) * SQR(r2);
+  }
 
   Real sqrdif = SQR(r1) - SQR(r2);
   //d^2 - r1^2 + r2^2
@@ -132,30 +138,32 @@ Vector<Real, 3> projToTri(const Vector<Real, 3> &from, const Vector<Real, 3> &p1
   Vec p3p1 = (p3 - p1);
   Vec normal = p2p1 % p3p1;
 
-  //inside s1
-  if((p2p1 % (from - p1)) * normal >= Real())
-  {
+  // Inside s1
+  if ((p2p1 % (from - p1)) * normal >= Real()) {
     bool s2 = ((p3 - p2) % (from - p2)) * normal >= Real();
     bool s3 = (p3p1 % (from - p3)) * normal <= Real();
 
-    if(s2 && s3)
-    {
-      if(normal.lengthsq() < tolsq)
-        //incorrect, but whatever...
+    if (s2 && s3) {
+      if (normal.lengthsq() < tolsq) { // Incorrect, but whatever...
         return p1;
+      }
 
       double dot = (from - p3) * normal;
       return from - (dot / normal.lengthsq()) * normal;
     }
-    if(!s3 && (s2 || (from - p3) * p3p1 >= Real()))
+    if (!s3 && (s2 || (from - p3) * p3p1 >= Real())) {
       return projToSeg(from, p3, p1);
+    }
     return projToSeg(from, p2, p3);
   }
-  //outside s1
-  if((from - p1) * p2p1 < Real())
+
+  // Outside s1
+  if ((from - p1) * p2p1 < Real()) {
     return projToSeg(from, p3, p1);
-  if((from - p2) * p2p1 > Real())
+  }
+  if ((from - p2) * p2p1 > Real()) {
     return projToSeg(from, p2, p3);
+  }
   return projToLine(from, p1, p2p1);
 }
 

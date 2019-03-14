@@ -25,8 +25,7 @@
 
 namespace Pinocchio {
 
-struct PinocchioOutput
-{
+struct PinocchioOutput {
   PinocchioOutput() : attachment(NULL) {}
 
   std::vector<Vector3> embedding;
@@ -50,8 +49,7 @@ static const double defaultTreeTol = 0.003;
 //constructs a distance field on an octree--user responsible for deleting output
 TreeType PINOCCHIO_API *constructDistanceField(const Mesh &m, double tol = defaultTreeTol);
 
-struct Sphere
-{
+struct Sphere {
   Sphere() : radius(0.) {}
   Sphere(const Vector3 &inC, double inR) : center(inC), radius(inR) {}
 

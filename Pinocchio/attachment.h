@@ -33,28 +33,27 @@ class VisibilityTester {
 };
 
 template<class T>
-class VisTester : public VisibilityTester
-{
+class VisTester : public VisibilityTester {
   public:
     VisTester(const T *t) : tree(t) {}
 
     //faster when v2 is farther inside than v1
-    virtual bool canSee(const Vector3 &v1, const Vector3 &v2) const
-    {
+    virtual bool canSee(const Vector3 &v1, const Vector3 &v2) const {
       const double maxVal = 0.002;
       double atV2 = tree->locate(v2)->evaluate(v2);
       double left = (v2 - v1).length();
       double leftInc = left / 100.;
       Vector3 diff = (v2 - v1) / 100.;
       Vector3 cur = v1 + diff;
-      while(left >= 0.)
-      {
+      while(left >= 0.) {
         double curDist = tree->locate(cur)->evaluate(cur);
-        if(curDist > maxVal)
+        if(curDist > maxVal) {
           return false;
+        }
         //if curDist and atV2 are so negative that distance won't reach above maxVal, return true
-        if(curDist + atV2 + left <= maxVal)
+        if(curDist + atV2 + left <= maxVal) {
           return true;
+        }
         cur += diff;
         left -= leftInc;
       }
@@ -64,17 +63,17 @@ class VisTester : public VisibilityTester
   private:
     const T *tree;
 };
+
 //be sure to delete afterwards
-template<class T> VisibilityTester *makeVisibilityTester(const T *tree)
-{
+template<class T>
+VisibilityTester *makeVisibilityTester(const T *tree) {
   return new VisTester<T>(tree);
 }
 
 
 class AttachmentPrivate;
 
-class PINOCCHIO_API Attachment
-{
+class PINOCCHIO_API Attachment {
   public:
     Attachment() : a(NULL) {}
     Attachment(const Attachment &);
