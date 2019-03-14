@@ -157,31 +157,31 @@ HumanSkeleton::HumanSkeleton() {
     makeJoint("back",       Vector3(0., 0.15, 0.),      "shoulders");       //1
     makeJoint("hips",       Vector3(0., 0., 0.),        "back");            //2
     makeJoint("head",       Vector3(0., 0.7, 0.),       "shoulders");       //3
-    
+
     makeJoint("lthigh",     Vector3(-0.1, 0., 0.),      "hips");            //4
     makeJoint("lknee",      Vector3(-0.15, -0.35, 0.),  "lthigh");          //5
     makeJoint("lankle",      Vector3(-0.15, -0.8, 0.),  "lknee");           //6
     makeJoint("lfoot",      Vector3(-0.15, -0.8, 0.1),  "lankle");          //7
-    
+
     makeJoint("rthigh",     Vector3(0.1, 0., 0.),       "hips");            //8
     makeJoint("rknee",      Vector3(0.15, -0.35, 0.),   "rthigh");          //9
     makeJoint("rankle",      Vector3(0.15, -0.8, 0.),   "rknee");           //10
     makeJoint("rfoot",      Vector3(0.15, -0.8, 0.1),   "rankle");          //11
-    
+
     makeJoint("lshoulder",  Vector3(-0.2, 0.5, 0.),     "shoulders");       //12
     makeJoint("lelbow",     Vector3(-0.4, 0.25, 0.075), "lshoulder");       //13
     makeJoint("lhand",      Vector3(-0.6, 0.0, 0.15),   "lelbow");          //14
-    
+
     makeJoint("rshoulder",  Vector3(0.2, 0.5, 0.),      "shoulders");       //15
     makeJoint("relbow",     Vector3(0.4, 0.25, 0.075),  "rshoulder");       //16
     makeJoint("rhand",      Vector3(0.6, 0.0, 0.15),    "relbow");          //17
-    
+
     // Symmetry
     makeSymmetric("lthigh", "rthigh");
     makeSymmetric("lknee", "rknee");
     makeSymmetric("lankle", "rankle");
     makeSymmetric("lfoot", "rfoot");
-    
+
     makeSymmetric("lshoulder", "rshoulder");
     makeSymmetric("lelbow", "relbow");
     makeSymmetric("lhand", "rhand");
@@ -256,34 +256,34 @@ QuadSkeleton::QuadSkeleton() {
     makeJoint("hips",       Vector3(0., 0., -0.5),       "back");
     makeJoint("neck",       Vector3(0., 0.2, 0.63),      "shoulders");
     makeJoint("head",       Vector3(0., 0.2, 0.9),       "neck");
-    
+
     makeJoint("lthigh",     Vector3(-0.15, 0., -0.5),    "hips");
     makeJoint("lhknee",     Vector3(-0.2, -0.4, -0.5),   "lthigh");
     makeJoint("lhfoot",     Vector3(-0.2, -0.8, -0.5),   "lhknee");
-    
+
     makeJoint("rthigh",     Vector3(0.15, 0., -0.5),     "hips");
     makeJoint("rhknee",     Vector3(0.2, -0.4, -0.5),    "rthigh");
     makeJoint("rhfoot",     Vector3(0.2, -0.8, -0.5),    "rhknee");
-    
+
     makeJoint("lshoulder",  Vector3(-0.2, 0., 0.5),      "shoulders");
     makeJoint("lfknee",     Vector3(-0.2, -0.4, 0.5),    "lshoulder");
     makeJoint("lffoot",      Vector3(-0.2, -0.8, 0.5),   "lfknee");
-    
+
     makeJoint("rshoulder",  Vector3(0.2, 0.0, 0.5),      "shoulders");
     makeJoint("rfknee",     Vector3(0.2, -0.4, 0.5),     "rshoulder");
     makeJoint("rffoot",      Vector3(0.2, -0.8, 0.5),    "rfknee");
-    
+
     makeJoint("tail",       Vector3(0., 0., -0.7),       "hips");
-    
+
     // Symmetry
     makeSymmetric("lthigh", "rthigh");
     makeSymmetric("lhknee", "rhknee");
     makeSymmetric("lhfoot", "rhfoot");
-    
+
     makeSymmetric("lshoulder", "rshoulder");
     makeSymmetric("lfknee", "rfknee");
     makeSymmetric("lffoot", "rffoot");
-    
+
     initCompressed();
 
     setFoot("lhfoot");
@@ -303,37 +303,37 @@ HorseSkeleton::HorseSkeleton() {
     makeJoint("hips",       Vector3(0., 0., -0.5),       "back");
     makeJoint("neck",       Vector3(0., 0.2, 0.63),      "shoulders");
     makeJoint("head",       Vector3(0., 0.2, 0.9),       "neck");
-    
+
     makeJoint("lthigh",     Vector3(-0.15, 0., -0.5),     "hips");
     makeJoint("lhknee",     Vector3(-0.2, -0.2, -0.45),  "lthigh");
     makeJoint("lhheel",     Vector3(-0.2, -0.4, -0.5),   "lhknee");
     makeJoint("lhfoot",     Vector3(-0.2, -0.8, -0.5),   "lhheel");
-    
+
     makeJoint("rthigh",     Vector3(0.15, 0., -0.5),      "hips");
     makeJoint("rhknee",     Vector3(0.2, -0.2, -0.45),   "rthigh");
     makeJoint("rhheel",     Vector3(0.2, -0.4, -0.5),    "rhknee");
     makeJoint("rhfoot",     Vector3(0.2, -0.8, -0.5),    "rhheel");
-    
+
     makeJoint("lshoulder",  Vector3(-0.2, 0., 0.5),      "shoulders");
     makeJoint("lfknee",     Vector3(-0.2, -0.4, 0.5),    "lshoulder");
     makeJoint("lffoot",      Vector3(-0.2, -0.8, 0.5),   "lfknee");
-    
+
     makeJoint("rshoulder",  Vector3(0.2, 0.0, 0.5),      "shoulders");
     makeJoint("rfknee",     Vector3(0.2, -0.4, 0.5),     "rshoulder");
     makeJoint("rffoot",      Vector3(0.2, -0.8, 0.5),    "rfknee");
-    
+
     makeJoint("tail",       Vector3(0., 0., -0.7),       "hips");
-    
+
     // Symmetry
     makeSymmetric("lthigh", "rthigh");
     makeSymmetric("lhknee", "rhknee");
     makeSymmetric("lhheel", "rhheel");
     makeSymmetric("lhfoot", "rhfoot");
-    
+
     makeSymmetric("lshoulder", "rshoulder");
     makeSymmetric("lfknee", "rfknee");
     makeSymmetric("lffoot", "rffoot");
-    
+
     initCompressed();
 
     setFoot("lhfoot");
@@ -355,27 +355,27 @@ CentaurSkeleton::CentaurSkeleton() {
     makeJoint("hback",      Vector3(0., 0.25, 0.5),      "shoulders");  //3
     makeJoint("hshoulders", Vector3(0., 0.5, 0.5),       "hback");      //4
     makeJoint("head",       Vector3(0., 0.7, 0.5),       "hshoulders"); //5
-    
+
     makeJoint("lthigh",     Vector3(-0.15, 0., -0.5),    "hips");       //6
     makeJoint("lhknee",     Vector3(-0.2, -0.4, -0.45),  "lthigh");     //7
     makeJoint("lhfoot",     Vector3(-0.2, -0.8, -0.5),   "lhknee");     //8
-    
+
     makeJoint("rthigh",     Vector3(0.15, 0., -0.5),     "hips");       //9
     makeJoint("rhknee",     Vector3(0.2, -0.4, -0.45),   "rthigh");     //10
     makeJoint("rhfoot",     Vector3(0.2, -0.8, -0.5),    "rhknee");     //11
-    
+
     makeJoint("lshoulder",  Vector3(-0.2, 0., 0.5),      "shoulders");  //12
     makeJoint("lfknee",     Vector3(-0.2, -0.4, 0.5),    "lshoulder");  //13
     makeJoint("lffoot",     Vector3(-0.2, -0.8, 0.5),    "lfknee");     //14
-    
+
     makeJoint("rshoulder",  Vector3(0.2, 0.0, 0.5),      "shoulders");  //15
     makeJoint("rfknee",     Vector3(0.2, -0.4, 0.5),     "rshoulder");  //16
     makeJoint("rffoot",     Vector3(0.2, -0.8, 0.5),     "rfknee");     //17
-    
+
     makeJoint("hlshoulder", Vector3(-0.2, 0.5, 0.5),     "hshoulders"); //18
     makeJoint("lelbow",     Vector3(-0.4, 0.25, 0.575),  "hlshoulder"); //19
     makeJoint("lhand",      Vector3(-0.6, 0.0, 0.65),    "lelbow");     //20
-    
+
     makeJoint("hrshoulder", Vector3(0.2, 0.5, 0.5),      "hshoulders"); //21
     makeJoint("relbow",     Vector3(0.4, 0.25, 0.575),   "hrshoulder"); //22
     makeJoint("rhand",      Vector3(0.6, 0.0, 0.65),     "relbow");     //23
@@ -387,15 +387,15 @@ CentaurSkeleton::CentaurSkeleton() {
     makeSymmetric("lhknee", "rhknee");
     makeSymmetric("lhheel", "rhheel");
     makeSymmetric("lhfoot", "rhfoot");
-    
+
     makeSymmetric("lshoulder", "rshoulder");
     makeSymmetric("lfknee", "rfknee");
     makeSymmetric("lffoot", "rffoot");
 
     makeSymmetric("hlshoulder", "hrshoulder");
     makeSymmetric("lelbow", "relbow");
-    makeSymmetric("lhand", "rhand");    
-    
+    makeSymmetric("lhand", "rhand");
+
     initCompressed();
 
     setFoot("lhfoot");
