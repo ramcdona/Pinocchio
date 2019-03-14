@@ -63,8 +63,7 @@ template<class Real = double> class Quaternion { // Normalized quaternion for re
     Quaternion operator*(const Quaternion &q) const { return Quaternion(r * q.r - v * q.v, r * q.v + q.r * v + v % q.v); }
 
     //transforming a std::vector
-    Vector<Real, 3> operator*(const Vector<Real, 3> &p) const
-    {
+    Vector<Real, 3> operator*(const Vector<Real, 3> &p) const {
       Vector<Real, 3> v2 = v + v;
       Vector<Real, 3> vsq2 = v.apply(std::multiplies<Real>(), v2);
       Vector<Real, 3> rv2 = r * v2;
@@ -131,12 +130,13 @@ template<class Real = double> class Matrix3 {
     typedef Matrix3<Real> Self;
 
     Matrix3(const Real &diag = Real()) { m[0] = m[4] = m[8] = diag; m[1] = m[2] = m[3] = m[5] = m[6] = m[7] = Real(); }
-    Matrix3(const Vec &c1, const Vec &c2, const Vec &c3)
-    {
+
+    Matrix3(const Vec &c1, const Vec &c2, const Vec &c3) {
       m[0] = c1[0]; m[1] = c2[0]; m[2] = c3[0];
       m[3] = c1[1]; m[4] = c2[1]; m[5] = c3[1];
       m[6] = c1[2]; m[7] = c2[2]; m[8] = c3[2];
     }
+
     Matrix3(const Self &inM) { for(int i = 0; i < 9; ++i) m[i] = inM[i]; }
 
     Real &operator[](int idx) { return m[idx]; }
@@ -152,42 +152,36 @@ template<class Real = double> class Matrix3 {
     Self operator*(const Real &x) { Self out(S(0)); for(int i = 0; i < 9; ++i) out[i] = m[i] * x; return out; }
     Self operator/(const Real &x) { Self out(S(0)); for(int i = 0; i < 9; ++i) out[i] = m[i] / x; return out; }
 
-  #define OPAS(op, typ, idx) Self &operator op(const typ &x) { for(int i = 0; i < 9; ++i) m[i] op x idx; return *this; }
-    OPAS(+=, Self, [i])
+    #define OPAS(op, typ, idx) Self &operator op(const typ &x) { for(int i = 0; i < 9; ++i) m[i] op x idx; return *this; }
+      OPAS(+=, Self, [i])
       OPAS(-=, Self, [i])
       OPAS(*=, Real, )
       OPAS(/=, Real, )
     #undef OPAS
 
-      Vec operator*(const Vec &v) const
-    {
+    Vec operator*(const Vec &v) const {
       return Vec(m[0] * v[0] + m[1] * v[1] + m[2] * v[2],
         m[3] * v[0] + m[4] * v[1] + m[5] * v[2],
         m[6] * v[0] + m[7] * v[1] + m[8] * v[2]);
     }
 
-    Self operator*(const Self &o) const
-    {
+    Self operator*(const Self &o) const {
       return Self((*this) * Vec(o[0], o[3], o[6]), (*this) * Vec(o[1], o[4], o[7]), (*this) * Vec(o[2], o[5], o[8]));
     }
 
-    //transpose
-    Self operator~() const
-    {
-      //uninitialized
-      Self out(S(0));
+    Self operator~() const { // Transpose
+      Self out(S(0)); // Uninitialized
       out[0] = m[0]; out[4] = m[4]; out[8] = m[8];
       out[1] = m[3]; out[3] = m[1]; out[2] = m[6]; out[6] = m[2]; out[5] = m[7]; out[7] = m[5];
       return out;
     }
 
-    //invert
-    Self operator!() const
-    {
+    Self operator!() const { // Invert
       Self out(S(0));
       Real d = det();
-      if(d == Real())
+      if(d == Real()) {
         return Self();
+      }
       d = Real(1.) / d;
       out[0] = d * (m[4] * m[8] - m[5] * m[7]);
       out[1] = d * (m[2] * m[7] - m[1] * m[8]);
@@ -201,20 +195,16 @@ template<class Real = double> class Matrix3 {
       return out;
     }
 
-    Real det() const
-      { return m[0] * (m[4] * m[8] - m[5] * m[7]) - m[1] * (m[3] * m[8] - m[5] * m[6]) + m[2] * (m[3] * m[7] - m[4] * m[6]); }
+    Real det() const {
+      return m[0] * (m[4] * m[8] - m[5] * m[7]) - m[1] * (m[3] * m[8] - m[5] * m[6]) + m[2] * (m[3] * m[7] - m[4] * m[6]);
+    }
 
   private:
-    struct S
-    {
-      S(int)
-      {
-      }
+    struct S {
+      S(int) {}
     };
-    //no initialization
-    Matrix3(const S &)
-    {
-    }
+    
+    Matrix3(const S &) {} // No initialization
 
     Real m[9];
 };
