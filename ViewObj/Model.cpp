@@ -344,126 +344,20 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
     if (vp) { free (vp); }
     if (vn) { free (vn); }
     if (vt) { free (vt); }
+    if (bl) { free (bl); }
 
     point_count = 10000;
+    bones_count = 100;
 
     // calloc is different than malloc in that it initializes the memory allocated.
     // With calloc, the memory is set to zero. With malloc, the memory is not cleared.
     vp = (GLfloat*)calloc(point_count*3, sizeof(vp[0]));
     vt = (GLfloat*)calloc(point_count*2, sizeof(vt[0]));
     vn = (GLfloat*)calloc(point_count*3, sizeof(vn[0]));
+    bl = (GLfloat*)calloc(bones_count*6, sizeof(bl[0]));
 }
 
-void AnimatedModel::drawMesh(const Mesh &m, bool flatShading, Vector3 trans) {
-    Vector3 normal;
-
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < (int)m.edges.size(); ++i) {
-        int v = m.edges[i].vertex;
-        const Vector3 &p = m.vertices[v].pos;
-
-        if (!flatShading) {
-            normal = m.vertices[v].normal;
-            glNormal3d(normal[0], normal[1], normal[2]);
-        } else if (i % 3 == 0) {
-            const Vector3 &p2 = m.vertices[m.edges[i + 1].vertex].pos;
-            const Vector3 &p3 = m.vertices[m.edges[i + 2].vertex].pos;
-            normal = ((p2 - p) % (p3 - p)).normalize();
-            glNormal3d(normal[0], normal[1], normal[2]);
-        }
-
-        glVertex3d(p[0] + trans[0], p[1] + trans[1], p[2] + trans[2]);
-    }
-    glEnd();
-}
-
-void AnimatedModel::drawFloor(bool flatShading) {
-    int i;
-    Mesh floor;
-
-    floor.vertices.resize(4);
-    for (i = 0; i < 4; ++i) {
-        floor.vertices[i].normal = Vector3(0, 1, 0);
-        floor.vertices[i].pos = 10. * Vector3(((i + 0) % 4) / 2, 0, ((i + 1) % 4) / 2) - Vector3(4.5, 0, 4.5);
-    }
-
-    floor.edges.resize(6);
-    for (i = 0; i < 6; ++i) {
-        floor.edges[i].vertex = (i % 3) + ((i > 3) ? 1 : 0);
-    }
-
-    static GLfloat colrb[4] = {0.5f, .9f, .75f, 1.0f };
-    static GLfloat colr[4] = {0.5f, .6f, .9f, 1.0f };
-    glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colr);
-    glMaterialfv( GL_BACK, GL_AMBIENT_AND_DIFFUSE, colrb);
-
-    glShadeModel(GL_SMOOTH);
-    drawMesh(floor, false);
-    glShadeModel( flatShading ? GL_FLAT : GL_SMOOTH);
-
-    glColor4d(.5, .6, .9, .3);
-    glLineWidth(1.);
-
-    int gridSize = 20;
-    double y = floor.vertices[0].pos[1];
-    double minX = floor.vertices[1].pos[0];
-    double maxX = floor.vertices[2].pos[0];
-    double minZ = floor.vertices[1].pos[2];
-    double maxZ = floor.vertices[3].pos[2];
-    double stepX = (maxX - minX) / double(gridSize);
-    double stepZ = (maxZ - minZ) / double(gridSize);
-
-    glEnable(GL_BLEND);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
-    glBegin(GL_LINES);
-
-    for (i = 0; i <= gridSize; ++i) {
-        glVertex3d(minX + i * stepX, y, minZ);
-        glVertex3d(minX + i * stepX, y, maxZ);
-        glVertex3d(minX, y, minZ + i * stepZ);
-        glVertex3d(maxX, y, minZ + i * stepZ);
-    }
-
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
-}
-
-void AnimatedModel::drawModel() {
-    static int framenum;
-    SkelHuman human;
-
-    std::vector<const Mesh *> model_mesh(meshes.size());
-    for (int i = 0; i < (int)meshes.size(); ++i) {
-        model_mesh[i] = &(meshes[i]->getMesh(framenum));
-    }
-
-    for (int i = 0; i < (int)meshes.size(); ++i) {
-        drawMesh(*(model_mesh[i]), flatShading);
-    }
-
-    glLineWidth(5);
-    for (int i = 0; i < (int)meshes.size(); ++i) {
-        std::vector<Vector3> v = meshes[i]->getSkel();
-        if (v.size() == 0) {
-            continue;
-        }
-        glColor3d(.5, 0, 0);
-
-        const std::vector<int> &prev = human.fPrev();
-        glBegin(GL_LINES);
-        for (int j = 1; j < (int)prev.size(); ++j) {
-            int k = prev[j];
-            glVertex3d(v[j][0], v[j][1], v[j][2]);
-            glVertex3d(v[k][0], v[k][1], v[k][2]);
-        }
-        glEnd();
-    }
-}
-
-void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], const Vector3 trans) {
+void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], int * p_bones_count, GLfloat const * p_bl[], const Vector3 trans) {
 	static int framenum;
 	SkelHuman human;
 
@@ -477,10 +371,13 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 		model_mesh[i] = &(meshes[i]->getMesh(framenum));
 	}
 
-	int i_pos = 0;
+	int i_point_count = 0;
 	GLfloat * i_vp = vp;
 	GLfloat * i_vt = vt;
 	GLfloat * i_vn = vn;
+
+	int i_bones_count = 0;
+	GLfloat * i_bl = bl;
 
 	for (int i = 0; i < (int)meshes.size(); ++i) {
 		const Mesh &m = *(model_mesh[i]);
@@ -501,12 +398,33 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 			*(i_vt++) = p[0] + trans[0];
 			*(i_vt++) = p[1] + trans[1];
 
-			i_pos++;
+			i_point_count++;
+		}
+
+		std::vector<Vector3> v = meshes[i]->getSkel();
+		if (v.size() != 0) {
+			const std::vector<int> &prev = human.fPrev();
+			for (int j = 1; j < (int)prev.size(); ++j) {
+				int k = prev[j];
+
+				*(i_bl++) = v[j][0];
+				*(i_bl++) = v[j][1];
+				*(i_bl++) = v[j][2];
+
+				*(i_bl++) = v[k][0];
+				*(i_bl++) = v[k][1];
+				*(i_bl++) = v[k][2];
+
+				i_bones_count++;
+			}
 		}
 	}
 
-	*p_point_count = i_pos;
+	*p_point_count = i_point_count;
 	*p_vp = vp;
 	*p_vt = vt;
 	*p_vn = vn;
+
+	*p_bones_count = i_bones_count;
+	*p_bl = bl;
 }

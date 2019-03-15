@@ -3,13 +3,15 @@
 // Anton Gerdelan
 // 21 Dec 2014
 //
-#include "maths_funcs.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h" // https://github.com/nothings/stb/
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h" // https://github.com/nothings/stb/
+
+#include "maths_funcs.h"
+
+#include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -353,8 +355,7 @@ int main (int argc, char** argv) {
 			texture_file_name);
 	}
 
-	// FLIP UP-SIDE DIDDLY-DOWN
-	// make upside-down copy for GL
+	// Make upside-down copy for OpenGL
 
 	unsigned char *imagePtr = &data[0];
 	int halfTheHeightInPixels = y / 2;
@@ -378,6 +379,7 @@ int main (int argc, char** argv) {
 		}
 	}
 
+	// Set up texture 0 in OpenGL
 
 	glGenTextures (1, &tex);
 	glActiveTexture (GL_TEXTURE0);
@@ -500,9 +502,12 @@ int main (int argc, char** argv) {
 	// --------------------------------------------------------------------------
 
 	int point_count = 0;
-	const GLfloat * vp = NULL; // array of vertex points
-	const GLfloat * vn = NULL; // array of vertex normals (we haven't used these yet)
-	const GLfloat * vt = NULL; // array of texture coordinates (or these)
+	const GLfloat * vp = NULL; // array of vertex points (3 numbers per vertex)
+	const GLfloat * vn = NULL; // array of vertex normals (3 numbers per vertex)
+	const GLfloat * vt = NULL; // array of texture coordinates (2 numbers per vertex)
+
+	int bones_count = 0;
+	const GLfloat * bl = NULL; // array of bone line points (6 numbers per line)
 
 	//
 	// Start rendering
@@ -538,22 +543,22 @@ int main (int argc, char** argv) {
 
 		// Copy points from the header file into our VBO on graphics hardware
 
-		model.getModelShape(&point_count, &vp, &vn, &vt);
+		model.getModelShape(&point_count, &vp, &vn, &vt, &bones_count, &bl);
 
 		GLuint points_vbo;
 		glGenBuffers (1, &points_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vp, GL_STATIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, sizeof(float) * 3 * point_count, vp, GL_STATIC_DRAW);
 
 		GLuint texcoord_vbo;
 		glGenBuffers (1, &texcoord_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, texcoord_vbo);
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 2 * point_count, vt, GL_STATIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, sizeof(float) * 2 * point_count, vt, GL_STATIC_DRAW);
 
 		GLuint normals_vbo;
 		glGenBuffers (1, &normals_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, normals_vbo);
-		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 3 * point_count, vn, GL_STATIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, sizeof(float) * 3 * point_count, vn, GL_STATIC_DRAW);
 
 		GLuint vao;
 		glGenVertexArrays (1, &vao);
@@ -572,6 +577,8 @@ int main (int argc, char** argv) {
 		glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 
+		// Run previously compiled shader programs
+
 		if (normals_mode) {
 			glUseProgram (normals_sp);
 			glUniformMatrix4fv (normals_M_loc, 1, GL_FALSE, M.m);
@@ -585,6 +592,24 @@ int main (int argc, char** argv) {
 
 		glBindVertexArray (vao);
 		glDrawArrays (GL_TRIANGLES, 0, point_count);
+
+
+
+
+
+
+		glDisable (GL_DEPTH_TEST);
+		//glBindTexture(GL_TEXTURE_2D, 0); // Bind the default (empty) texture
+		glLineWidth(5);
+		glColor3d(.5, 0, 0);
+		glBegin(GL_LINES);
+		for (int j = 0; j < bones_count; ++j) {
+			glVertex3d(bl[j*6+0], bl[j*6+1], bl[j*6+2]);
+			glVertex3d(bl[j*6+3], bl[j*6+4], bl[j*6+5]);
+		}
+		glEnd();
+		glEnable (GL_DEPTH_TEST);
+
 		glfwPollEvents ();
 		glfwSwapBuffers (window);
 

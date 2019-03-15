@@ -22,7 +22,7 @@ LDFLAGS= \
 	-Wl,--no-undefined
 
 LIBS= \
-	-lm -L../Pinocchio/ -lpinocchio \
+	-lm -L../Pinocchio/ -lpinocchio -lstb \
 	$(shell $(PKGCONFIG) --libs $(PACKAGES))
 
 SRCS= main.cpp DefMesh.cpp Model.cpp Motion.cpp MotionFilter.cpp

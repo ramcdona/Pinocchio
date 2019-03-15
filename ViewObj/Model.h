@@ -54,17 +54,18 @@ class AnimatedModel {
         }
 
     public:
-        AnimatedModel() : flatShading(false), point_count(0), vp(NULL), vt(NULL), vn(NULL) {}
+        AnimatedModel() : flatShading(false), point_count(0), vp(NULL), vt(NULL), vn(NULL), bones_count(0), bl(NULL) {}
 
         ~AnimatedModel() {
             if (vp) { free (vp); vp = NULL; }
             if (vn) { free (vn); vn = NULL; }
             if (vt) { free (vt); vt = NULL; }
+            if (bl) { free (bl); bl = NULL; }
         }
 
         void loadObject(std::string obj_filename, std::string motion_filenamename);
         void drawModel();
-        void getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], Vector3 trans = Vector3());
+        void getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], int * p_bones_count, GLfloat const * p_bl[], Vector3 trans = Vector3());
 
         Vector3 getTransformVector3() const { return transform.getTrans(); }
         Pinocchio::Quaternion<> getTransformRot() const { return transform.getRot(); }
@@ -81,11 +82,13 @@ class AnimatedModel {
         std::vector<DisplayMesh *> meshes;
         std::vector<LineSegment> lines;
 
-        int point_count;
-        GLfloat * vp;
-        GLfloat * vt;
-        GLfloat * vn;
+        int point_count; // Vertex Counter
+        GLfloat * vp; // Vertex Points
+        GLfloat * vt; // Vertex Texture Mapping
+        GLfloat * vn; // Vertex Normals
 
+        int bones_count; // Bones Counter
+        GLfloat * bl; // Bones Lines Points
 };
 
 #endif // MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA
