@@ -25,7 +25,7 @@ LIBS= \
 	-lm -L../Pinocchio/ -lpinocchio \
 	$(shell $(PKGCONFIG) --libs $(PACKAGES))
 
-SRCS= main.cpp
+SRCS= main.cpp DefMesh.cpp Model.cpp Motion.cpp MotionFilter.cpp
 OBJS= $(subst .cpp,.o,$(SRCS))
 
 BINARY= ViewObj
@@ -54,7 +54,7 @@ clean:
 	$(RM) $(OBJS) $(BINARY)
 
 distclean cleanall: clean
-	$(RM) *~ .depend core *.out *.bak
+	$(RM) *~ .depend core *.out *.bak *.o
 
 include .depend
 

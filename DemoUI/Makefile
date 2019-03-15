@@ -54,7 +54,7 @@ clean:
 	$(RM) $(OBJS) $(BINARY)
 
 distclean cleanall: clean
-	$(RM) *~ .depend core *.out *.bak
+	$(RM) *~ .depend core *.out *.bak *.o
 
 include .depend
 

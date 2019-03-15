@@ -44,8 +44,7 @@ AnimatedModel model;
 
 using namespace std;
 
-enum MODES { MODE_OBJECT, MODE_CAMERA, MODE_LIGHT, MODE_LAST }
-view_mode;
+enum MODES { MODE_OBJECT, MODE_CAMERA, MODE_LIGHT, MODE_LAST } view_mode = MODE_LIGHT;
 int rotY_direction = 0, rotX_direction = 0, transZ_direction = 0, strife = 0;
 float speed_factor = 1;
 glm::mat4 transforms[MODE_LAST];
@@ -401,9 +400,9 @@ int init_resources(char* model_filename, char* vshader_filename, char* fshader_f
 void init_view() {
     main_object.object2world = glm::mat4(1);
     transforms[MODE_CAMERA] = glm::lookAt(
-        glm::vec3(0.0,  0.0, 4.0),                // eye
-        glm::vec3(0.0,  0.0, 0.0),                // direction
-        glm::vec3(0.0,  1.0, 0.0));               // up
+        glm::vec3(0.0, 0.0, 4.0),   // Eye
+        glm::vec3(0.0, 0.0, 0.0),   // Direction
+        glm::vec3(0.0, 1.0, 0.0));  // Up
 }
 
 

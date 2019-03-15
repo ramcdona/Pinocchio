@@ -54,7 +54,7 @@ clean:
 	$(RM) $(OBJS) $(BINARY)
 
 distclean cleanall: clean
-	$(RM) *~ .depend core *.out *.bak
+	$(RM) *~ .depend core *.out *.bak *.o
 
 SRC_FILES = $(shell find . -maxdepth 3 \
 	-name '*.c' -o -name '*.cpp' -o -name '*.cc' -o \

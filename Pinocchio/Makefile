@@ -92,7 +92,7 @@ clean:
 	rm -f *.so *.so* *.a *~
 
 distclean cleanall: clean
-	$(RM) *~ .depend core *.out *.bak
+	$(RM) *~ .depend core *.out *.bak *.o
 
 depend: .depend
 
