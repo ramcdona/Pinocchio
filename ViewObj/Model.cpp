@@ -42,6 +42,11 @@ using namespace Pinocchio;
 
 #include <GL/gl.h>
 
+#include "cube_model.h"
+
+// This will generate a number from LO to HI, inclusive.
+#define RANDOM_FLOAT(LO,HI) (static_cast <float> (LO) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(static_cast <float> (HI) - static_cast <float> (LO)))))
+
 struct SkelHuman : public Skeleton {
     SkelHuman() {
         // Order of makeJoint calls is very important
@@ -335,14 +340,25 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
     //    printf("(%f, %f, %f) ", it->normal[0], it->normal[1], it->normal[2]);
     //}
     //printf("\n");
+
+    if (vp) { free (vp); }
+    if (vn) { free (vn); }
+    if (vt) { free (vt); }
+
+    point_count = 10000;
+
+    // calloc is different than malloc in that it initializes the memory allocated.
+    // With calloc, the memory is set to zero. With malloc, the memory is not cleared.
+    vp = (GLfloat*)calloc(point_count*3, sizeof(vp[0]));
+    vt = (GLfloat*)calloc(point_count*2, sizeof(vt[0]));
+    vn = (GLfloat*)calloc(point_count*3, sizeof(vn[0]));
 }
 
 void AnimatedModel::drawMesh(const Mesh &m, bool flatShading, Vector3 trans) {
-    int i;
     Vector3 normal;
 
     glBegin(GL_TRIANGLES);
-    for (i = 0; i < (int)m.edges.size(); ++i) {
+    for (int i = 0; i < (int)m.edges.size(); ++i) {
         int v = m.edges[i].vertex;
         const Vector3 &p = m.vertices[v].pos;
 
@@ -416,21 +432,20 @@ void AnimatedModel::drawFloor(bool flatShading) {
 }
 
 void AnimatedModel::drawModel() {
-    int i;
     static int framenum;
     SkelHuman human;
 
     std::vector<const Mesh *> model_mesh(meshes.size());
-    for (i = 0; i < (int)meshes.size(); ++i) {
+    for (int i = 0; i < (int)meshes.size(); ++i) {
         model_mesh[i] = &(meshes[i]->getMesh(framenum));
     }
 
-    for (i = 0; i < (int)meshes.size(); ++i) {
+    for (int i = 0; i < (int)meshes.size(); ++i) {
         drawMesh(*(model_mesh[i]), flatShading);
     }
 
     glLineWidth(5);
-    for (i = 0; i < (int)meshes.size(); ++i) {
+    for (int i = 0; i < (int)meshes.size(); ++i) {
         std::vector<Vector3> v = meshes[i]->getSkel();
         if (v.size() == 0) {
             continue;
@@ -446,6 +461,52 @@ void AnimatedModel::drawModel() {
         }
         glEnd();
     }
+}
 
-    return;
+void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], const Vector3 trans) {
+	static int framenum;
+	SkelHuman human;
+
+	//*p_point_count = cube_point_count;
+	//*p_vp = cube_vp;
+	//*p_vt = cube_vt;
+	//*p_vn = cube_vn;
+
+	std::vector<const Mesh *> model_mesh(meshes.size());
+	for (int i = 0; i < (int)meshes.size(); ++i) {
+		model_mesh[i] = &(meshes[i]->getMesh(framenum));
+	}
+
+	int i_pos = 0;
+	GLfloat * i_vp = vp;
+	GLfloat * i_vt = vt;
+	GLfloat * i_vn = vn;
+
+	for (int i = 0; i < (int)meshes.size(); ++i) {
+		const Mesh &m = *(model_mesh[i]);
+		Vector3 normal;
+
+		for (int j = 0; j < (int)m.edges.size(); ++j) {
+			int v = m.edges[j].vertex;
+			const Vector3 &p = m.vertices[v].pos;
+			normal = m.vertices[v].normal;
+			*(i_vp++) = p[0] + trans[0];
+			*(i_vp++) = p[1] + trans[1];
+			*(i_vp++) = p[2] + trans[2];
+
+			*(i_vn++) = normal[0];
+			*(i_vn++) = normal[1];
+			*(i_vn++) = normal[2];
+
+			*(i_vt++) = p[0] + trans[0];
+			*(i_vt++) = p[1] + trans[1];
+
+			i_pos++;
+		}
+	}
+
+	*p_point_count = i_pos;
+	*p_vp = vp;
+	*p_vt = vt;
+	*p_vn = vn;
 }

@@ -27,6 +27,8 @@ THE SOFTWARE.
 
 #include "../Pinocchio/pinocchioApi.h"
 
+#include <GL/gl.h>
+
 class AnimatedModel {
     protected:
         struct LineSegment {
@@ -52,10 +54,17 @@ class AnimatedModel {
         }
 
     public:
-        AnimatedModel() : flatShading(false) {}
+        AnimatedModel() : flatShading(false), point_count(0), vp(NULL), vt(NULL), vn(NULL) {}
+
+        ~AnimatedModel() {
+            if (vp) { free (vp); vp = NULL; }
+            if (vn) { free (vn); vn = NULL; }
+            if (vt) { free (vt); vt = NULL; }
+        }
 
         void loadObject(std::string obj_filename, std::string motion_filenamename);
         void drawModel();
+        void getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], Vector3 trans = Vector3());
 
         Vector3 getTransformVector3() const { return transform.getTrans(); }
         Pinocchio::Quaternion<> getTransformRot() const { return transform.getRot(); }
@@ -71,6 +80,12 @@ class AnimatedModel {
         Pinocchio::Transform<> transform;
         std::vector<DisplayMesh *> meshes;
         std::vector<LineSegment> lines;
+
+        int point_count;
+        GLfloat * vp;
+        GLfloat * vt;
+        GLfloat * vn;
+
 };
 
 #endif // MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA

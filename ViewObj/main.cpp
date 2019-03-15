@@ -26,7 +26,6 @@
 #include "../Pinocchio/pinocchioApi.h"
 
 #include "Model.h"
-#include "cube_model.h"
 
 // This will generate a number from LO to HI, inclusive.
 #define RANDOM_FLOAT(LO,HI) (static_cast <float> (LO) + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(static_cast <float> (HI) - static_cast <float> (LO)))))
@@ -38,7 +37,7 @@ AnimatedModel model;
 //
 // for parsing CL params
 int my_argc;
-char** my_argv;
+char ** my_argv;
 
 //
 // dimensions of the window drawing surface
@@ -132,7 +131,6 @@ int main (int argc, char** argv) {
 	GLuint shader_programme, normals_sp;
 	int M_loc, V_loc, P_loc, time_loc;
 	int normals_M_loc, normals_V_loc, normals_P_loc;
-	int point_count = 0;
 	int param = 0;
 	float scalef = 1.0f;
 	double prev;
@@ -495,23 +493,17 @@ int main (int argc, char** argv) {
 	}
 #endif
 
+
+#if 1
 	//
 	// Set up vertex buffers and vertex array object
 	// --------------------------------------------------------------------------
 
-	GLfloat * vp = NULL; // array of vertex points
-	GLfloat * vn = NULL; // array of vertex normals (we haven't used these yet)
-	GLfloat * vt = NULL; // array of texture coordinates (or these)
+	int point_count = 0;
+	const GLfloat * vp = NULL; // array of vertex points
+	const GLfloat * vn = NULL; // array of vertex normals (we haven't used these yet)
+	const GLfloat * vt = NULL; // array of texture coordinates (or these)
 
-	point_count = cube_point_count;
-
-	// calloc is different than malloc in that it initializes the memory allocated.
-	// With calloc, the memory is set to zero. With malloc, the memory is not cleared.
-	vp = (GLfloat*)calloc(point_count*3, sizeof(cube_vp[0]));
-	vt = (GLfloat*)calloc(point_count*2, sizeof(cube_vt[0]));
-	vn = (GLfloat*)calloc(point_count*3, sizeof(cube_vn[0]));
-
-#if 1
 	//
 	// Start rendering
 	// --------------------------------------------------------------------------
@@ -546,14 +538,7 @@ int main (int argc, char** argv) {
 
 		// Copy points from the header file into our VBO on graphics hardware
 
-		for (int i=0; i<point_count*3; i++) { vp[i] = cube_vp[i] * RANDOM_FLOAT(0.97, 1.03) ; }
-		for (int i=0; i<point_count*2; i++) { vt[i] = cube_vt[i]; }
-		for (int i=0; i<point_count*3; i++) { vn[i] = cube_vn[i]; }
-
-		//printf("point_count: %d\n", point_count);
-		//printf("vp (%d): ", point_count*3); for (int i=0; i<point_count*3; i++) { printf("%f ", vp[i]); } printf("\n");
-		//printf("vt (%d): ", point_count*2); for (int i=0; i<point_count*2; i++) { printf("%f ", vt[i]); } printf("\n");
-		//printf("vn (%d): ", point_count*3); for (int i=0; i<point_count*3; i++) { printf("%f ", vn[i]); } printf("\n");
+		model.getModelShape(&point_count, &vp, &vn, &vt);
 
 		GLuint points_vbo;
 		glGenBuffers (1, &points_vbo);
@@ -644,14 +629,6 @@ int main (int argc, char** argv) {
 		}
 	}
 #endif
-
-	//
-	// Clean up
-	// --------------------------------------------------------------------------
-
-	free (vp);
-	free (vn);
-	free (vt);
 
 	return 0;
 }
