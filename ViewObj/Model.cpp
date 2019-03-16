@@ -344,7 +344,7 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
     if (vp) { free (vp); }
     if (vn) { free (vn); }
     if (vt) { free (vt); }
-    if (bl) { free (bl); }
+    if (bp) { free (bp); }
 
     point_count = 10000;
     bones_count = 100;
@@ -354,10 +354,10 @@ void AnimatedModel::loadObject(std::string obj_filename, std::string motion_file
     vp = (GLfloat*)calloc(point_count*3, sizeof(vp[0]));
     vt = (GLfloat*)calloc(point_count*2, sizeof(vt[0]));
     vn = (GLfloat*)calloc(point_count*3, sizeof(vn[0]));
-    bl = (GLfloat*)calloc(bones_count*6, sizeof(bl[0]));
+    bp = (GLfloat*)calloc(bones_count*6, sizeof(bp[0]));
 }
 
-void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], int * p_bones_count, GLfloat const * p_bl[], const Vector3 trans) {
+void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], GLfloat const * p_vn[], GLfloat const * p_vt[], int * p_bones_count, GLfloat const * p_bp[], const Vector3 trans) {
 	static int framenum;
 	SkelHuman human;
 
@@ -377,7 +377,7 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 	GLfloat * i_vn = vn;
 
 	int i_bones_count = 0;
-	GLfloat * i_bl = bl;
+	GLfloat * i_bp = bp;
 
 	for (int i = 0; i < (int)meshes.size(); ++i) {
 		const Mesh &m = *(model_mesh[i]);
@@ -395,8 +395,8 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 			*(i_vn++) = normal[1];
 			*(i_vn++) = normal[2];
 
-			*(i_vt++) = p[0] + trans[0];
-			*(i_vt++) = p[1] + trans[1];
+			*(i_vt++) = 1.0;
+			*(i_vt++) = 0.0;
 
 			i_point_count++;
 		}
@@ -407,13 +407,13 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 			for (int j = 1; j < (int)prev.size(); ++j) {
 				int k = prev[j];
 
-				*(i_bl++) = v[j][0];
-				*(i_bl++) = v[j][1];
-				*(i_bl++) = v[j][2];
+				*(i_bp++) = v[j][0];
+				*(i_bp++) = v[j][1];
+				*(i_bp++) = v[j][2];
 
-				*(i_bl++) = v[k][0];
-				*(i_bl++) = v[k][1];
-				*(i_bl++) = v[k][2];
+				*(i_bp++) = v[k][0];
+				*(i_bp++) = v[k][1];
+				*(i_bp++) = v[k][2];
 
 				i_bones_count++;
 			}
@@ -426,5 +426,5 @@ void AnimatedModel::getModelShape(int * p_point_count, GLfloat const * p_vp[], G
 	*p_vn = vn;
 
 	*p_bones_count = i_bones_count;
-	*p_bl = bl;
+	*p_bp = bp;
 }

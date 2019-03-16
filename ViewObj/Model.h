@@ -54,13 +54,13 @@ class AnimatedModel {
         }
 
     public:
-        AnimatedModel() : flatShading(false), point_count(0), vp(NULL), vt(NULL), vn(NULL), bones_count(0), bl(NULL) {}
+        AnimatedModel() : flatShading(false), point_count(0), vp(NULL), vt(NULL), vn(NULL), bones_count(0), bp(NULL) {}
 
         ~AnimatedModel() {
             if (vp) { free (vp); vp = NULL; }
             if (vn) { free (vn); vn = NULL; }
             if (vt) { free (vt); vt = NULL; }
-            if (bl) { free (bl); bl = NULL; }
+            if (bp) { free (bp); bp = NULL; }
         }
 
         void loadObject(std::string obj_filename, std::string motion_filenamename);
@@ -88,7 +88,7 @@ class AnimatedModel {
         GLfloat * vn; // Vertex Normals
 
         int bones_count; // Bones Counter
-        GLfloat * bl; // Bones Lines Points
+        GLfloat * bp; // Bones Lines Points
 };
 
 #endif // MODEL_H_A392C730_465A_11E9_B3CE_47F0D82200CA

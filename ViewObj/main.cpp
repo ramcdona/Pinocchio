@@ -405,98 +405,7 @@ int main (int argc, char** argv) {
 	// Main loop
 	// --------------------------------------------------------------------------
 
-#if 0
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glClearColor(0.5, 0.5, 0.8, 1.0);
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
-
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glDepthMask (GL_FALSE);
-
-	prev = glfwGetTime ();
-	while (!glfwWindowShouldClose (window)) {
-		double curr, elapsed;
-
-		curr = glfwGetTime ();
-		elapsed = curr - prev;
-		prev = curr;
-
-		// Init GL
-		static GLfloat pos[4] = {5.0, 5.0, 10.0, 1.0 };
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-		glLightfv( GL_LIGHT0, GL_POSITION, pos );
-		glEnable( GL_LIGHTING );
-		glEnable( GL_LIGHT0 );
-		glEnable( GL_DEPTH_TEST );
-		glEnable( GL_NORMALIZE);
-		glDisable(GL_ALPHA_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glShadeModel(GL_FLAT);
-		glClearColor(0.f, 0.f, 1.f, 0.f);
-
-		glViewport(0, 0, gl_width, gl_height);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
-		double left   = -0.1;
-		double bottom = -0.1;
-		double right  =  1.1;
-		double top    =  1.1;
-		if (gl_width > 1 && gl_height > 1) {
-			if (gl_width > gl_height) { right = -0.1 + 1.2 * (double)gl_width / (double)gl_height; }
-			if (gl_height > gl_width) { bottom = 1.1 - 1.2 * (double)gl_height / (double)gl_width; }
-		}
-		double scale_factor = 1.0 / 1000.0;
-		left =   -(double)gl_width  * scale_factor;
-		right =   (double)gl_width  * scale_factor;
-		bottom = -(double)gl_height * scale_factor;
-		top =     (double)gl_height * scale_factor;
-		glFrustum(left, right, bottom, top, 5., 30.);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_LIGHTING);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-
-		// Transform
-		Vector3 trans = model.getTransformVector3();
-		glTranslated(trans[0], trans[1], -10 + trans[2]);
-
-		double transform_scale = model.getTransformScale();
-		glScaled(transform_scale, transform_scale, transform_scale);
-
-		Quaternion<> r = model.getTransformRot();
-		double ang = r.getAngle();
-		if (fabs(ang) > 1e-6) {
-			Vector3 ax = r.getAxis();
-			glRotated(ang * 180. / M_PI, ax[0], ax[1], ax[2]);
-		}
-
-		// Draw
-
-		model.drawModel();
-
-		// Manage events
-
-		glfwPollEvents ();
-		glfwSwapBuffers (window);
-
-		if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE)) {
-			glfwSetWindowShouldClose (window, 1);
-		}
-	}
-#endif
-
-
-#if 1
 	//
 	// Set up vertex buffers and vertex array object
 	// --------------------------------------------------------------------------
@@ -507,7 +416,7 @@ int main (int argc, char** argv) {
 	const GLfloat * vt = NULL; // array of texture coordinates (2 numbers per vertex)
 
 	int bones_count = 0;
-	const GLfloat * bl = NULL; // array of bone line points (6 numbers per line)
+	const GLfloat * bp = NULL; // array of bone line points (6 numbers per line)
 
 	//
 	// Start rendering
@@ -543,7 +452,7 @@ int main (int argc, char** argv) {
 
 		// Copy points from the header file into our VBO on graphics hardware
 
-		model.getModelShape(&point_count, &vp, &vn, &vt, &bones_count, &bl);
+		model.getModelShape(&point_count, &vp, &vn, &vt, &bones_count, &bp);
 
 		GLuint points_vbo;
 		glGenBuffers (1, &points_vbo);
@@ -576,8 +485,9 @@ int main (int argc, char** argv) {
 		glBindBuffer (GL_ARRAY_BUFFER, normals_vbo);
 		glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-
 		// Run previously compiled shader programs
+
+		glBindTexture (GL_TEXTURE_2D, tex);
 
 		if (normals_mode) {
 			glUseProgram (normals_sp);
@@ -593,22 +503,26 @@ int main (int argc, char** argv) {
 		glBindVertexArray (vao);
 		glDrawArrays (GL_TRIANGLES, 0, point_count);
 
+		// Draw skeleton bones on top
 
-
-
-
+		glUseProgram (normals_sp);
+		glUniformMatrix4fv (normals_M_loc, 1, GL_FALSE, M.m);
 
 		glDisable (GL_DEPTH_TEST);
-		//glBindTexture(GL_TEXTURE_2D, 0); // Bind the default (empty) texture
+		glBindTexture(GL_TEXTURE_2D, 0); // Bind the default (empty) texture
+
 		glLineWidth(5);
-		glColor3d(.5, 0, 0);
+		glColor3d(0.5, 0.0, 0.0);
 		glBegin(GL_LINES);
 		for (int j = 0; j < bones_count; ++j) {
-			glVertex3d(bl[j*6+0], bl[j*6+1], bl[j*6+2]);
-			glVertex3d(bl[j*6+3], bl[j*6+4], bl[j*6+5]);
+			glVertex3d(bp[j*6+0], bp[j*6+1], bp[j*6+2]);
+			glVertex3d(bp[j*6+3], bp[j*6+4], bp[j*6+5]);
 		}
 		glEnd();
+
 		glEnable (GL_DEPTH_TEST);
+
+		// Swap buffers and poll events
 
 		glfwPollEvents ();
 		glfwSwapBuffers (window);
@@ -653,7 +567,7 @@ int main (int argc, char** argv) {
 			glfwSetWindowShouldClose (window, 1);
 		}
 	}
-#endif
+
 
 	return 0;
 }
