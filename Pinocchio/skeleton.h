@@ -24,8 +24,7 @@
 
 namespace Pinocchio {
 
-class PINOCCHIO_API Skeleton
-{
+class PINOCCHIO_API Skeleton {
   public:
     Skeleton() {}
 
@@ -51,7 +50,7 @@ class PINOCCHIO_API Skeleton
   protected:
     void initCompressed();
 
-    //help for creation
+    // Help for creation
     std::map<std::string, int> jointNames;
     void makeJoint(const std::string &name, const Vector3 &pos, const std::string &previous = std::string());
     void makeSymmetric(const std::string &name1, const std::string &name2);
@@ -59,62 +58,41 @@ class PINOCCHIO_API Skeleton
     void setFat(const std::string &name);
 
   private:
-    //full
-    PtGraph fGraphV;
-    //previous vertices
-    std::vector<int> fPrevV;
-    //symmetry
-    std::vector<int> fSymV;
+    PtGraph fGraphV; // Full
+    std::vector<int> fPrevV; // Previous vertices
+    std::vector<int> fSymV; // Symmetry
 
-    //compressed (no degree 2 vertices)
-    PtGraph cGraphV;
-    //previous vertices
-    std::vector<int> cPrevV;
-    //symmetry
-    std::vector<int> cSymV;
-    //whether the vertex should be near the ground
-    std::vector<bool> cFeetV;
-    //whether the vertex should be in a large region
-    std::vector<bool> cFatV;
+    PtGraph cGraphV; // Compressed (no degree 2 vertices)
+    std::vector<int> cPrevV; // Previous vertices
+    std::vector<int> cSymV; // Symmetry
+    std::vector<bool> cFeetV; // Whether the vertex should be near the ground
+    std::vector<bool> cFatV; // Whether the vertex should be in a large region
 
-    //compressed to full std::map
-    std::vector<int> cfMapV;
-    //full to compressed std::map, -1 when vertex is not in compressed
-    std::vector<int> fcMapV;
-    //maps full vertex number to ratio of its prev edge length to total length of
-    std::vector<double> fcFractionV;
-    //containing edge in the compressed graph
-    //lengths of the compressed bones
+    std::vector<int> cfMapV; // Compressed to full std::map
+    std::vector<int> fcMapV; // Full to compressed std::map, -1 when vertex is not in compressed
+    std::vector<double> fcFractionV; // Maps full vertex number to ratio of its prev edge length to total length of
+                                     //containing edge in the compressed graph
+                                     //lengths of the compressed bones
     std::vector<double> cLengthV;
 };
 
-class PINOCCHIO_API HumanSkeleton : public Skeleton
-{
-  public:
+struct PINOCCHIO_API HumanSkeleton : public Skeleton {
     HumanSkeleton();
 };
 
-class PINOCCHIO_API QuadSkeleton : public Skeleton
-{
-  public:
+struct PINOCCHIO_API QuadSkeleton : public Skeleton {
     QuadSkeleton();
 };
 
-class PINOCCHIO_API HorseSkeleton : public Skeleton
-{
-  public:
+struct PINOCCHIO_API HorseSkeleton : public Skeleton {
     HorseSkeleton();
 };
 
-class PINOCCHIO_API CentaurSkeleton : public Skeleton
-{
-  public:
+struct PINOCCHIO_API CentaurSkeleton : public Skeleton {
     CentaurSkeleton();
 };
 
-class PINOCCHIO_API FileSkeleton : public Skeleton
-{
-  public:
+struct PINOCCHIO_API FileSkeleton : public Skeleton {
     FileSkeleton(const std::string &filename);
 };
 

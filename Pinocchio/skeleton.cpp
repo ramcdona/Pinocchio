@@ -16,7 +16,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/* 06.11.2014 RR: * makeJoint(), if defineed PINOCCHIO_SKEL_XYZ_ROT
+/* 06.11.2014 RR: * makeJoint(), if defined PINOCCHIO_SKEL_XYZ_ROT
                     rotate the positon componentes for the joints.
                     X Y Z  -->  Z Y X
 */
@@ -30,12 +30,10 @@
 namespace Pinocchio {
 
 void Skeleton::initCompressed() {
-  int i;
-
   fcMapV.resize(fPrevV.size(), -1);
   fcFractionV.resize(fPrevV.size(), -1.);
 
-  for(i = 0; i < (int)fPrevV.size(); ++i) {
+  for (int i = 0; i < (int)fPrevV.size(); ++i) {
     if(fGraphV.edges[i].size() == 2) {
       continue;
     }
@@ -49,25 +47,27 @@ void Skeleton::initCompressed() {
   cFeetV = std::vector<bool>(cPrevV.size(), false);
   cFatV = std::vector<bool>(cPrevV.size(), false);
 
-  for(i = 0; i < (int)cfMapV.size(); ++i) {
+  for (int i = 0; i < (int)cfMapV.size(); ++i) {
     cGraphV.verts.push_back(fGraphV.verts[cfMapV[i]]);
 
     //symmetry--TODO: need to make sure all unreduced bones in chain
     //          are marked as symmetric before marking the reduced one
-    if(fSymV[cfMapV[i]] >= 0)
+    if (fSymV[cfMapV[i]] >= 0) {
       cSymV[i] = fcMapV[fSymV[cfMapV[i]]];
+    }
 
-    //prev
-    if(i > 0) {
+    // Prev
+    if (i > 0) {
       int curPrev = fPrevV[cfMapV[i]];
-      while(fcMapV[curPrev]  < 0)
+      while(fcMapV[curPrev]  < 0) {
         curPrev = fPrevV[curPrev];
+      }
       cPrevV[i] = fcMapV[curPrev];
     }
   }
 
-  //graph edges
-  for(i = 1; i < (int)cPrevV.size(); ++i) {
+  // Graph edges
+  for (int i = 1; i < (int)cPrevV.size(); ++i) {
     cGraphV.edges[i].push_back(cPrevV[i]);
     cGraphV.edges[cPrevV[i]].push_back(i);
   }
@@ -75,7 +75,7 @@ void Skeleton::initCompressed() {
   cLengthV.resize(cPrevV.size(), 0.);
 
   //lengths/fraction computation
-  for (i = 1; i < (int)cPrevV.size(); ++i){
+  for (int i = 1; i < (int)cPrevV.size(); ++i){
     int cur = cfMapV[i];
     std::unordered_map<int, double> lengths;
     do {
@@ -91,10 +91,10 @@ void Skeleton::initCompressed() {
 
 
 void Skeleton::scale(double factor) {
-  int i;
-  for(i = 0; i < (int)fGraphV.verts.size(); ++i)
+  for (int i = 0; i < (int)fGraphV.verts.size(); ++i) {
     fGraphV.verts[i] *= factor;
-  for(i = 0; i < (int)cGraphV.verts.size(); ++i) {
+  }
+  for (int i = 0; i < (int)cGraphV.verts.size(); ++i) {
     cGraphV.verts[i] *= factor;
     cLengthV[i] *= factor;
   }
@@ -118,9 +118,7 @@ void Skeleton::makeJoint(const std::string &name, const Vector3 &pos, const std:
 
   if(previous == std::string("")) {
     fPrevV.push_back(-1);
-    //add a bone
-  }
-  else {
+  } else { // Add a bone
     int prev = jointNames[previous];
     fGraphV.edges[cur].push_back(prev);
     fGraphV.edges[prev].push_back(cur);
@@ -133,8 +131,9 @@ void Skeleton::makeSymmetric(const std::string &name1, const std::string &name2)
   int i1 = jointNames[name1];
   int i2 = jointNames[name2];
 
-  if(i1 > i2)
+  if (i1 > i2) {
     std::swap(i1, i2);
+  }
   fSymV[i2] = i1;
 }
 
@@ -414,23 +413,23 @@ CentaurSkeleton::CentaurSkeleton() {
 FileSkeleton::FileSkeleton(const std::string &filename) {
   std::ifstream strm(filename.c_str());
 
-  if(!strm.is_open()) {
+  if (!strm.is_open()) {
     Debugging::out() << "Error opening file " << filename << std::endl;
     return;
   }
 
-  while(!strm.eof()) {
+  while (!strm.eof()) {
     std::vector<std::string> line = readWords(strm);
-    if(line.size() < 5)
-      //error
+    if (line.size() < 5) { // Error
       continue;
+    }
 
     Vector3 p;
     sscanf(line[1].c_str(), "%lf", &(p[0]));
     sscanf(line[2].c_str(), "%lf", &(p[1]));
     sscanf(line[3].c_str(), "%lf", &(p[2]));
 
-    if(line[4] == "-1") {
+    if (line[4] == "-1") {
       line[4] = std::string();
     }
 
