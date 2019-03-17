@@ -24,7 +24,7 @@ PKGCONFIG= pkg-config
 PACKAGES= 
 
 CFLAGS= -O2 -g -Wall -std=c++17 \
-	-Ienet/include -Ishared \
+	-Ishared \
 	-fstack-protector-strong \
 	-Wall \
 	-Wformat \

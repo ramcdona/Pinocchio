@@ -97,7 +97,7 @@ class DNode : public Data {
     MyRect rect;
 };
 
-template<class Data, int Dim, template<typename Node, int IDim> class Indexer = DumbIndexer>
+template<class Data, int Dim, template<typename Node, int IDim> class Indexer = Pinocchio::DumbIndexer>
 class DRootNode : public DNode<Data, Dim>, public Indexer<DNode<Data, Dim>, Dim>
 {
   public:

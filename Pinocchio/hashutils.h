@@ -30,4 +30,4 @@ namespace std {
     };
 }
 
-#endif
+#endif // HASHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

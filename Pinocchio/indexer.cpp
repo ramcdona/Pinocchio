@@ -18,6 +18,8 @@
 
 #include "indexer.h"
 
+namespace Pinocchio {
+
 unsigned int interLeaveLookupTable[32768];
 
 class LookupTable
@@ -55,3 +57,5 @@ class LookupTable3
 };
 
 static LookupTable3 lt3;
+
+} // namespace Pinocchio

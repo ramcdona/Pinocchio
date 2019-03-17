@@ -16,8 +16,12 @@ nullstring :=
 all: makerule = $(nullstring)
 depend clean distclean cleanall: makerule = distclean
 
-all depend clean distclean cleanall:
+all depend clean:
 	$(makePerDir)
+
+distclean cleanall:
+	$(makePerDir)
+	rm -f *.o */*.o *.a */*.a *~ */*~
 
 SRC_FILES = $(shell find . -maxdepth 3 \
 	-name '*.c' -o -name '*.cpp' -o -name '*.cc' -o \

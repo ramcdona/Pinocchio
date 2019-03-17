@@ -22,6 +22,8 @@
 #include "hashutils.h"
 #include "vector.h"
 
+namespace Pinocchio {
+
 template<class Node, int Dim>
 class DumbIndexer {
   public:
@@ -255,4 +257,7 @@ class HashIndexer
     Node *table[(1 << bits)];
     HashIndex<Node, hlev> hNodes;
 };
-#endif
+
+} // namespace Pinocchio
+
+#endif // INDEXER_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
