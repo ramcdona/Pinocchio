@@ -21,8 +21,23 @@ THE SOFTWARE.
 */
 
 #include <iostream>
-#include <FL/gl.h>
+
+#ifdef __APPLE__
+
+#define GL_SILENCE_DEPRECATION
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+
+#else
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#endif
+
+// #include <FL/gl.h>
 #include <FL/Fl.H>
+
 #include "MyWindow.h"
 #include "../Pinocchio/skeleton.h"
 
