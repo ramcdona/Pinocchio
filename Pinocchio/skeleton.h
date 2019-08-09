@@ -96,6 +96,12 @@ struct PINOCCHIO_API FileSkeleton : public Skeleton {
     FileSkeleton(const std::string &filename);
 };
 
+struct PINOCCHIO_API DataSkeleton : public Skeleton {
+    DataSkeleton();
+
+    void init( const std::vector<Vector3> &pts, const std::vector<int> &previd );
+};
+
 } // namespace Pinocchio
 
 #endif // SKELETON_H_BFCF2002_4190_11E9_AA8F_EFB66606E782

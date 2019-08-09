@@ -439,4 +439,29 @@ FileSkeleton::FileSkeleton(const std::string &filename) {
   initCompressed();
 }
 
+DataSkeleton::DataSkeleton()
+{
+}
+
+void DataSkeleton::init( const std::vector<Vector3> &pts, const std::vector<int> &previd )
+{
+
+    int npts = pts.size();
+
+    for ( int i = 0; i < npts; i++ )
+    {
+        std::string start = std::to_string( i );
+        std::string end = std::string();
+        if ( previd[i] >= 0 ) // -1 will leave empty string.
+        {
+            end = std::to_string( previd[i] );
+        }
+        makeJoint( start, pts[i] * 2., end );
+    }
+
+    initCompressed();
+}
+
+
+
 } // namespace Pinocchio
