@@ -28,11 +28,12 @@
 namespace Pinocchio {
 
 struct MeshVertex {
-  MeshVertex() : edge(-1) {}
+  MeshVertex() : edge(-1), origVertID(-999999999) {}
 
   Vector3 pos;
   Vector3 normal;
   int edge; // An edge such that edge->prev->vertex is this
+  int origVertID;
 };
 
 struct MeshEdge {
