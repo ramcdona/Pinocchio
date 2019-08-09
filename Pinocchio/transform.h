@@ -30,6 +30,14 @@ template<class Real = double> class Quaternion { // Normalized quaternion for re
     Quaternion(const Quaternion &q) : r(q.r), v(q.v) {} // Copy constructor
     template<class R> Quaternion(const Quaternion<R> &q) : r(q.r), v(q.v) {} //Convert quaternions of other types
 
+    template<class R> Quaternion(const R &w, const R &x, const R &y, const R &z)
+    {
+        r = w;
+        v[0] = x;
+        v[1] = y;
+        v[2] = z;
+    }
+
     // Axis angle constructor:
     template<class R> Quaternion(const Vector<R, 3> &axis,
       const R &angle) : r(cos(angle * Real(0.5))),
@@ -117,6 +125,10 @@ template<class Real = double> class Transform { // T(v) = (rot * v * scale) + tr
     Real getScale() const { return scale; }
     Vec getTrans() const { return trans; }
     Quaternion<Real> getRot() const { return rot; }
+
+    void setScale( const Real &s ) { scale = s; }
+    void setTrans( const Vec &t ) { trans = t; }
+    void setRot( const Quaternion<Real> &r ) { rot = r; }
 
   private:
     Quaternion<Real> rot;
