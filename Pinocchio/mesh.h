@@ -54,6 +54,7 @@ class PINOCCHIO_API Mesh {
     void normalizeBoundingBox();
     void computeTopology();
     void writeObj(const std::string &filename) const;
+    void fixDupFaces();
 
   private:
     void readObj(std::istream &strm);
@@ -61,7 +62,6 @@ class PINOCCHIO_API Mesh {
     void readPly(std::istream &strm);
     void readGts(std::istream &strm);
     void readStl(std::istream &strm);
-    void fixDupFaces();
     void sortEdges(); // Sort edges so that triplets forming faces are adjacent
 
   public:
