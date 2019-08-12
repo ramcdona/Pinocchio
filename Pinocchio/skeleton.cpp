@@ -137,18 +137,30 @@ void Skeleton::makeSymmetric(const std::string &name1, const std::string &name2)
   fSymV[i2] = i1;
 }
 
+void Skeleton::makeSymmetric(const int &name1, const int &name2)
+{
+   makeSymmetric( std::to_string( name1 ), std::to_string( name2 ) );
+}
 
 void Skeleton::setFoot(const std::string &name) {
   int i = jointNames[name];
   cFeetV[fcMapV[i]] = true;
 }
 
+void Skeleton::setFoot(const int &name)
+{
+    setFoot( std::to_string( name ) );
+}
 
 void Skeleton::setFat(const std::string &name) {
   int i = jointNames[name];
   cFatV[fcMapV[i]] = true;
 }
 
+void Skeleton::setFat(const int &name)
+{
+    setFat( std::to_string( name ) );
+}
 
 //-----------------actual skeletons-------------------
 

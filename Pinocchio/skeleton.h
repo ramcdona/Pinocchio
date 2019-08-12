@@ -47,7 +47,7 @@ class PINOCCHIO_API Skeleton {
 
     void scale(double factor);
 
-  protected:
+  public:
     void initCompressed();
 
     // Help for creation
@@ -56,6 +56,10 @@ class PINOCCHIO_API Skeleton {
     void makeSymmetric(const std::string &name1, const std::string &name2);
     void setFoot(const std::string &name);
     void setFat(const std::string &name);
+
+    void makeSymmetric(const int &name1, const int &name2);
+    void setFoot(const int &name);
+    void setFat(const int &name);
 
   private:
     PtGraph fGraphV; // Full
