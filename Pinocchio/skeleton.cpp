@@ -470,8 +470,6 @@ void DataSkeleton::init( const std::vector<Vector3> &pts, const std::vector<int>
         }
         makeJoint( start, pts[i] * 2., end );
     }
-
-    initCompressed();
 }
 
 
