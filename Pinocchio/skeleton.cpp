@@ -110,7 +110,7 @@ void Skeleton::makeJoint(const std::string &name, const Vector3 &pos, const std:
   fGraphV.verts.push_back(Vector3( pos[2], pos[0], pos[1]) * 0.5);
   #else
   //skeletons specified in [-1,1] will be fit to object in [0,1]
-  fGraphV.verts.push_back(pos * 0.5);
+  fGraphV.verts.push_back(pos * 0.5);  // Do not understand * 0.5
   #endif
 
   fGraphV.edges.resize(cur + 1);
@@ -468,7 +468,7 @@ void DataSkeleton::init( const std::vector<Vector3> &pts, const std::vector<int>
         {
             end = std::to_string( previd[i] );
         }
-        makeJoint( start, pts[i] * 2., end );
+        makeJoint( start, pts[i] * 2., end );  // Do not understand * 2.
     }
 }
 
