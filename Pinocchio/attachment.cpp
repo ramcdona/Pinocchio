@@ -71,12 +71,8 @@ class AttachmentPrivate1 : public AttachmentPrivate
         } while(cur != start);
       }
 
-      weights.resize(nv);
       int bones = skeleton.fGraph().verts.size() - 1;
 
-      // initialize the weights vectors so they are big enough
-      for(i = 0; i < nv; ++i)
-        weights[i][bones - 1] = 0.;
 
       std::vector<std::vector<double> > boneDists(nv);
       std::vector<std::vector<bool> > boneVis(nv);
@@ -211,6 +207,12 @@ class AttachmentPrivate1 : public AttachmentPrivate
             nzweights[i].push_back(std::make_pair(j, rhs[i]));
         }
       }
+
+      weights.resize(nv);
+
+      // initialize the weights vectors so they are big enough
+      for(i = 0; i < nv; ++i)
+        weights[i][bones - 1] = 0.;
 
       for(i = 0; i < nv; ++i)
       {
