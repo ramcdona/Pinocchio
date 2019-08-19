@@ -15,7 +15,7 @@ ADD_LIBRARY( pinocchio
         intersector.cpp
         lsqSolver.cpp
         matrix.cpp
-        mesh.cpp
+        pin_mesh.cpp
         pinocchioApi.cpp
         quatinterface.cpp
         refinement.cpp
@@ -34,7 +34,7 @@ ADD_LIBRARY( pinocchio
         mat3.h
         mathutils.h
         matrix.h
-        mesh.h
+        pin_mesh.h
         multilinear.h
         pinocchioApi.h
         point3.h

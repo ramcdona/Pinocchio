@@ -19,7 +19,7 @@
 #ifndef ATTACHMENT_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 #define ATTACHMENT_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
-#include "mesh.h"
+#include "pin_mesh.h"
 #include "skeleton.h"
 #include "transform.h"
 #include "quatinterface.h"

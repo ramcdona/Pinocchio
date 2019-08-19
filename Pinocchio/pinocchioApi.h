@@ -19,7 +19,7 @@
 #ifndef PINOCCHIOAPI_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 #define PINOCCHIOAPI_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
-#include "mesh.h"
+#include "pin_mesh.h"
 #include "quaddisttree.h"
 #include "attachment.h"
 

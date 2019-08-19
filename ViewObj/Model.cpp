@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "../Pinocchio/utils.h"
 #include "../Pinocchio/debugging.h"
 #include "../Pinocchio/attachment.h"
-#include "../Pinocchio/mesh.h"
+#include "../Pinocchio/pin_mesh.h"
 #include "../Pinocchio/pinocchioApi.h"
 
 using namespace Pinocchio;

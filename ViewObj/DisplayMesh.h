@@ -23,7 +23,7 @@ THE SOFTWARE.
 #ifndef DISPLAYMESH_H_A392C6AE_465A_11E9_B3CD_87B0B67BD348
 #define DISPLAYMESH_H_A392C6AE_465A_11E9_B3CD_87B0B67BD348
 
-#include "../Pinocchio/mesh.h"
+#include "../Pinocchio/pin_mesh.h"
 
 class DisplayMesh {
     public:

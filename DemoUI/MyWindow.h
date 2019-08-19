@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include <sstream>
 #include <string.h>
-#include "../Pinocchio/mesh.h"
+#include "pin_mesh.h"
 #include "../Pinocchio/transform.h"
 #include "DisplayMesh.h"
 #include "shared.h"

@@ -23,7 +23,7 @@ THE SOFTWARE.
 #ifndef DISPLAYMESH_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
 #define DISPLAYMESH_H_CCB0E12A_4190_11E9_BF66_EB91561F8FE5
 
-#include "../Pinocchio/mesh.h"
+#include "pin_mesh.h"
 
 class DisplayMesh
 {
