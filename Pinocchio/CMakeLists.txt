@@ -1,25 +1,14 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
 
 SET(PINOCCHIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Path to pinocchio headers")
 
 # INCLUDE_DIRECTORIES(
 # )
 
-ADD_LIBRARY( pinocchio
-        Pinocchio.cpp
-        attachment.cpp
-        discretization.cpp
-        embedding.cpp
-        graphutils.cpp
-        indexer.cpp
-        intersector.cpp
-        lsqSolver.cpp
-        matrix.cpp
-        pin_mesh.cpp
-        pinocchioApi.cpp
-        quatinterface.cpp
-        refinement.cpp
-        skeleton.cpp
+ADD_LIBRARY( pinocchio )
+ADD_LIBRARY( pinocchio::pinocchio ALIAS pinocchio )
+
+SET( public_headers
         Pinocchio.h
         attachment.h
         debugging.h
@@ -52,5 +41,57 @@ ADD_LIBRARY( pinocchio
         vecutils.h
 )
 
+SET( sources
+        ${public_headers}
+        Pinocchio.cpp
+        attachment.cpp
+        discretization.cpp
+        embedding.cpp
+        graphutils.cpp
+        indexer.cpp
+        intersector.cpp
+        lsqSolver.cpp
+        matrix.cpp
+        pin_mesh.cpp
+        pinocchioApi.cpp
+        quatinterface.cpp
+        refinement.cpp
+        skeleton.cpp
+)
+
+TARGET_SOURCES( pinocchio PRIVATE ${sources} )
+
+# TARGET_COMPILE_DEFINITIONS( pinocchio
+#         PUBLIC
+#         "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:PINOCCHIO_STATIC_DEFINE"
+# )
+
+TARGET_INCLUDE_DIRECTORIES( pinocchio
+        PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+        PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+SET_TARGET_PROPERTIES( pinocchio PROPERTIES
+        CXX_STANDARD 98
+        PUBLIC_HEADER "${public_headers}"
+)
+
+TARGET_INCLUDE_DIRECTORIES( pinocchio PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
+
 # ADD_DEPENDENCIES( pinocchio
 # )
+
+IF( PINOCCHIO_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES )
+
+INSTALL( TARGETS pinocchio
+         EXPORT pinocchio
+         LIBRARY DESTINATION lib
+         INCLUDES DESTINATION include
+         PUBLIC_HEADER COMPONENT include
+)
+
+ENDIF ()

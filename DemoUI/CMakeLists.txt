@@ -1,18 +1,14 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
 
-IF( NOT VSP_NO_GRAPHICS )
+FIND_PACKAGE(FLTK REQUIRED)
 
-#   FLTK_WRAP_UI( demoscreens
-#   demo.fl
-#   )
+IF ( FLTK_FOUND )
 
-  INCLUDE_DIRECTORIES(
-    ${PINOCCHIO_INCLUDE_DIR}
-    ${FLTK_INCLUDE_DIR}
-  )
+  #   FLTK_WRAP_UI( demoscreens
+  #   demo.fl
+  #   )
 
-#  ADD_LIBRARY(demoscreens ${demoscreens_FLTK_UI_SRCS} )
-
+  #  ADD_LIBRARY(demoscreens ${demoscreens_FLTK_UI_SRCS} )
 
   ADD_EXECUTABLE(demoui
           DemoUI.cpp
@@ -30,12 +26,15 @@ IF( NOT VSP_NO_GRAPHICS )
           shared.h
   )
 
-  TARGET_LINK_LIBRARIES(demoui
+  TARGET_INCLUDE_DIRECTORIES(demoui PUBLIC
+          ${PINOCCHIO_INCLUDE_DIR}
+          ${FLTK_INCLUDE_DIR}
+  )
+
+  TARGET_LINK_LIBRARIES(demoui PUBLIC
     pinocchio
     ${FLTK_LIBRARIES}
     ${OPENGL_LIBRARIES}
   )
 
-#  INSTALL( TARGETS vspviewer RUNTIME DESTINATION . )
-
-ENDIF()
+ENDIF ()
