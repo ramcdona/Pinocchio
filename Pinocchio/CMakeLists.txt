@@ -76,7 +76,7 @@ TARGET_INCLUDE_DIRECTORIES( pinocchio
 )
 
 SET_TARGET_PROPERTIES( pinocchio PROPERTIES
-        CXX_STANDARD 98
+        CXX_STANDARD 17
         PUBLIC_HEADER "${public_headers}"
 )
 
