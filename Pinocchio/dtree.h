@@ -107,7 +107,7 @@ class DRootNode : public DNode<Data, Dim>, public Indexer<DNode<Data, Dim>, Dim>
     typedef Vector<double, Dim> Vec;
     typedef Rect<double, Dim> MyRect;
 
-    DRootNode(MyRect r = MyRect(Vec(), Vec().apply(bind2nd(std::plus<double>(), 1.)))) : Node(r) {
+    DRootNode(MyRect r = MyRect(Vec(), Vec().apply(bind(std::plus<double>(), std::placeholders::_1, 1.)))) : Node(r) {
       MyIndexer::setRoot(this);
     }
 

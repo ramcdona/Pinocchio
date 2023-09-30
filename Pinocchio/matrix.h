@@ -87,8 +87,8 @@ class Vectorn : public std::vector<Real> {
     Real operator*(const Self &other) const { return accumulate(std::multiplies<Real>(), std::plus<Real>(), other); }
     Self operator+(const Self &other) const { return apply(std::plus<Real>(), other); }
     Self operator-(const Self &other) const { return apply(std::minus<Real>(), other); }
-    Self operator*(const Real &scalar) const { return apply(bind2nd(std::multiplies<Real>(), scalar)); }
-    Self operator/(const Real &scalar) const { return apply(bind2nd(std::divides<Real>(), scalar)); }
+    Self operator*(const Real &scalar) const { return apply(bind(std::multiplies<Real>(), std::placeholders::_1, scalar)); }
+    Self operator/(const Real &scalar) const { return apply(bind(std::divides<Real>(), std::placeholders::_1, scalar)); }
     Self operator-() const { return apply(std::negate<Real>()); }
     bool operator==(const Self &other) const { return accumulate(std::equal_to<Real>(), std::logical_and<Real>(), other); }
 
@@ -161,11 +161,11 @@ class Matrixn
 
     Self operator+(const Self &oth) const { return Self(m + oth.m); }
     Self operator-(const Self &oth) const { return Self(m - oth.m); }
-    Self operator*(double oth) const { return Self(m.apply(bind2nd(myMult<Vec, Real, Vec>(), oth))); }
-    Self operator/(double oth) const { return Self(m.apply(bind2nd(myDiv<Vec, Real, Vec>(), oth))); }
+    Self operator*(double oth) const { return Self(m.apply(bind(myMult<Vec, Real, Vec>(), std::placeholders::_1, oth))); }
+    Self operator/(double oth) const { return Self(m.apply(bind(myDiv<Vec, Real, Vec>(), std::placeholders::_1, oth))); }
     Self operator-() const { return Self(-m); }
 
-    Vec operator*(const Vec &oth) const { return m.apply(bind2nd(myMult<Vec, Vec, Real>(), oth)); }
+    Vec operator*(const Vec &oth) const { return m.apply(bind(myMult<Vec, Vec, Real>(), std::placeholders::_1, oth)); }
 
     Self operator*(const Self &oth) const {
       assert(getCols() == oth.getRows());
