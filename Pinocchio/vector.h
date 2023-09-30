@@ -23,6 +23,7 @@
 #include <functional>
 #include <vector>
 #include <numeric>
+#include <utility>
 #include "hashutils.h"
 #include "mathutils.h"
 
@@ -48,18 +49,19 @@ class Vector {
     const Real &operator[](int n) const { return m[n]; }
 
     // Basic recursive functions
-    template<class F> Vector<typename F::result_type, Dim> apply(const F &func) const
+    template<class F> decltype(auto) apply(const F &func) const
       { return VO::apply(func, *this); }
 
-    template<class F> Vector<typename F::result_type, Dim> apply(const F &func, const Self &other) const
+    template<class F> decltype(auto) apply(const F &func, const Self &other) const
       { return VO::apply(func, *this, other); }
 
+
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum) const
       { return VO::accumulate(op, accum, *this); }
 
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum, const Self &other) const
       { return VO::accumulate(op, accum, *this, other); }
 
     // Operators
@@ -106,14 +108,14 @@ class Vector<Real, -1> {
     const Real &operator[](int n) const { if((int)m.size() <= n) const_cast<Vector<Real, -1> *>(this)->m.resize(n + 1); return m[n]; }
 
     //basic recursive functions
-    template<class F> Vector<typename F::result_type, -1> apply(const F &func) const {
-      std::vector<typename F::result_type> out(m.size());
+    template<class F> decltype(auto) apply(const F &func) const {
+      std::vector< decltype( func( m[0] ) ) > out( m.size() );
       transform(m.begin(), m.end(), out.begin(), func);
-      return Vector<typename F::result_type, -1>(out);
+      return Vector< decltype( func( m[0] ) ), -1 >(out);
     }
 
-    template<class F> Vector<typename F::result_type, -1> apply(const F &func, const Self &other) const {
-      std::vector<typename F::result_type> out(std::max(m.size(), other.m.size()));
+    template<class F> decltype(auto) apply(const F &func, const Self &other) const {
+      std::vector< decltype( func( m[0], other.m[0] ) ) > out(std::max(m.size(), other.m.size()));
       if(m.size() == other.m.size()) {
         transform(m.begin(), m.end(), other.m.begin(), out.begin(), func);
       } else if(m.size() < other.m.size()) {
@@ -123,25 +125,25 @@ class Vector<Real, -1> {
         transform(m.begin(), m.begin() + (other.m.end() - other.m.begin()), other.m.begin(), out.begin(), func);
         for (int i = other.m.size(); i < (int)m.size(); ++i) out[i] = func(m[i], Real());
       }
-      return Vector<typename F::result_type, -1>(out);
+      return Vector< decltype( func( m[0], other.m[0] ) ), -1 >(out);
     }
 
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum) const
     {
       if(m.empty())
-        return typename Accum::result_type();
-      typename Accum::result_type out = op(m[0]);
+        return decltype( op(m[0]) )();
+      auto out = op(m[0]);
       for (int i = 1; i < (int)m.size(); ++i) { out = accum(out, op(m[i])); }
       return out;
     }
 
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum, const Self &other) const
     {
-      typename Accum::result_type out;
+      decltype( op(m[0], other.m[0]) ) out;
       if(m.empty() || other.m.empty()) {
-        if(m.empty() && other.m.empty()) return typename Accum::result_type();
+        if(m.empty() && other.m.empty()) return out;
         if(m.empty()) out = op(Real(), other.m[0]);
         else out = op(m[0], Real());
       } else {
@@ -244,28 +246,30 @@ namespace _VectorPrivate
         static void assign(const R1 &from, VRD &to) { to[last] = from; Next::assign(from, to); }
 
       template<class R, int D, class F>
-        static Vector<typename F::result_type, D> apply(const F &func, const VRD &v)
-        { Vector<typename F::result_type, D> out; _apply(func, v, out); return out; }
+        static decltype(auto) apply(const F &func, const VRD &v)
+        {  Vector< decltype( func( v[0] ) ), D > out; _apply(func, v, out); return out; }
 
       template<class R, int D, class F>
-        static Vector<typename F::result_type, D> apply(const F &func, const VRD &v, const VRD &other)
-        { Vector<typename F::result_type, D> out; _apply(func, v, other, out); return out; }
+        static decltype(auto) apply(const F &func, const VRD &v, const VRD &other)
+        {  Vector< decltype( func( v[0], other[0] ) ), D > out; _apply(func, v, other, out); return out; }
+
 
       template<class R, int D, class Op, class Accum>
-        static typename Accum::result_type accumulate(const Op &op, const Accum &accum, const VRD &v)
+        static decltype(auto) accumulate(const Op &op, const Accum &accum, const VRD &v)
         { return accum(op(v[last]), Next::accumulate(op, accum, v)); }
 
       template<class R, int D, class Op, class Accum>
-        static typename Accum::result_type accumulate(const Op &op, const Accum &accum, const VRD &v, const VRD &other)
+        static decltype(auto) accumulate(const Op &op, const Accum &accum, const VRD &v, const VRD &other)
         { return accum(op(v[last], other[last]), Next::accumulate(op, accum, v, other)); }
 
       template<class R, int D, class F>
-        static void _apply(const F &func, const VRD &v, Vector<typename F::result_type, D> &out)
+        static void _apply(const F &func, const VRD &v, Vector< decltype( func(v[0]) ), D > &out)
         { out[last] = func(v[last]); Next::_apply(func, v, out); }
 
       template<class R, int D, class F>
-        static void _apply(const F &func, const VRD &v, const VRD &other, Vector<typename F::result_type, D> &out)
+        static void _apply(const F &func, const VRD &v, const VRD &other, Vector< decltype( func(v[0], other[0]) ), D > &out)
         { out[last] = func(v[last], other[last]); Next::_apply(func, v, other, out); }
+
   };
 
   template <>
@@ -279,28 +283,30 @@ namespace _VectorPrivate
       template<class R, class R1, int D> static void assign(const R1 &from, VRD &to) { to[0] = from; }
 
       template<class R, int D, class F>
-        static Vector<typename F::result_type, D> apply(const F &func, const VRD &v)
-        { Vector<typename F::result_type, D> out; _apply(func, v, out); return out; }
+        static decltype(auto) apply(const F &func, const VRD &v)
+        {  Vector< decltype( func( v[0] ) ), D > out; _apply(func, v, out); return out; }
 
       template<class R, int D, class F>
-        static Vector<typename F::result_type, D> apply(const F &func, const VRD &v, const VRD &other)
-        { Vector<typename F::result_type, D> out; _apply(func, v, other, out); return out; }
+        static decltype(auto) apply(const F &func, const VRD &v, const VRD &other)
+        {  Vector< decltype( func( v[0], other[0] ) ), D > out; _apply(func, v, other, out); return out; }
+
 
       template<class R, int D, class Op, class Accum>
-        static typename Accum::result_type accumulate(const Op &op, const Accum &, const VRD &v)
+        static decltype(auto) accumulate(const Op &op, const Accum &, const VRD &v)
         { return op(v[0]); }
 
       template<class R, int D, class Op, class Accum>
-        static typename Accum::result_type accumulate(const Op &op, const Accum &, const VRD &v, const VRD &other)
+        static decltype(auto) accumulate(const Op &op, const Accum &, const VRD &v, const VRD &other)
         { return op(v[0], other[0]); }
 
       template<class R, int D, class F>
-        static void _apply(const F &func, const VRD &v, Vector<typename F::result_type, D> &out)
+        static void _apply(const F &func, const VRD &v, Vector< decltype( func( v[0] ) ), D > &out)
         { out[0] = func(v[0]); }
 
       template<class R, int D, class F>
-        static void _apply(const F &func, const VRD &v, const VRD &other, Vector<typename F::result_type, D> &out)
+        static void _apply(const F &func, const VRD &v, const VRD &other, Vector< decltype( func( v[0], other[0] ) ), D > &out)
         { out[0] = func(v[0], other[0]); }
+
   };
 }
 

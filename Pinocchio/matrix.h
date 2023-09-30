@@ -44,41 +44,41 @@ class Vectorn : public std::vector<Real> {
     using super::size;
 
     //basic recursive functions
-    template<class F> Vectorn<typename F::result_type> apply(const F &func) const
+    template<class F> decltype(auto) apply(const F &func) const
     {
-      Vectorn<typename F::result_type> out(size());
+      Vectorn< decltype( func((*this)[0]) ) > out(size());
       for (int i = 0; i < (int)size(); ++i)
         out[i] = func((*this)[i]);
       return out;
     }
 
-    template<class F> Vectorn<typename F::result_type> apply(const F &func, const Self &other) const
+    template<class F> decltype(auto) apply(const F &func, const Self &other) const
     {
       assert(size() == other.size());
-      Vectorn<typename F::result_type> out(size());
+      Vectorn< decltype( func((*this)[0]), other[0] ) > out(size());
       for (int i = 0; i < (int)size(); ++i)
         out[i] = func((*this)[i], other[i]);
       return out;
     }
 
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum) const
     {
       if (size() == 0)
-        return typename Accum::result_type();
-      typename Accum::result_type out(op((*this)[0]));
+        return decltype( op((*this)[0]) )();
+      auto out(op((*this)[0]));
       for (int i = 1; i < (int)size(); ++i)
         out = accum(out, op((*this)[i]));
       return out;
     }
 
     template<class Op, class Accum>
-      typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
+      decltype(auto) accumulate(const Op &op, const Accum &accum, const Self &other) const
     {
       if (size() == 0)
-        return typename Accum::result_type();
+        return decltype( op((*this)[0], other[0]) )();
       assert(size() == other.size());
-      typename Accum::result_type out(op((*this)[0], other[0]));
+      auto out(op((*this)[0], other[0]));
       for (int i = 1; i < (int)size(); ++i)
         out = accum(out, op((*this)[i], other[i]));
       return out;
