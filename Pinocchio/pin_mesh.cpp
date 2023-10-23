@@ -29,14 +29,6 @@
 
 namespace Pinocchio {
 
-// Some constants to make it easier to specify different algorithms.
-// linear blend skinning
-int Mesh::LBS = 0;
-// dual quaternion skinning
-int Mesh::DQS = 1;
-// mixed LBS and DQS results
-int Mesh::MIX = 2;
-
 Mesh::Mesh(const std::string &file, int algo, float weight)
 : scale(1.), blendWeight(weight), algo(algo)
 {

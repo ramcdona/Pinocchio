@@ -73,9 +73,12 @@ class PINOCCHIO_API Mesh {
     double scale;
     float blendWeight;
     int algo;
-    static int LBS;
-    static int DQS;
-    static int MIX;
+
+    // Some constants to make it easier to specify different algorithms.
+    // LBS linear blend skinning
+    // DQS dual quaternion skinning
+    // MIX mixed LBS and DQS results
+    enum { LBS = 0, DQS = 1, MIX = 2 };
 };
 
 } // namespace Pinocchio
