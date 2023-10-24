@@ -23,7 +23,7 @@
 // PINOCCHIO_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(PINOCCHIO_DLL)
 #ifdef PINOCCHIO_EXPORTS
 #define PINOCCHIO_API __declspec(dllexport)
 //PINOCCHIO_EXPORTS
@@ -31,8 +31,11 @@
 #define PINOCCHIO_API __declspec(dllimport)
 //PINOCCHIO_EXPORTS
 #endif
-//_WIN32
-#else
+//_WIN32 && PINOCCHIO_DLL
+#endif
+
+// All other cases.
+#ifndef PINOCCHIO_API
 #define PINOCCHIO_API
-//_WIN32
+//PINOCCHIO_API
 #endif
