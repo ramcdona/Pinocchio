@@ -19,6 +19,7 @@
 #ifndef GRAPHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 #define GRAPHUTILS_H_BFCF2002_4190_11E9_AA8F_EFB66606E782
 
+#include <algorithm>
 #include <queue>
 #include "vector.h"
 
