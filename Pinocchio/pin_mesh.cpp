@@ -620,7 +620,6 @@ namespace Pinocchio {
 void Mesh::readStl(std::istream &strm)
 {
   int i;
-  int lineNum = 0;
 
   std::unordered_map<StlVtx, int> vertexIdx;
 
@@ -630,8 +629,6 @@ void Mesh::readStl(std::istream &strm)
 
   while(!strm.eof())
   {
-    ++lineNum;
-
     std::vector<std::string> words = readWords(strm);
 
     if(words.size() == 0)

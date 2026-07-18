@@ -276,7 +276,7 @@ template<class RootNode = OctTreeRoot> class OctTreeMaker
           return d = (vec - proj.project(vec)).length();
         }
 
-        void setRect(const Rect3 &r) const { }
+        void setRect(const Rect3 &) const { }
 
       private:
         mutable std::unordered_map<unsigned int, double> cache;
