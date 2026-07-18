@@ -36,9 +36,9 @@ namespace Tbx {
 
     static Point3 random(float r) {
       float r2 = 2.f * r;
-      float x_ = rand() * 1.f /RAND_MAX;
-      float y_ = rand() * 1.f /RAND_MAX;
-      float z_ = rand() * 1.f /RAND_MAX;
+      float x_ = rand() * 1.f / static_cast<float>(RAND_MAX);
+      float y_ = rand() * 1.f / static_cast<float>(RAND_MAX);
+      float z_ = rand() * 1.f / static_cast<float>(RAND_MAX);
       return Point3(x_ * r2 - r, y_ * r2 - r, z_ * r2 - r);
     }
 
