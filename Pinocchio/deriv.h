@@ -29,6 +29,7 @@ template<class Real, int Vars> class Deriv {
     Deriv(const Real &inX) : x(inX) {}
     Deriv(const Real &inX, int varNum) : x(inX) { d[varNum] = Real(1.); }
     Deriv(const Self &inD) : x(inD.x), d(inD.d) {}
+    Self &operator=(const Self &) = default;
     Deriv(const Real &inX, const Vector<Real, Vars> &inD) : x(inX), d(inD) {}
 
     Real getReal() const { return x; }

@@ -40,6 +40,7 @@ class Rect
     Rect(const Vec &vec) : empty(false), lo(vec), hi(vec) {}
     Rect(const Vec &inLo, const Vec &inHi) : lo(inLo), hi(inHi) { markEmpty(); }
     Rect(const Rect &inRect) : empty(inRect.empty), lo(inRect.lo), hi(inRect.hi) {}
+    Rect &operator=(const Rect &) = default;
     template<class R> Rect(const Rect<R, Dim> &inRect) : empty(inRect.empty), lo(inRect.lo), hi(inRect.hi) {}
 
     //constructs a Rect given an iterator over points--could be optimized with a min-max

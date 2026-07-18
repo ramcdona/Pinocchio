@@ -36,6 +36,7 @@ class Vectorn : public std::vector<Real> {
 
     Vectorn() {}
     Vectorn(const Vectorn &other) : super(other) {}
+    Vectorn &operator=(const Vectorn &) = default;
     Vectorn(int sz, const Real &init = Real()) : super(sz, init) {}
 
     template<class R> Vectorn(const std::vector<R> &other) : super(other.begin(), other.end()) {}

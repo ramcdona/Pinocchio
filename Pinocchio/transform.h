@@ -28,6 +28,7 @@ template<class Real = double> class Quaternion { // Normalized quaternion for re
     // Constructors
     Quaternion() : r(1.) { } // Initialize to identity
     Quaternion(const Quaternion &q) : r(q.r), v(q.v) {} // Copy constructor
+    Quaternion &operator=(const Quaternion &) = default;
     template<class R> Quaternion(const Quaternion<R> &q) : r(q.r), v(q.v) {} //Convert quaternions of other types
 
     template<class R> Quaternion(const R &w, const R &x, const R &y, const R &z)

@@ -524,6 +524,9 @@ namespace Tbx
         coeff[1] = q.i(); coeff[2] = q.j(); coeff[3] = q.k();
       }
 
+      /// Copy assignment
+      Quat_cu& operator=(const Quat_cu&) = default;
+
       /// directly fill the quaternion
       Quat_cu(float w, float i, float j, float k) {
         coeff[0] = w;

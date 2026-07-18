@@ -40,6 +40,7 @@ class Vector {
 
     Vector() { VO::assign(Real(), *this); }
     Vector(const Self &other) { VO::assign(other, *this); }
+    Self &operator=(const Self &) = default;
     explicit Vector(const Real &m) { VO::assign(m, *this); }
     Vector(const Real &m1, const Real &m2) { m[0] = m1; m[1] = m2; checkDim<2>(VO()); }
     Vector(const Real &m1, const Real &m2, const Real &m3) { m[0] = m1; m[1] = m2; m[2] = m3; checkDim<3>(VO()); }
@@ -101,6 +102,7 @@ class Vector<Real, -1> {
 
     Vector() { }
     Vector(const Self &other) : m(other.m) { }
+    Self &operator=(const Self &) = default;
     Vector(const std::vector<Real> &inM) : m(inM) { }
     explicit Vector(const Real &inM) { m.push_back(inM); }
 
